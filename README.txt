@@ -28,7 +28,7 @@ CHANGES SO FAR:
     Newly learned alchemy is now preselected/highlighted for alchemy selection
     (Texts still unchanged)
   Ingredienizer:
-    Randomize ingridient requirements
+    Randomize ingredient requirements
     Scales with difficulty
     Goes crazy with chaos
   Boss dropamizer: randomiz what each boss drops and
