@@ -37,7 +37,7 @@ win32: evermizer.exe ow-patch.exe
 all: native win32
 endif
 
-ifneq ($(PATCH_FILES),) # assume we have a pre-built gen.h if pathes/ is missing
+ifneq ($(PATCH_FILES),) # assume we have a pre-built gen.h if patches/ is missing
 gen.h: $(PATCH_FILES) everscript2h.py
 	$(PYTHON3) everscript2h.py $@ $(PATCH_FILES)
 endif

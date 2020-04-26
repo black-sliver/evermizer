@@ -405,7 +405,7 @@ DEF(144, 0x958bbf - 0x800000, "\x0c\x26\x04\xb1" "\x0c\x0d\x04\xb1" "\x00");
 DEF(145, 0x998bda - 0x800000, "\x04\x00\x00");
 // Avoid softlock if you have collected more than 3 rocket parts
 DEF(146, 0x998d7e + 6 - 0x800000, "\x21"); // >= OP instead of == OP
-// Don't despawn North of Nobilia Market when Aegis is dead
+// Don't despawn Rock north of Nobilia Market when Aegis is dead
 DEF(147, 0x95cb0a + 1 - 0x800000, "\x30\x14\x14"); // !!FALSE instead of bit test
 // Use bottom left cell as town exit if you cleared mosquito cell last
 DEF(148, 0x98a66e + 3 - 0x800000, "\xb7\x00\x00");
