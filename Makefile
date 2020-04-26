@@ -1,5 +1,6 @@
 # native
 CC?=gcc
+PYTHON3?=python3
 
 ifeq ($(CC),clang) # clang's lto has limitations, but we only have one .c anyways
 CFLAGS?=-Wall -Werror -DWITH_ASSERT -D_FORTIFY_SOURCE=2 -pie -fPIE -ffunction-sections -fdata-sections -Wl,--gc-sections -s -Os
@@ -38,7 +39,7 @@ endif
 
 ifneq ($(PATCH_FILES),) # assume we have a pre-built gen.h if pathes/ is missing
 gen.h: $(PATCH_FILES) everscript2h.py
-	./everscript2h.py $@ $(PATCH_FILES)
+	$(PYTHON3) everscript2h.py $@ $(PATCH_FILES)
 endif
 
 main.res: icon.ico
