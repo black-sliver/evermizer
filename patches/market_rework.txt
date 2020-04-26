@@ -1,0 +1,9 @@
+// clear out market for Aegis if (have DEs OR DEs stolen) AND NOT Aegis dead
+//                    instead of (Pyramid AND Halls) AND NOT Aegis dead
+// NOTE: we may want to change that to only stolen for non-bossdropamizier
+//       in open-world with fix-sequence on, together with Aegis spawn check
+// FIXME: also check for NOT vigor dead, but that will require a major rewrite
+//@0x96b688: Orig: 09 05 07 04 29 05 06 04 28 29 05 0b 04 14 a8
+//@0x96b688: New:  09 05 61 00 29 05 0d 04 27 29 05 0b 04 14 a8
+@0x96b688+2
+61 00 29 05 0d 04 27
