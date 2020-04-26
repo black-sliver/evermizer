@@ -1,0 +1,20 @@
+#OS junk
+[Tt]humbs.db
+*.DS_Store
+
+#build output
+evermizer
+ow-patch
+*.exe
+
+#build temps
+*.res
+gen.h
+
+#releases
+old
+rls
+*.zip
+#local/private scripts
+release.sh
+test.sh
