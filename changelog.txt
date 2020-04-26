@@ -1,0 +1,22 @@
+v018:
+  Fixed FE village alchemist not selling you ingredients after talking to FE
+  Fixed FE village raptor kill rewards and honey
+  Fixed Escape drop being missable
+  Added musicmizer for a few rooms where it should be safe
+  Added command line argument -d to specify destination directory
+  Added version, settings and seednumber to SPOILER.log
+  Moved manually written patch definition to patches.h
+  Generating new patches from documentation, translated to gen.h
+  Added a proper Makefile
+  
+v017:
+  Vigor fight won't start if you did not jump down the cliff at blimp
+  Don't despawn North Market rock when Aegis is dead
+  Fix softlock when you have more than 3 rocket parts
+  Fix softlock when opening mosquito cell last (exit will be bottom left cell)
+  Source code in a separate archive to make the ZIP less confusing
+  src/icon.png has better compression
+  Slightly better overall compression
+  
+v016 and before:
+  see README.txt

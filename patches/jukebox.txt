@@ -1,0 +1,149 @@
+#ifndef NO_RANDO
+@0xb08070
+// we have 61 = 0x3d tracks -> first index is 0x00, last index is 0x3c
+// we use 7e2880, let's hope that it's a temp and is never used
+
+jukebox1:   // @0xb08070, as used in most scripts
+29 91 00 0f // call start at 0xb08070+11; TODO: rcall?
+a3 01       // call "start music"
+04 13 00    // skip 19 to jukebox_end
+
+jukebox2:   // @0xb08079, as used for raptors 2
+29 91 00 0f // call start at 0xb08070+11; TODO: rcall?
+18 35 01 b0 // write CHANGE MUSIC ($238d) = 0x0000
+04 08 00    // skip 8 to jukebox_end
+
+jukebox3:   // @0xb08084, as used for raptors 1
+29 91 00 0f // call start at 0xb08070+x; TODO: rcall?
+18 67 01 b0 // write $23bf = 0x0000
+
+jukebox_end:
+19 4c 00 b0 // clear temp
+00          // end
+
+start: @0xb08091
+11 4c 00 02 3d ab               // tmp = (byte) 0x3d,random2 = (random*0x3d)>>16 ^= randrange(0,0x3c)
+08 0c 4c 00 29 02 1e 9f 89 01   // if tmp > 30: skip 393 to song_31
+09 0c 4c 00 29 02 00 a2 03 00   // if tmp not 0: skip 3
+33 02 00                        // play track 02, end
+09 0c 4c 00 29 02 01 a2 03 00   // if tmp not 1: skip 3
+33 04 00                        // play track 04, end
+09 0c 4c 00 29 02 02 a2 03 00   // if tmp not 2: skip 3
+33 06 00                        // play track 06, end
+09 0c 4c 00 29 02 03 a2 03 00   // if tmp not 3: skip 3
+33 08 00                        // play track 08, end
+09 0c 4c 00 29 02 04 a2 03 00   // if tmp not 4: skip 3
+33 0a 00                        // play track 0a, end
+09 0c 4c 00 29 02 05 a2 03 00   // if tmp not 5: skip 3
+33 0c 00                        // play track 0c, end
+09 0c 4c 00 29 02 06 a2 03 00   // if tmp not 6: skip 3
+33 0e 00                        // play track 0e, end
+09 0c 4c 00 29 02 07 a2 03 00   // if tmp not 7: skip 3
+33 12 00                        // play track 12, end
+09 0c 4c 00 29 02 08 a2 03 00   // if tmp not 8: skip 3
+33 14 00                        // play track 14, end
+09 0c 4c 00 29 02 09 a2 03 00   // if tmp not 9: skip 3
+33 16 00                        // play track 16, end
+09 0c 4c 00 29 02 0a a2 03 00   // if tmp not 10: skip 3
+33 18 00                        // play track 18, end
+09 0c 4c 00 29 02 0b a2 03 00   // if tmp not 11: skip 3
+33 1a 00                        // play track 1a, end
+09 0c 4c 00 29 02 0c a2 03 00   // if tmp not 12: skip 3
+33 1c 00                        // play track 1c, end
+09 0c 4c 00 29 02 0d a2 03 00   // if tmp not 13: skip 3
+33 1e 00                        // play track 1e, end
+09 0c 4c 00 29 02 0e a2 03 00   // if tmp not 14: skip 3
+33 20 00                        // play track 20, end
+09 0c 4c 00 29 02 0f a2 03 00   // if tmp not 15: skip 3
+33 22 00                        // play track 22, end
+09 0c 4c 00 29 02 10 a2 03 00   // if tmp not 16: skip 3
+33 24 00                        // play track 24, end
+09 0c 4c 00 29 02 11 a2 03 00   // if tmp not 17: skip 3
+33 26 00                        // play track 26, end
+09 0c 4c 00 29 02 12 a2 03 00   // if tmp not 18: skip 3
+33 28 00                        // play track 28, end
+09 0c 4c 00 29 02 13 a2 03 00   // if tmp not 19: skip 3
+33 2a 00                        // play track 2a, end
+09 0c 4c 00 29 02 14 a2 03 00   // if tmp not 20: skip 3
+33 2c 00                        // play track 2c, end
+09 0c 4c 00 29 02 15 a2 03 00   // if tmp not 21: skip 3
+33 2e 00                        // play track 2e, end
+09 0c 4c 00 29 02 16 a2 03 00   // if tmp not 22: skip 3
+33 30 00                        // play track 30, end
+09 0c 4c 00 29 02 17 a2 03 00   // if tmp not 23: skip 3
+33 32 00                        // play track 32, end
+09 0c 4c 00 29 02 18 a2 03 00   // if tmp not 24: skip 3
+33 38 00                        // play track 38, end
+09 0c 4c 00 29 02 19 a2 03 00   // if tmp not 25: skip 3
+33 3a 00                        // play track 3a, end
+09 0c 4c 00 29 02 1a a2 03 00   // if tmp not 26: skip 3
+33 3c 00                        // play track 3c, end
+09 0c 4c 00 29 02 1b a2 03 00   // if tmp not 27: skip 3
+33 3e 00                        // play track 3e, end
+09 0c 4c 00 29 02 1c a2 03 00   // if tmp not 28: skip 3
+33 40 00                        // play track 40, end
+09 0c 4c 00 29 02 1d a2 03 00   // if tmp not 29: skip 3
+33 42 00                        // play track 42, end
+33 44 00                        // play track 44, end
+song_31:
+09 0c 4c 00 29 02 1f a2 03 00   // if tmp not 31: skip 3
+33 46 00                        // play track 46, end
+09 0c 4c 00 29 02 20 a2 03 00   // if tmp not 32: skip 3
+33 48 00                        // play track 48, end
+09 0c 4c 00 29 02 21 a2 03 00   // if tmp not 33: skip 3
+33 4a 00                        // play track 4a, end
+09 0c 4c 00 29 02 22 a2 03 00   // if tmp not 34: skip 3
+33 54 00                        // play track 54, end
+09 0c 4c 00 29 02 23 a2 03 00   // if tmp not 35: skip 3
+33 56 00                        // play track 56, end
+09 0c 4c 00 29 02 24 a2 03 00   // if tmp not 36: skip 3
+33 58 00                        // play track 58, end
+09 0c 4c 00 29 02 25 a2 03 00   // if tmp not 37: skip 3
+33 5a 00                        // play track 5a, end
+09 0c 4c 00 29 02 26 a2 03 00   // if tmp not 38: skip 3
+33 5c 00                        // play track 5c, end
+09 0c 4c 00 29 02 27 a2 03 00   // if tmp not 39: skip 3
+33 5e 00                        // play track 5e, end
+09 0c 4c 00 29 02 28 a2 03 00   // if tmp not 40: skip 3
+33 60 00                        // play track 60, end
+09 0c 4c 00 29 02 29 a2 03 00   // if tmp not 41: skip 3
+33 62 00                        // play track 62, end
+09 0c 4c 00 29 02 2a a2 03 00   // if tmp not 42: skip 3
+33 64 00                        // play track 64, end
+09 0c 4c 00 29 02 2b a2 03 00   // if tmp not 43: skip 3
+33 66 00                        // play track 66, end
+09 0c 4c 00 29 02 2c a2 03 00   // if tmp not 44: skip 3
+33 68 00                        // play track 68, end
+09 0c 4c 00 29 02 2d a2 03 00   // if tmp not 45: skip 3
+33 6a 00                        // play track 6a, end
+09 0c 4c 00 29 02 2e a2 03 00   // if tmp not 46: skip 3
+33 6c 00                        // play track 6c, end
+09 0c 4c 00 29 02 2f a2 03 00   // if tmp not 47: skip 3
+33 6e 00                        // play track 6e, end
+09 0c 4c 00 29 02 30 a2 03 00   // if tmp not 48: skip 3
+33 70 00                        // play track 70, end
+09 0c 4c 00 29 02 31 a2 03 00   // if tmp not 49: skip 3
+33 72 00                        // play track 72, end
+09 0c 4c 00 29 02 32 a2 03 00   // if tmp not 50: skip 3
+33 74 00                        // play track 74, end
+09 0c 4c 00 29 02 33 a2 03 00   // if tmp not 51: skip 3
+33 76 00                        // play track 76, end
+09 0c 4c 00 29 02 34 a2 03 00   // if tmp not 52: skip 3
+33 7a 00                        // play track 7a, end
+09 0c 4c 00 29 02 35 a2 03 00   // if tmp not 53: skip 3
+33 7c 00                        // play track 7c, end
+09 0c 4c 00 29 02 36 a2 03 00   // if tmp not 54: skip 3
+33 80 00                        // play track 80, end
+09 0c 4c 00 29 02 37 a2 03 00   // if tmp not 55: skip 3
+33 82 00                        // play track 82, end
+09 0c 4c 00 29 02 38 a2 03 00   // if tmp not 56: skip 3
+33 86 00                        // play track 86, end
+09 0c 4c 00 29 02 39 a2 03 00   // if tmp not 57: skip 3
+33 88 00                        // play track 88, end
+09 0c 4c 00 29 02 3a a2 03 00   // if tmp not 58: skip 3
+33 8a 00                        // play track 8a, end
+09 0c 4c 00 29 02 3b a2 03 00   // if tmp not 59: skip 3
+33 8c 00                        // play track 8c, end
+33 8e 00                        // play track 8e, end
+@
+#endif

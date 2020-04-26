@@ -1,0 +1,13 @@
+// Make stuff that changes with WW posession to check Magmar instead
+//@0x94d139,etc Orig: 09 85 23 04 .. .. // WW unlocked
+//@0x94d139,etc New:  09 85 46 00 .. .. // Magmar defeated
+@0x94d139+2
+46 00
+@0x94d451+2
+46 00
+@0x94d463+2
+46 00
+@0x94d534+2
+46 00
+@0x94d54a+2
+46 00
