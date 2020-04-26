@@ -49,7 +49,7 @@ CHANGES SO FAR:
     Grant access to inner volcano
     Grant access to east swamp
     Fix palace cutscenes
-    Lock barrier (horace inside palace) + gates behind aegis (instead of WW)
+    Lock Barrier (Horace inside palace) + gates behind Aegis (instead of WW)
     Make both act3 towns filled with people
     Moved ticket lady bazooka shells behind dog race (in both towns)
     Fixed lance not appearing
@@ -57,7 +57,7 @@ CHANGES SO FAR:
       TODO: not 100%, look at this again
       TODO: fix weird camera glitch in act3 houses
     Locked east draw bridge behind Mungola
-    Disabled exit from naris to chessboard if Mungola is alive
+    Disabled exit from Naris to chessboard if Mungola is alive
     Fixed reverse Timberdrake
     Disabled exit from castle to verm if verm is not dead
     Fixed prison sound crash
@@ -75,6 +75,7 @@ CHANGES SO FAR:
     Madrinus will (still) spawn after Aegis is defeated
     Move call bead glitch behind rocket
     Don't despawn North Market rock when Aegis is dead
+    Replaced FE Village Windwalker checks with Magmar-dead checks
   Vanilla bugs fixed:
     Fix softlock when entering west prison with dead dog
     Fix softlock when opening mosquito cell last (exit will be bottom left cell)
