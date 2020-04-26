@@ -76,6 +76,7 @@ CHANGES SO FAR:
     Move call bead glitch behind rocket
     Don't despawn North Market rock when Aegis is dead
     Replaced FE Village Windwalker checks with Magmar-dead checks
+    Progress Act3 NPCs based on Castle crumbled instead of WW (ongoing effort)
   Vanilla bugs fixed:
     Fix softlock when entering west prison with dead dog
     Fix softlock when opening mosquito cell last (exit will be bottom left cell)
