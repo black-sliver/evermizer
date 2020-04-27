@@ -37,7 +37,7 @@ win32: evermizer.exe ow-patch.exe
 all: native win32
 endif
 
-ifneq ($(PATCH_FILES),) # assume we have a pre-built gen.h if patches/ is missing
+ifneq ($(strip $(PATCH_FILES)),) # assume we have a pre-built gen.h if patches/ is missing
 gen.h: $(PATCH_FILES) everscript2h.py
 	$(PYTHON3) everscript2h.py $@ $(PATCH_FILES)
 endif
@@ -49,20 +49,20 @@ evermizer: $(SOURCE_FILES) $(INCLUDE_FILES)
 	$(CC) -o $@ $(SOURCE_FILES) $(CFLAGS)
 
 ow-patch: $(SOURCE_FILES) $(INCLUDE_FILES)
-	$(CC) -o $@ $(SOURCE_FILES) $(CFLAGS)
+	$(CC) -DNO_RANDO -o $@ $(SOURCE_FILES) $(CFLAGS)
 
 evermizer.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main.res
 	$(WIN32CC) -o $@ $(SOURCE_FILES) $(WIN32CFLAGS) main.res
 
 ow-patch.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main.res
-	$(WIN32CC) -o $@ $(SOURCE_FILES) $(WIN32CFLAGS) main.res
+	$(WIN32CC) -DNO_RANDO -o $@ $(SOURCE_FILES) $(WIN32CFLAGS) main.res
 
 clean: clean-temps
 	rm -rf evermizer evermizer.exe ow-patch ow-patch.exe
 
 clean-temps:
 	rm -rf main.res
-ifneq ($(PATCH_FILES),) # only if not pre-built
+ifneq ($(strip $(PATCH_FILES)),) # only if not pre-built
 	rm -rf gen.h
 endif
 
