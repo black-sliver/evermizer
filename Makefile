@@ -16,7 +16,7 @@ WIN32WINDRES?=windres
 else
 # cross compile
 WIN32CC?=i686-w64-mingw32-gcc
-WIN32CFLAGS?=-Wall -DWITH_ASSERT -D_FORTIFY_SOURCE=2 -pie -fPIE -static -static-libgcc --function-sections -Wl,--gc-sections -s -fdata-sections -flto=4 -Os
+WIN32CFLAGS?=-Wall -Werror -DWITH_ASSERT -D_FORTIFY_SOURCE=2 -pie -fPIE -static -static-libgcc -ffunction-sections -fdata-sections -Wl,--gc-sections -s -flto=4 -Os
 WIN32WINDRES?=i686-w64-mingw32-windres
 endif
 
