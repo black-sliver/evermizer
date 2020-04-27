@@ -31,7 +31,7 @@ CHANGES SO FAR:
     Randomize ingredient requirements
     Scales with difficulty
     Goes crazy with chaos
-  Boss dropamizer: randomiz what each boss drops and
+  Boss dropamizer: randomize what each boss drops and
     Horace will not steal your DEs
     Thraxx will always drop a weapon for now
     Bridges in pyramid won't collapse
@@ -40,7 +40,7 @@ CHANGES SO FAR:
     Tinker taking away your diamond eyes sets flag to not lock-out Aegis
   Musicmizer: randomize music, in testing stage
   Fix sequence:
-    Desolarify: Act1 first rock skip is disabled (levitation required)
+    Desolarify: Act1 first rock skip is disabled (Levitation required)
     Desaturnate: require the use of teleporter before final boss hatch is open
     Disable double gauge: don't take away rocket parts until you have them all
   Fix cheats:
@@ -50,18 +50,18 @@ CHANGES SO FAR:
     Grant access to east swamp
     Fix palace cutscenes
     Lock Barrier (Horace inside palace) + gates behind Aegis (instead of WW)
-    Make both act3 towns filled with people
+    Make both Act3 towns filled with people
     Moved ticket lady bazooka shells behind dog race (in both towns)
     Fixed lance not appearing
       NOTE: he now appears in ivory as well as ebon keep
       TODO: not 100%, look at this again
-      TODO: fix weird camera glitch in act3 houses
+      TODO: fix weird camera glitch in Act3 houses
     Locked east draw bridge behind Mungola
     Disabled exit from Naris to chessboard if Mungola is alive
     Fixed reverse Timberdrake
-    Disabled exit from castle to verm if verm is not dead
+    Disabled exit from castle to Verminator if Verminator is not dead
     Fixed prison sound crash
-    Killing verminator is now optional, prison door unlocks when cleared
+    Killing Verminator is optional, prison door unlocks when prison is cleared
     Keep dog after Magmar (room change required to make him visible)
     Play Tinker WW cutscene once, regardless of progress
     Landing skip converted to a regular landing
@@ -69,7 +69,7 @@ CHANGES SO FAR:
     Vigor fight won't start if you did not jump down the cliff at blimp
     Act1 Fire Eyes cutscenes play in order (dog naming skip as in vanilla)
     Act1 top-of-volcano guy fixed
-    Act3 mungola hp / fight fixed
+    Act3 Mungola HP / fight fixed
     Act1 move Coleoptera behind talking to FE after killing Thraxx
     Aquagoth is accessible once. Oglin cave gourd can't be randomized
     Madrinus will (still) spawn after Aegis is defeated
@@ -112,4 +112,6 @@ LINUX AND MAC BUILD INSTRUCTIONS:
 
 WINDOWS BUILD INSTRUCTIONS:
   run make for mingw, or create a VS project with main.c as (only) source file
+  the github source tree requires you to have python3 in PATH to build gen.h
+  the zip distribution includes a pre-built gen.h
 
