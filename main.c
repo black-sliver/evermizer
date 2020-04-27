@@ -863,6 +863,7 @@ int main(int argc, const char** argv)
     printf("Fixing some missables...\n");
     // v018:
     APPLY(ESCAPE_AFTER_DES); // would only be required for alchemizer
+    APPLY(PALACE_REWORK); // would only be required for alchemizer
     
     #ifndef NO_RANDO
     if (gourdomizer || bossdropamizer) {

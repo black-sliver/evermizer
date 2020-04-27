@@ -1,0 +1,5 @@
+// Allow unlocking barrier check after Tiny was defeated
+// Jump into unlocking spell instead of end, NOTE: text is not perfect
+// [+x95d362] (04) SKIP 141 (to +x95d3f2) -> 104 (to +x95d3cd)
+@0x95d362
+04 68 00

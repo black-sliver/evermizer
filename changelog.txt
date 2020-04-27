@@ -2,6 +2,7 @@ v018:
   Fixed FE village alchemist not selling you ingredients after talking to FE
   Fixed FE village raptor kill rewards and honey
   Fixed Escape drop being missable
+  Fixed Barrier drop being missable (makes text awkward though)
   Clear out market for Aegis based on DEs, not Pyramid+Halls, still not perfect
   Change Regrowth Lady's text+shop when castle crumbles istead of WW unlocked
   Added musicmizer for a few rooms where it should be safe
