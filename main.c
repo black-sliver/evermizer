@@ -450,26 +450,21 @@ int main(int argc, const char** argv)
             printf("\n");
             printf("Difficulty:      %-6s (E/N/H to change)\n", 
                    DIFFICULTY_NAME[difficulty]);
-            printf("Chaos:           %s    (C to toggle)\n", chaos?"on ":"off");
-            printf("Open World:      %s\n", openworld?"on ":"off");
-            printf("Fix sequence:    %s    (1 to toggle)\n", fixsequence?   "on ":"off");
-            printf("Fix cheats:      %s    (2 to toggle)\n", fixcheats?     "on ":"off");
-            printf("Glitchless:      %s    (3 to toggle)\n", glitchless?    "on ":"off");
-            printf("Alchemizer:      %s    (A to toggle)\n", alchemizer?    "on ":"off");
-            printf("Ingredienizer:   %s    (I to toggle)\n", ingredienizer? "on ":"off");
-            printf("Boss dropamizer: %s    (B to toggle)\n", bossdropamizer?"on ":"off");
-            printf("Gourdomizer:     %s    (G to toggle) [Dummy]\n", gourdomizer? "on ":"off");
-          //printf("Sniffamizer:     %s    (S to toggle) [Dummy]\n", sniffamizer? "on ":"off");
-          //printf("Doggomizer:      %s    (D to toggle) [Dummy]\n", doggomizer?  "on ":"off");
-          //printf("Enemizer:        %s    (Y to toggle) [Dummy]\n", enemizer?    "on ":"off");
-            printf("Musicmizer:      %s    (M to toggle) [Demo]\n",  musicmizer?  "on ":"off");
-            printf("Spoiler Log:     %s    (L to toggle)\n", spoilerlog?    "on ":"off");
+            printf("Chaos:               %s    (C to toggle)\n", chaos?"on ":"off");
+            printf("Open World:          %s\n", openworld?"on ":"off");
+            printf("Fix sequence:        %s    (1 to toggle)\n", fixsequence?   "on ":"off");
+            printf("Fix cheats:          %s    (2 to toggle)\n", fixcheats?     "on ":"off");
+            printf("Glitchless beatable: %s    (3 to toggle)\n", glitchless?    "on ":"off");
+            printf("Alchemizer:          %s    (A to toggle)\n", alchemizer?    "on ":"off");
+            printf("Ingredienizer:       %s    (I to toggle)\n", ingredienizer? "on ":"off");
+            printf("Boss dropamizer:     %s    (B to toggle)\n", bossdropamizer?"on ":"off");
+            printf("Gourdomizer:         %s    (G to toggle) [Dummy]\n", gourdomizer? "on ":"off");
+          //printf("Sniffamizer:         %s    (S to toggle) [Dummy]\n", sniffamizer? "on ":"off");
+          //printf("Doggomizer:          %s    (D to toggle) [Dummy]\n", doggomizer?  "on ":"off");
+          //printf("Enemizer:            %s    (Y to toggle) [Dummy]\n", enemizer?    "on ":"off");
+            printf("Musicmizer:          %s    (M to toggle) [Demo]\n",  musicmizer?  "on ":"off");
+            printf("Spoiler Log:         %s    (L to toggle)\n", spoilerlog?    "on ":"off");
             printf("\n");
-            #ifdef SHOW_INFO
-            printf("*  Levitation and Energy core required\n");
-            printf("** Infinite call beads\n");
-            printf("\n");
-            #endif
             printf("Press ESC to abort, ENTER to continue");
             fflush(stdout);
             char c = getch();
@@ -549,7 +544,7 @@ int main(int argc, const char** argv)
   //DEF(JUKEBOX_BBM,          0x93c417 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // bbm bridges glitch out
   //DEF(JUKEBOX_WCRUSTACIA,   0x96bd85 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // exploding rocks
   //DEF(JUKEBOX_EHORACE,      0x96c4da - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // exploding rocks
-  //DEF(JUKEBOX_PALACEG,      0x96d636 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // Doggo fountain sounds
+  //DEF(JUKEBOX_PALACEG,      0x96d636 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // doggo fountain sounds
   //DEF(JUKEBOX_FEGATHERING,  0x94c312 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // naming character glitches out
   //DEF(JUKEBOX_WSWAMP,       0x948999 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // frippo sounds and leafpads
   //DEF(JUKEBOX_SWAMP,        0x9492d5 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // frippo sounds and leafpads
@@ -784,9 +779,11 @@ int main(int argc, const char** argv)
                                       checks[i].type==CHECK_BOSS ? boss_drops[checks[i].index] : 0;
                         const drop_tree_item* drop = get_drop(checks[i].type, idx);
                         check_progress(checks+i, progress);
-                        //printf("Reached %s\n", check2str(checks+i));
                         drop_progress(drop, progress);
-                        //if (drop) printf("Got %s\n", drop2str(drop));
+                        #ifdef DEBUG_CHECK_TREE
+                        printf("Reached %s\n", check2str(checks+i));
+                        if (drop) printf("Got %s\n", drop2str(drop));
+                        #endif
                         complete=false;
                     }
                 }
@@ -851,7 +848,7 @@ int main(int argc, const char** argv)
     }
     
     // General bug fixes
-    printf("Fixing soft locks...\n");
+    printf("Fixing vanilla softlocks...\n");
     // v009:
     APPLY(73);
     // v015:
@@ -1057,7 +1054,8 @@ int main(int argc, const char** argv)
     FILE* flog = fopen(logdstbuf,"wb");
     if (!flog) { fclose(fsrc); free(buf); die("Could not open spoiler log file!\n"); }
     #define ENDL "\r\n"
-    fprintf(flog,"Spoiler log for evermizer %s settings %s seed %" PRIx64 "\n\n", VERSION, shortsettings, seed);
+    fprintf(flog,"Spoiler log for evermizer %s settings %s seed %" PRIx64 "%s", VERSION, shortsettings, seed, ENDL);
+    fprintf(flog,"%s", ENDL);
     fprintf(flog,"     %-15s  %-15s  %-15s   %s" ENDL, "Spell", "Location", "Ingredient 1", "Ingredient 2"); 
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     for (size_t i=0; i<ALCHEMY_COUNT; i++) {
@@ -1072,7 +1070,7 @@ int main(int argc, const char** argv)
             f->amount2, ingredient_names[f->type2]);
     }
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
-    fprintf(flog,"\n");
+    fprintf(flog,"%s", ENDL);
     fprintf(flog,"     %-13s  %s" ENDL, "Boss", "Drop");
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++) {
