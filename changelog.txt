@@ -5,6 +5,7 @@ v019:
   Include one missed use of Hard Ball in alchemizer, only eye candy though
   Include missed uses of Cure and Miracle Cure in FE Village texts
   Moved Strongheart giving you Spot's Collar behind Magmar
+  Changed lots of FE Village texts to check for Magmar instead of Wind Walker
 
 v018:
   Fixed FE village alchemist not selling you ingredients after talking to FE
