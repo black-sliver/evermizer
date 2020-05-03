@@ -88,7 +88,8 @@ CHANGES SO FAR:
 
 
 TO BE TESTED:
-  nothing specific at the moment
+  v019 change to Madronius may also fix double Horace
+    (talking to Madronius after beating Pyramid+Halls without having 2DEs)
 
 
 STILL TO BE FIXED:
