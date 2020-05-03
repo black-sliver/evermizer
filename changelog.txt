@@ -1,6 +1,7 @@
 v019:
   Fixed stuck-in-door softlock when getting thrown into already cleared prison
   Fixed hard lock when selecting spells at Madronius after Horace is gone
+  Include check for Madronius talking about his brother in alchemizer
 
 v018:
   Fixed FE village alchemist not selling you ingredients after talking to FE

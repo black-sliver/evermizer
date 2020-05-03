@@ -45,7 +45,7 @@ const static size_t escape_locations[] = {
 const static size_t explosion_locations[] = {
     0x198793 +2, 0x1987af +2, 0x1987c8 +2, 0x1987cf +1, 0x198d2d +2, LOC_END };
 const static size_t fireball_locations[] = {
-    0x17a2d0 +2, 0x17a027 +6, 0x17a03a +1, 0x17a012 +2, 0x17a002 +2, LOC_END };
+    0x17a2d0 +2, 0x17a027 +6, 0x17a03a +1, 0x17a012 +2, 0x17a002 +2, 0x16dbc6 +2, LOC_END };
 const static size_t firepower_locations[] = {
     0x17e9ed +2, 0x17ea2a +1, LOC_END };
 const static size_t flash_locations[] = {
