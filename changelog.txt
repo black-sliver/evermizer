@@ -4,7 +4,7 @@ v019:
   Include check for Madronius talking about his brother in alchemizer
   Include one missed use of Hard Ball in alchemizer, only eye candy though
   Include missed uses of Cure and Miracle Cure in FE Village texts
-  Moved Strongheart giving you Spot's Collar behind Magmar
+  Moved Strong Heart giving you Spot's Collar behind Magmar
   Changed lots of FE Village texts to check for Magmar instead of Wind Walker
 
 v018:
