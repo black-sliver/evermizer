@@ -31,7 +31,7 @@ const static size_t corrosion_locations[] = {
 const static size_t crush_locations[] = {
     0x15ba42 +1, LOC_END };
 const static size_t cure_locations[] = {
-    0x1683b2 +2, 0x16843d +1, 0x14e756 +1, LOC_END };
+    0x1683b2 +2, 0x16843d +1, 0x14e756 +1, 0x14c726 +2, 0x14c81c +2, LOC_END };
 const static size_t defend_locations[] = {
     0x14e506 +1, LOC_END };
 const static size_t doubledrain_locations[] = {
@@ -63,7 +63,7 @@ const static size_t levitate_locations[] = {
 const static size_t lightningstorm_locations[] = {
     0x1996f0 +1, LOC_END };
 const static size_t miraclecure_locations[] = {
-    0x14e70a +2, 0x14e711 +1, LOC_END };
+    0x14e70a +2, 0x14e711 +1, 0x14c70e +2, LOC_END };
 const static size_t nitro_locations[] = {
     0x198793 +11, 0x1987f1 +1, 0x198d22 +2, LOC_END };
 const static size_t oneup_locations[] = {
