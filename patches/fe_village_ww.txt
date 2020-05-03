@@ -11,3 +11,9 @@
 46 00
 @0x94d54a+2
 46 00
+
+// Strong heart giving you Spot's Collar
+//@0x94e698 Orig: 09 85 23 04 ...
+//@0x94e698 New:  09 85 46 00 ...
+@0x94e698+2
+46 00
