@@ -88,22 +88,18 @@ CHANGES SO FAR:
 
 
 TO BE TESTED:
-  Horace camp spawn
-  Horace camp dialog
-  Vanilla Horace, Double drain, Heal alchemy spots (for recent bug fixes)
+  nothing specific at the moment
 
 
 STILL TO BE FIXED:
-  Show info to the player if market timer is over but vigor won't start yet
+  Show info to the player if market timer is over but vigor won't spawn yet
   Remove now unnecessary parts of first WW patch
-  Make sure market timer works correctly when entering from square / fire pit
-  Banquet / Skip / Queen's key after Mungola is dead
+  Queen's key after Mungola is dead
   Act3 has camera location bugs in houses until blindly talked to Lance
   Lance is still somewhat buggy
   Stop, Lance and Fire Power (in glitchless) are missabe
-  Create spoiler.log
-  Disable "Double gauge" for tinker/rocket when fix sequence is on
-  Put rocket behind mungola / change tinker progression
+  Put rocket behind mungola / change tinker progression?
+  Remove (some cutscenes)?
   Desaturnate 2.0: make sure *NO* hatches can be skipped
 
 
