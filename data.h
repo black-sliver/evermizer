@@ -53,7 +53,7 @@ const static size_t flash_locations[] = {
 const static size_t forcefield_locations[] = {
     0x19da23 +1, LOC_END };
 const static size_t hardball_locations[] = {
-    0x14a9a1 +9, 0x14a3eb +1, 0x14a425 +2, LOC_END };
+    0x14a9a1 +9, 0x14a3eb +1, 0x14a425 +2, 0x14a89c +2, LOC_END };
 const static size_t heal_locations[] = {
     0x13dacd +1, LOC_END };
 const static size_t lance_locations[] = {
