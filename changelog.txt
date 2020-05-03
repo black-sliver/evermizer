@@ -1,3 +1,6 @@
+v019:
+  Fixed stuck-in-door softlock when getting thrown into already cleared prison
+
 v018:
   Fixed FE village alchemist not selling you ingredients after talking to FE
   Fixed FE village raptor kill rewards and honey

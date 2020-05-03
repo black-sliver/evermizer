@@ -844,7 +844,7 @@ int main(int argc, const char** argv)
         APPLY(FE_VILLAGE_WW);  APPLY(FE_VILLAGE_WW2); APPLY(FE_VILLAGE_WW3);
         APPLY(FE_VILLAGE_WW4); APPLY(FE_VILLAGE_WW5);
         APPLY(MARKET_REWORK);
-        APPLY(ACT3_OW);  APPLY(ACT3_OW2);
+        APPLY(ACT3_OW);  APPLY(ACT3_OW2); APPLY(ACT3_OW3);
     }
     
     // General bug fixes
