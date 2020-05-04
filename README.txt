@@ -82,6 +82,9 @@ CHANGES SO FAR:
     Fix softlock when opening mosquito cell last (exit will be bottom left cell)
     Fix softlock when you have more than 3 rocket parts
     Removed option to save at Madronius' Brother
+  Fix missables:
+    Directly reward Queen's Key to inventory
+    Make Escape still obtainable when Horace is gone
   Uses tinymt64 for platform-independend RNG. See tinymt64.h for lincense
   Allow for ROM to grow to 4MB if required
   Allow skipping of intro with no prior save file
@@ -95,12 +98,11 @@ TO BE TESTED:
 STILL TO BE FIXED:
   Show info to the player if market timer is over but vigor won't spawn yet
   Remove now unnecessary parts of first WW patch
-  Queen's key after Mungola is dead
   Act3 has camera location bugs in houses until blindly talked to Lance
   Lance is still somewhat buggy
-  Stop, Lance and Fire Power (in glitchless) are missabe
+  Stop and Lance are missabe, Fire Power location still marked as missable
   Put rocket behind mungola / change tinker progression?
-  Remove (some cutscenes)?
+  Remove some cutscenes?
   Desaturnate 2.0: make sure *NO* hatches can be skipped
 
 

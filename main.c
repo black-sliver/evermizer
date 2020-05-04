@@ -868,6 +868,11 @@ int main(int argc, const char** argv)
     APPLY(ESCAPE_AFTER_DES2); // TODO: merge this with horace spawn changes
     APPLY(ESCAPE_AFTER_DES3); // 2 and 3 is required for changed horace spawn
     APPLY(PALACE_REWORK); // would only be required for alchemizer
+    APPLY(QUEENS_KEY);
+    APPLY(QUEENS_KEY2);
+    APPLY(QUEENS_KEY3);
+    APPLY(QUEENS_KEY4);
+    APPLY(QUEENS_KEY5);
     
     #ifndef NO_RANDO
     if (gourdomizer || bossdropamizer) {
