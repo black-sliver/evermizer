@@ -1,0 +1,4 @@
+// Fix flags vanilla got wrong that have no real impact on the gameplay
+// Root pickup id:12b7 on volcano path, vanilla sets $22aa&0x02 instead of &0x40
+@0x93eb58+1
+96 02

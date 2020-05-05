@@ -1,3 +1,6 @@
+v020:
+  Fixed one sniffing spot loot flag
+
 v019:
   Fixed stuck-in-door softlock when getting thrown into already cleared prison
   Fixed hard lock when selecting spells at Madronius after Horace is gone
