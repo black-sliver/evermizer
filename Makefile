@@ -22,7 +22,7 @@ endif
 
 PATCH_FILES := $(wildcard patches/*.txt) # this is replaced by pre-built gen.h in release to reduce build dependencies
 SOURCE_FILES = main.c
-INCLUDE_FILES = data.h patches.h gen.h tinymt64.h
+INCLUDE_FILES = data.h sniff.h patches.h gen.h tinymt64.h
 
 
 .PHONY: clean clean-temps all native win32 test release

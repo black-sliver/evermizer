@@ -143,6 +143,20 @@ void shuffle_u8_pairs(uint8_t *array, size_t n/*pairs*/)
         }
     }
 }
+void shuffle_u16(uint16_t *array, size_t n)
+{
+    if (n > 1) 
+    {
+        size_t i;
+        for (i = 0; i < n - 1; i++) 
+        {
+          size_t j = i + rand64() / (UINT64_MAX / (n - i) + 1);
+          uint16_t t = array[j];
+          array[j] = array[i];
+          array[i] = t;
+        }
+    }
+}
 uint8_t rand_u8(uint8_t min, uint8_t max)
 {
     if (max<=min) return min;
@@ -162,6 +176,11 @@ uint8_t rand_amount(uint8_t min, uint8_t max, float cur_minus_expected)
     if (cur_minus_expected<-3.0) return rand_u8(min+1, max);
     if (cur_minus_expected> 3.0) return rand_u8(min, max-1);
     return rand_u8(min, max);
+}
+uint16_t rand_u16(uint16_t min, uint16_t max)
+{
+    if (max<=min) return min;
+    return (min+(uint16_t)(rand64()%(max-min+1)));
 }
 
 
@@ -201,8 +220,8 @@ const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard"};
     alchemizer     = D(alchemizer);\
     bossdropamizer = D(bossdropamizer);\
     gourdomizer    = D(gourdomizer);\
-/*  sniffamizer    = D(sniffamizer);\
-    doggomizer     = D(doggomizer);\
+    sniffamizer    = D(sniffamizer);\
+  /*doggomizer     = D(doggomizer);\
     enemizer       = D(enemizer);*/\
     glitchless     = D(glitchless);\
     chaos          = D(chaos);\
@@ -218,13 +237,13 @@ const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard"};
 #define C(t) (t != D(t))
 #ifndef NO_RANDO
 #define SETTINGS2STR(s)\
-    snprintf(s, ARRAY_SIZE(s), "r%c%s%s%s%s%s%s%s%s" /*"%s%s%s"*/ "%s%s",\
+    snprintf(s, ARRAY_SIZE(s), "r%c%s%s%s%s%s%s%s%s%s" /*"%s%s"*/ "%s%s",\
         DIFFICULTY_CHAR[difficulty], C(chaos)?"c":"",\
         C(fixsequence)?"1":"",   C(fixcheats)?"2":"",\
         C(glitchless)?"3":"",    C(alchemizer)?"a":"",\
         C(ingredienizer)?"i":"", C(bossdropamizer)?"b":"",\
-        C(gourdomizer)?"g":""/*, C(sniffamizer)?"s":"",\
-        C(doggomizer)?"d":"",    C(enemizer)?"m":""*/,\
+        C(gourdomizer)?"g":"", C(sniffamizer)?"s":"",\
+        /*C(doggomizer)?"d":"",    C(enemizer)?"m":"",*/\
         C(musicmizer)?"m":"", C(spoilerlog)?"l":"");
 #else
 #define SETTINGS2STR(s)\
@@ -277,7 +296,7 @@ int main(int argc, const char** argv)
     bool alchemizer     = D(alchemizer);     // shuffle spell drops
     bool bossdropamizer = D(bossdropamizer); // shuffle boss drops
     bool gourdomizer    = D(gourdomizer);    // shuffle gourds, not implemented
-  //bool sniffamizer    = D(sniffamizer);    // shuffle sniffing spots
+    bool sniffamizer    = D(sniffamizer);    // shuffle sniffing spots
   //bool doggomizer     = D(doggomizer);     // shuffle dogs
   //bool enemizer       = D(enemizer);       // shuffle enemy spawns
     bool musicmizer     = D(musicmizer);     // random music
@@ -363,7 +382,7 @@ int main(int argc, const char** argv)
             else if (c == 'i') ingredienizer = !ingredienizer;
             else if (c == 'b') bossdropamizer = !bossdropamizer;
             else if (c == 'g') gourdomizer = !gourdomizer;
-          //else if (c == 's') sniffamizer = !sniffamizer;
+            else if (c == 's') sniffamizer = !sniffamizer;
           //else if (c == 'd') doggomizer = !doggomizer;
           //else if (c == 'y') enemizer = !enemizer;
             else if (c == 'm') musicmizer = !musicmizer;
@@ -459,7 +478,7 @@ int main(int argc, const char** argv)
             printf("Ingredienizer:       %s    (I to toggle)\n", ingredienizer? "on ":"off");
             printf("Boss dropamizer:     %s    (B to toggle)\n", bossdropamizer?"on ":"off");
             printf("Gourdomizer:         %s    (G to toggle) [Dummy]\n", gourdomizer? "on ":"off");
-          //printf("Sniffamizer:         %s    (S to toggle) [Dummy]\n", sniffamizer? "on ":"off");
+            printf("Sniffamizer:         %s    (S to toggle)\n", sniffamizer? "on ":"off");
           //printf("Doggomizer:          %s    (D to toggle) [Dummy]\n", doggomizer?  "on ":"off");
           //printf("Enemizer:            %s    (Y to toggle) [Dummy]\n", enemizer?    "on ":"off");
             printf("Musicmizer:          %s    (M to toggle) [Demo]\n",  musicmizer?  "on ":"off");
@@ -484,7 +503,7 @@ int main(int argc, const char** argv)
             if (c == 'i') ingredienizer = !ingredienizer;
             if (c == 'b') bossdropamizer = !bossdropamizer;
             if (c == 'g') gourdomizer = !gourdomizer;
-          //if (c == 's') sniffamizer = !sniffamizer;
+            if (c == 's') sniffamizer = !sniffamizer;
           //if (c == 'd') doggomizer = !doggomizer;
           //if (c == 'y') enemizer = !enemizer;
             if (c == 'm') musicmizer = !musicmizer;
@@ -517,6 +536,8 @@ int main(int argc, const char** argv)
     #include "patches.h" // hand-written c code patches
     #include "gen.h" // generated from patches/
     #ifndef NO_RANDO
+    #include "sniff.h" // generated list of sniffing spots
+    
     DEF(JUKEBOX_SJUNGLE,      0x938664 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
     DEF(JUKEBOX_RAPTORS_1,    0x9391fa - 0x800000, "\x29\x84\x00\x0f\x4d\x4d"); // CALL jukebox3, NOP, NOP
     DEF(JUKEBOX_RATPROS_3,    0x938878 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
@@ -571,6 +592,9 @@ int main(int argc, const char** argv)
         }
     }
     uint8_t boss_drops[] = BOSS_DROPS;
+    
+    uint16_t sniff_drops[ARRAY_SIZE(sniffs)];
+    for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) sniff_drops[i] = sniffs[i].val;
     
     int rollcount=0;
     if (randomized)
@@ -676,6 +700,13 @@ int main(int argc, const char** argv)
         }
         if (bossdropamizer) {
             shuffle_u8(boss_drops, ARRAY_SIZE(boss_drops));
+        }
+        if (sniffamizer && !chaos) {
+            shuffle_u16(sniff_drops, ARRAY_SIZE(sniff_drops));
+        } else if (sniffamizer) {
+            for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
+                sniff_drops[i] = rand_u16(0x0200, 0x0200+ARRAY_SIZE(ingredient_names)-1);
+            }
         }
         
         // general logic checking
@@ -987,6 +1018,13 @@ int main(int argc, const char** argv)
         APPLY(JUKEBOK_SWAMPPEPPER);
         APPLY(JUKEBOK_SWAMPSLEEP);
     }
+    if (sniffamizer) {
+        printf("Applying sniffamizer...\n");
+        for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
+            buf[rom_off + sniffs[i].addr + 0] = (uint8_t)(sniff_drops[i]&0xff);
+            buf[rom_off + sniffs[i].addr + 1] = (uint8_t)(sniff_drops[i]>>8);
+        }
+    }
     
     // if check value differs, the generated ROMs are different.
     uint32_t seedcheck = (uint16_t)(rand64()&0x3ff); // 10bits=2 b32 chars
@@ -998,7 +1036,7 @@ int main(int argc, const char** argv)
     if (alchemizer)     seedcheck |= 0x00008000;
     if (ingredienizer)  seedcheck |= 0x00010000;
     if (gourdomizer)    seedcheck |= 0x00020000;
-  //if (sniffamizer)    seedcheck |= 0x00040000;
+    if (sniffamizer)    seedcheck |= 0x00040000;
   //if (doggomizer)     seedcheck |= 0x00080000;
   //if (enemizer)       seedcheck |= 0x00100000;
     if (chaos)          seedcheck |= 0x01000000; // 25bits in use -> 5 b32 chars

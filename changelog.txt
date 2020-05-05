@@ -1,5 +1,6 @@
 v020:
   Fixed one sniffing spot loot flag
+  Added sniffamizer
 
 v019:
   Fixed stuck-in-door softlock when getting thrown into already cleared prison

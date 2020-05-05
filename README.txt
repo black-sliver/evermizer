@@ -39,6 +39,7 @@ CHANGES SO FAR:
     Horace spawn should be fixed (tied to DEs in inventory or DEs lost)
     Horace dialog should correcly indicate how many DEs you have
     Tinker taking away your diamond eyes sets flag to not lock-out Aegis
+  Sniffamizer: non-chaos shuffles, chaos randomizes dog-sniff ingredients
   Musicmizer: randomize music, in testing stage
   Fix sequence:
     Desolarify: Act1 first rock skip is disabled (Levitation required)
