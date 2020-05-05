@@ -12,6 +12,7 @@ HOWTO:
 
 
 CHANGES SO FAR:
+  This is in an early but working state.
   Crude user interface to select seed and settings
     Default output filename includes settings and seed number
     Option to save a spoiler log
@@ -52,10 +53,8 @@ CHANGES SO FAR:
     Lock Barrier (Horace inside palace) + gates behind Aegis (instead of WW)
     Make both Act3 towns filled with people
     Moved ticket lady bazooka shells behind dog race (in both towns)
-    Fixed lance not appearing
-      NOTE: he now appears in ivory as well as ebon keep
-      TODO: not 100%, look at this again
-      TODO: fix weird camera glitch in Act3 houses
+    Fixed lance not appearing. He now appears in ivory as well as ebon keep
+      Still not 100%, look into this again, weird camera glitch in Act3 houses
     Locked east draw bridge behind Mungola
     Disabled exit from Naris to chessboard if Mungola is alive
     Fixed reverse Timberdrake
@@ -96,6 +95,7 @@ TO BE TESTED:
 
 
 STILL TO BE FIXED:
+  (with feature set outlined above)
   Show info to the player if market timer is over but vigor won't spawn yet
   Remove now unnecessary parts of first WW patch
   Act3 has camera location bugs in houses until blindly talked to Lance
@@ -114,3 +114,17 @@ WINDOWS BUILD INSTRUCTIONS:
   the github source tree requires you to have python3 in PATH to build gen.h
   the zip distribution includes a pre-built gen.h
 
+
+CREDITS:
+  Written by black_sliver
+  Thanks to all people pushing or commenting on the project, providing ideas, 
+    testing it, pointing out vanilla bugs and looking into SNES/SoE stuff
+  ayame li, colin, cyb3r, darkmoon2321, dot, flarezenyu, fronk, greenambler,
+  metasigma, mira, nyrambler, queenanne, skarsnikus, solarcell007, zheal
+  Special thanks to elwismw for existing. #hereforelwis
+
+LICENSE:
+  The project as a whole is distributed under the terms of GPL v3.
+  See LICENSE file.
+  The patches found in patches/ directory are in public domain unless
+  otherwise noted. See patches/LICENSE file.
