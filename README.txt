@@ -128,4 +128,4 @@ LICENSE:
   The project as a whole is distributed under the terms of GPL v3.
   See LICENSE file.
   The patches found in patches/ directory are in public domain unless
-  otherwise noted. See patches/LICENSE file.
+  noted otherwise. See patches/LICENSE file.
