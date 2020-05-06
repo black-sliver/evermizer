@@ -4,7 +4,7 @@
 // see google doc for documentation on the actual patches used below
 // the idea is to "manually" patch the game to a state where we simply swap
 // out some numbers to make it random (without rewriting/relocating everything)
-#define VERSION "v020"
+#define VERSION "v021"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -881,6 +881,7 @@ int main(int argc, const char** argv)
         APPLY(FE_VILLAGE_WW19);
         APPLY(MARKET_REWORK);
         APPLY(ACT3_OW);  APPLY(ACT3_OW2); APPLY(ACT3_OW3);
+        APPLY(MUD_PEPPER_LIMIT);
     }
     
     // General bug fixes
@@ -1020,6 +1021,8 @@ int main(int argc, const char** argv)
     }
     if (sniffamizer) {
         printf("Applying sniffamizer...\n");
+        if (!openworld)
+            APPLY(MUD_PEPPER_LIMIT);
         for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
             buf[rom_off + sniffs[i].addr + 0] = (uint8_t)(sniff_drops[i]&0xff);
             buf[rom_off + sniffs[i].addr + 1] = (uint8_t)(sniff_drops[i]>>8);

@@ -1,0 +1,11 @@
+// Change [+x92aa3a] (09) IF $2305 & 0xff + $2461 >= 0x01 SKIP 18 (to +x92aa5a)
+//        [+x92aa48] (14) WRITE $2305 = $2305 + 0x01 + $2461
+//        [+x92aa56] (0c) $22ea |= 0x01 (Loot successful)
+//        [+x92aa5a] (04) SKIP 297 (to +x92ab86)
+// To     [...31] >= 0x63
+//        [...49] WRITE (moved by 1)
+//        [...57] jump to "loot successful" of next prize @...85
+@0x92aa3a
+09 07 ad 00 29 08 09 02 1a 29 02 63 9e 11 00 // IF ... >= 99 SKIP 17 (1 less)
+14 ad 00 07 ad 00 29 31 29 08 09 02 1a 9a // WRITE += 1 + extra
+04 2b 00 // @ ...57 SKIP 43 to 85
