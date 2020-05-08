@@ -103,11 +103,6 @@ void die(const char* msg)
 #endif
     exit(1);
 }
-void rtrim(char* s)
-{
-    char* t = s+strlen(s)-1;
-    while (t>=s && *t == ' ') *t-- = '\0';
-}
 const char B32[] = "abcdefghijklmnopqrstuvwxyz234567=";
 char b32(unsigned v) { return B32[v&0x1f]; }
 #define APPLY_PATCH(buf, patch, loc) memcpy(buf+loc, patch, sizeof(patch)-1)
@@ -288,15 +283,18 @@ int main(int argc, const char** argv)
         die(NULL);
     }
     
+    #ifdef NO_RANDO // open world + fixes only
+    (void)alchemy_locations; // suppress warning
+    #endif
+    
     // default settings
+    #if !defined NO_RANDO && !defined NO_UI // only rando has interactive mode (yet)
     bool interactive = true;           // show settings ui
+    #endif
     bool openworld   = D(openworld);   // always enable windwalker and fix resulting bugs
     bool fixsequence = D(fixsequence); // fix sequence breaking glitches
     bool fixcheats   = D(fixcheats);   // fix difficulty breaking glitches, excluding atlas
-    #ifdef NO_RANDO // open world + fixes only
-    (void)alchemy_locations; // suppress warning
-    (void)interactive; // no ui in OW-only (yet)
-    #else // rando
+    #ifndef NO_RANDO
     bool ingredienizer  = D(ingredienizer);  // randomize ingredients required for alchemy
     bool alchemizer     = D(alchemizer);     // shuffle spell drops
     bool bossdropamizer = D(bossdropamizer); // shuffle boss drops
@@ -320,16 +318,16 @@ int main(int argc, const char** argv)
         if (strcmp(argv[1], "-b") == 0) {
             modeforced = true;
             batch = true;
+    #if !defined NO_UI && !defined NO_RANDO // NO_RANDO has no UI (yet)
             interactive = false;
+    #endif
             argv++; argc--;
         } else if (strcmp(argv[1], "-i") == 0) {
             modeforced = true;
-            interactive = true;
-    #ifdef NO_UI
+    #if defined NO_UI || defined NO_RANDO  // NO_RANDO has no UI (yet)
             fprintf(stderr, "Requested interactive mode, but not compiled in!\n");
             print_usage(appname);
             die(NULL);
-            (void) interactive; // ignore unused variable
     #endif
             argv++; argc--;
         } else if (strcmp(argv[1], "-o") == 0) {
@@ -352,9 +350,9 @@ int main(int argc, const char** argv)
     }
     
     if (!modeforced) {
-        #ifdef NO_RANDO
-        interactive = argc<3;
-        #else
+        #if defined NO_RANDO && !defined NO_UI
+        //interactive = argc<3; // NO_RANDO has no UI (yet)
+        #elif !defined NO_UI
         interactive = argc<4;
         #endif
     }
@@ -456,10 +454,10 @@ int main(int argc, const char** argv)
     #ifndef NO_UI // TODO: UI for OW
     if (interactive)
     {
-        char seedbuf[17];
         clrscr();
         printf("Evermizer " VERSION "\n");
         if (argc<4) {
+            char seedbuf[17];
             printf("Seed (ENTER for random): ");
             fflush(stdout);
             if (! fgets(seedbuf, sizeof(seedbuf), stdin)) die("\nAborting...\n");
@@ -615,7 +613,7 @@ int main(int argc, const char** argv)
             if (difficulty==0 && !ingredienizer) {
                 // make sure that one of acid rain, flash or speed
                 // is obtainable before thraxx on easy
-                uint8_t at = rand64()%2 ? HARD_BALL_IDX : FLASH_IDX;
+                uint8_t at = (rand64()%2) ? HARD_BALL_IDX : FLASH_IDX;
                 uint8_t spell = rand_u8(0, 2);
                 spell = (spell==0) ? FLASH_IDX : (spell==1) ? ACID_RAIN_IDX : SPEED_IDX;
                 for (size_t i=0; i<ALCHEMY_COUNT; i++) {
@@ -632,7 +630,7 @@ int main(int argc, const char** argv)
             const uint8_t max_single_cost = 3;
             const uint8_t max_spell_cost = MIN(4+difficulty, 2*max_single_cost);
             const uint8_t est_total_cost = 92-6 + difficulty*6; // 92/34 for vanilla
-            uint8_t cheap_spell_location = (difficulty==0) ? (rand64()%2 ? HARD_BALL_IDX : FLASH_IDX) : 0xff;
+            uint8_t cheap_spell_location = (difficulty==0) ? ((rand64()%2) ? HARD_BALL_IDX : FLASH_IDX) : 0xff;
             
             uint8_t cur_total_cost = 0;
             if (chaos) {
