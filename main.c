@@ -266,6 +266,8 @@ const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard"};
 void print_usage(const char* appname)
 {
     fprintf(stderr, "Usage: %s " FLAGS "<src file.sfc>" ARGS "\n", appname);
+    fprintf(stderr, "       %s --help     to show this output\n", appname);
+    fprintf(stderr, "       %s --version  to print version\n", appname);
 #if defined(WIN32) || defined(_WIN32)
     fprintf(stderr, "       or simply drag & drop your ROM onto the EXE\n");
 #ifndef NO_UI
