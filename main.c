@@ -257,8 +257,10 @@ const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard"};
 #define FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] "
 #endif
 #ifdef NO_RANDO
+#define APPNAME "SoE-OpenWorld"
 #define ARGS " [settings]"
 #else
+#define APPNAME "Evermizer"
 #define ARGS " [settings [seed]]"
 #endif
 
@@ -268,12 +270,42 @@ void print_usage(const char* appname)
     fprintf(stderr, "Usage: %s " FLAGS "<src file.sfc>" ARGS "\n", appname);
     fprintf(stderr, "       %s --help     to show this output\n", appname);
     fprintf(stderr, "       %s --version  to print version\n", appname);
+    fprintf(stderr, "       %s --settings to show available settings\n", appname);
 #if defined(WIN32) || defined(_WIN32)
     fprintf(stderr, "       or simply drag & drop your ROM onto the EXE\n");
 #ifndef NO_UI
     if (!batch) system("pause");
 #endif
 #endif
+}
+void print_settings()
+{
+    printf("%s %s settings:\n", APPNAME, VERSION);
+#ifdef NO_RANDO
+    printf("Options:\n");
+    printf("  1: %s Fix sequence\n", D(fixsequence)?"No":"");
+    printf("  2: %s Fix cheats\n",   D(fixcheats)?  "No":"");
+#else
+    printf("Difficulty:\n");
+    for (uint8_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++)
+        printf("  %c: %s%s\n", DIFFICULTY_CHAR[i], DIFFICULTY_NAME[i],
+                               i==D(difficulty)?" (default)":"");
+    printf("Options:\n");
+    printf("  c: %s Chaos\n",               D(chaos)         ?"No":"  ");
+    printf("  1: %s Fix sequence\n",        D(fixsequence)   ?"No":"  ");
+    printf("  2: %s Fix cheats\n",          D(fixcheats)     ?"No":"  ");
+    printf("  3: %s Glitchless beatable\n", D(glitchless)    ?"No":"  ");
+    printf("  a: %s Alchemizer\n",          D(alchemizer)    ?"No":"  ");
+    printf("  i: %s Ingredienizer\n",       D(ingredienizer) ?"No":"  ");
+    printf("  b: %s Boss dropamizer\n",     D(bossdropamizer)?"No":"  ");
+    printf("  g: %s Gourdomizer [Dummy]\n", D(gourdomizer)   ?"No":"  ");
+    printf("  s: %s Sniffamizer\n",         D(sniffamizer)   ?"No":"  ");
+  //printf("  d: %s Doggomizer\n",          D(doggomizer)    ?"No":"  ");
+  //printf("  y: %s Enemizer\n",            D(enemizer)      ?"No":"  ");
+    printf("  m: %s Musicmizer [Testing]\n",D(musicmizer)    ?"No":"  ");
+    printf("  l: %s Spoiler Log\n",         D(spoilerlog)    ?"No":"  ");
+#endif
+    printf("\n");
 }
 int main(int argc, const char** argv)
 {
@@ -293,23 +325,16 @@ int main(int argc, const char** argv)
     #if !defined NO_RANDO && !defined NO_UI // only rando has interactive mode (yet)
     bool interactive = true;           // show settings ui
     #endif
-    bool openworld   = D(openworld);   // always enable windwalker and fix resulting bugs
-    bool fixsequence = D(fixsequence); // fix sequence breaking glitches
-    bool fixcheats   = D(fixcheats);   // fix difficulty breaking glitches, excluding atlas
-    #ifndef NO_RANDO
-    bool ingredienizer  = D(ingredienizer);  // randomize ingredients required for alchemy
-    bool alchemizer     = D(alchemizer);     // shuffle spell drops
-    bool bossdropamizer = D(bossdropamizer); // shuffle boss drops
-    bool gourdomizer    = D(gourdomizer);    // shuffle gourds, not implemented
-    bool sniffamizer    = D(sniffamizer);    // shuffle sniffing spots
-  //bool doggomizer     = D(doggomizer);     // shuffle dogs
-  //bool enemizer       = D(enemizer);       // shuffle enemy spawns
-    bool musicmizer     = D(musicmizer);     // random music
-    bool glitchless     = D(glitchless);     // may not require glitches to complete
-    bool chaos          = D(chaos);          // randomize more
+    #ifdef NO_RANDO
+    bool openworld, fixsequence, fixcheats;
+    #else
+    bool openworld, fixsequence, fixcheats,
+         ingredienizer, alchemizer, bossdropamizer, gourdomizer, sniffamizer,
+       //doggomizer, enemizer,
+         musicmizer, glitchless, chaos, spoilerlog;
     uint8_t difficulty  = D(difficulty);     // 0=easy, 1=normal, 2=hard
-    bool spoilerlog     = D(spoilerlog);     // randomize more
     #endif
+    DEFAULT_SETTINGS();
     
     const char* ofn=NULL;
     const char* dstdir=NULL;
@@ -345,6 +370,9 @@ int main(int argc, const char** argv)
             return 0;
         } else if (strcmp(argv[1], "--help") == 0) {
             print_usage(appname);
+            return 0;
+        } else if (strcmp(argv[1], "--settings") == 0) {
+            print_settings();
             return 0;
         } else {
             break;
@@ -457,7 +485,7 @@ int main(int argc, const char** argv)
     if (interactive)
     {
         clrscr();
-        printf("Evermizer " VERSION "\n");
+        printf(APPNAME " " VERSION "\n");
         if (argc<4) {
             char seedbuf[17];
             printf("Seed (ENTER for random): ");
@@ -467,7 +495,7 @@ int main(int argc, const char** argv)
         }
         while (true) {
             clrscr();
-            printf("Evermizer " VERSION "\n");
+            printf(APPNAME " " VERSION "\n");
             printf("Seed: %" PRIx64 "\n", seed);
             SETTINGS2STR(settings);
             printf("Settings: %-14s(Press R to reset)\n", settings);
@@ -518,7 +546,7 @@ int main(int argc, const char** argv)
         clrscr();
     }
     #endif
-    printf("Evermizer " VERSION "\n");
+    printf(APPNAME " " VERSION "\n");
     printf("Seed: %" PRIx64 "\n", seed);
     srand64(seed);
     bool randomized = alchemizer || ingredienizer || bossdropamizer ||
