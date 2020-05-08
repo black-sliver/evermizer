@@ -36,6 +36,10 @@ char getch() {
 }
 #endif
 #endif
+
+#ifdef __cplusplus
+#define _Static_assert static_assert
+#endif
 #ifdef WITH_ASSERT // include or override assert
 #include <assert.h>
 #else
@@ -49,6 +53,7 @@ char getch() {
 #define DIRSEP '\\'
 #ifndef PRIx64
 #define PRIx64 "I64x"
+#define uint64_t unsigned __int64
 #endif
 #else
 #define DIRSEP '/'
