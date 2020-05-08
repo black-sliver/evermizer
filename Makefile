@@ -13,11 +13,13 @@ ifeq ($(OS),Windows_NT)
 WIN32CC?=$(CC)
 WIN32CFLAGS?=$(CFLAGS)
 WIN32WINDRES?=windres
+CPPCHECK:=$(shell shere cppcheck)
 else
 # cross compile
 WIN32CC?=i686-w64-mingw32-gcc
 WIN32CFLAGS?=-Wall -Werror -DWITH_ASSERT -D_FORTIFY_SOURCE=2 -pie -fPIE -static -static-libgcc -ffunction-sections -fdata-sections -Wl,--gc-sections -s -flto=4 -Os
 WIN32WINDRES?=i686-w64-mingw32-windres
+CPPCHECK:=$(shell which cppcheck)
 endif
 
 PATCH_FILES := $(wildcard patches/*.txt) # this is replaced by pre-built gen.h in release to reduce build dependencies
@@ -67,6 +69,9 @@ ifneq ($(strip $(PATCH_FILES)),) # only if not pre-built
 endif
 
 test: all
+ifneq ($(strip $(CPPCHECK)),)
+	$(CPPCHECK) --force --enable=all --suppress=missingIncludeSystem --suppress=duplicateExpression -q main.c
+endif
 	./test.sh # this tests code, not your binary. only required for release
 
 release: test
