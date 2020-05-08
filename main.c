@@ -548,7 +548,7 @@ int main(int argc, const char** argv)
     DEF(JUKEBOX_ECRUSTACIAR,  0x95ba0b - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
     DEF(JUKEBOX_CRUSTACIAFP,  0x97c125 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
     DEF(JUKEBOX_NOBILIAF,     0x95d72c - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_PALACE,       0x95d43f - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_PALACE,       0x95d43f - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // TODO: limit because of wall sounds in past-vigor cutscene
     DEF(JUKEBOX_NOBILIAFP,    0x97c579 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
     DEF(JUKEBOX_STRONGHHE,    0x94e625 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
     DEF(JUKEBOK_SWAMPPEPPER,  0x94dde6 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
