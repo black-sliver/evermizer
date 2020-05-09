@@ -190,67 +190,90 @@ uint16_t rand_u16(uint16_t min, uint16_t max)
 // Misc consts
 const char DIFFICULTY_CHAR[] = {'e','n','h'};
 const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard"};
-#define DEFAULT_openworld      true
-#define DEFAULT_difficulty     1
-#define DEFAULT_fixsequence    true
-#define DEFAULT_fixcheats      true
-#define DEFAULT_glitchless     true
-#define DEFAULT_chaos          false
-#define DEFAULT_ingredienizer  true
-#define DEFAULT_alchemizer     true
-#define DEFAULT_bossdropamizer true
-#define DEFAULT_gourdomizer    true
-#define DEFAULT_sniffamizer    true
-#define DEFAULT_doggomizer     false
-#define DEFAULT_enemizer       false
-#define DEFAULT_musicmizer     false
-#define DEFAULT_spoilerlog     false
+#define DEFAULT_difficulty 1
+struct option { char key; bool def; const char* text; const char* info; };
+const static struct option options[] = {
+#ifndef NO_RANDO
+    { 'c', false, "Chaos", NULL },
+#endif
+    { 0,   true,  "Open World", NULL },
+    { '1', true,  "Fix sequence", NULL },
+    { '2', true,  "Fix cheats", NULL },
+#ifndef NO_RANDO
+    { '3', true,  "Glitchless beatable", NULL },
+    { 'a', true,  "Alchemizer", NULL },
+    { 'i', true,  "Ingredienizer", NULL },
+    { 'b', true,  "Boss dropamizer", NULL },
+    { 'g', true,  "Gourdomizer", "Dummy" },
+    { 's', true,  "Sniffamizer", NULL },
+    { 'm', false, "Musicmizer", "Demo" },
+    { 'l', false, "Spoiler Log", NULL },
+#endif
+};
+enum option_indices {
+#ifndef NO_RANDO
+    chaos_idx,
+#endif
+    openworld_idx, fixsequence_idx, fixcheats_idx,
+#ifndef NO_RANDO
+    glitchless_idx, alchemizer_idx, ingredienizer_idx, bossdropamizer_idx,
+    gourdomizer_idx, sniffamizer_idx, /*doggomizer_idx, enemizer_idx,*/
+    musicmizer_idx, spoilerlog_idx
+#endif
+};
+#define D(IDX) options[ IDX ].def
+#define O(IDX) option_values[ IDX ]
+#define C(IDX) ( O(IDX) != D(IDX) )
+#define chaos O(chaos_idx)
+#define openworld O(openworld_idx)
+#define fixsequence O(fixsequence_idx)
+#define fixcheats O(fixcheats_idx)
+#define glitchless O(glitchless_idx)
+#define alchemizer O(alchemizer_idx)
+#define ingredienizer O(ingredienizer_idx)
+#define bossdropamizer O(bossdropamizer_idx)
+#define gourdomizer O(gourdomizer_idx)
+#define sniffamizer O(sniffamizer_idx)
+#define doggomizer O(doggomizer_idx)
+#define enemizer O(enemizer_idx)
+#define musicmizer O(musicmizer_idx)
+#define spoilerlog O(spoilerlog_idx)
 
-#define D(t) DEFAULT_ ## t
 #define DEFAULT_OW() do {\
-    openworld   = D(openworld);\
-    fixsequence = D(fixsequence);\
-    fixcheats   = D(fixcheats);\
+    for (size_t i=0; i<ARRAY_SIZE(options); i++)\
+        O(i) = D(i);\
 } while (false)
 #define DEFAULT_RANDO() do {\
-    openworld      = D(openworld);\
-    fixsequence    = D(fixsequence);\
-    fixcheats      = D(fixcheats);\
-    ingredienizer  = D(ingredienizer);\
-    alchemizer     = D(alchemizer);\
-    bossdropamizer = D(bossdropamizer);\
-    gourdomizer    = D(gourdomizer);\
-    sniffamizer    = D(sniffamizer);\
-  /*doggomizer     = D(doggomizer);\
-    enemizer       = D(enemizer);*/\
-    glitchless     = D(glitchless);\
-    chaos          = D(chaos);\
-    difficulty     = D(difficulty);\
-    musicmizer     = D(musicmizer);\
-    spoilerlog     = D(spoilerlog);\
+    difficulty=DEFAULT_difficulty;\
+    DEFAULT_OW();\
 } while (false)
 #ifdef NO_RANDO
 #define DEFAULT_SETTINGS() DEFAULT_OW()
 #else
 #define DEFAULT_SETTINGS() DEFAULT_RANDO()
 #endif
-#define C(t) (t != D(t))
+
 #ifndef NO_RANDO
 #define SETTINGS2STR(s)\
-    snprintf(s, ARRAY_SIZE(s), "r%c%s%s%s%s%s%s%s%s%s" /*"%s%s"*/ "%s%s",\
-        DIFFICULTY_CHAR[difficulty], C(chaos)?"c":"",\
-        C(fixsequence)?"1":"",   C(fixcheats)?"2":"",\
-        C(glitchless)?"3":"",    C(alchemizer)?"a":"",\
-        C(ingredienizer)?"i":"", C(bossdropamizer)?"b":"",\
-        C(gourdomizer)?"g":"", C(sniffamizer)?"s":"",\
-        /*C(doggomizer)?"d":"",    C(enemizer)?"m":"",*/\
-        C(musicmizer)?"m":"", C(spoilerlog)?"l":"");
+    do {\
+        char* t = s;\
+        assert(ARRAY_SIZE(s)>ARRAY_SIZE(options)+2);\
+        *t++ = 'r'; *t++ = DIFFICULTY_CHAR[difficulty];\
+        for (size_t i=0; i<ARRAY_SIZE(options); i++)\
+            if (C(i)) *t++ = options[i].key;\
+        *t++ = 0;\
+    } while (false)
 #else
 #define SETTINGS2STR(s)\
-    snprintf(s, ARRAY_SIZE(s), "r%s%s",\
-        C(fixsequence)?"1":"", C(fixcheats)?"2":"");
+    do {\
+        char* t = s;\
+        assert(ARRAY_SIZE(s)>ARRAY_SIZE(options)+2);\
+        *t++ = 'r';\
+        for (size_t i=0; i<ARRAY_SIZE(options); i++)\
+            if (C(i)) *t++ = options[i].key;\
+        *t++ = 0;\
+    } while (false)
 #endif
-
 #ifdef NO_UI
 #define FLAGS "[-o <dst file.sfc>|-d <dst directory>] "
 #else
@@ -263,25 +286,6 @@ const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard"};
 #define APPNAME "Evermizer"
 #define ARGS " [settings [seed]]"
 #endif
-
-struct option { char key; bool def; const char* text; const char* info; };
-const static struct option options[] = {
-#ifndef NO_RANDO
-    { 'c', false, "Chaos", NULL },
-#endif
-    { '1', true,  "Fix sequence", NULL },
-    { '2', true,  "Fix cheats", NULL },
-#ifndef NO_RANDO
-    { '3', true,  "Glitchless beatable", NULL },
-    { 'a', true,  "Alchemizer", NULL },
-    { 'i', true,  "Ingredienizer", NULL },
-    { 'b', true,  "Boss dropamizer", NULL },
-    { 'g', true,  "Gourdomizer", "Dummy" },
-    { 's', true,  "Sniffamizer", NULL },
-    { 'm', false, "Musicmizer", "Testing" },
-    { 'l', false, "Spoiler Log", NULL },
-#endif
-};
 
 // The actual program
 void print_usage(const char* appname)
@@ -305,11 +309,12 @@ void print_settings()
     printf("Difficulty:\n");
     for (uint8_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++)
         printf("  %c: %s%s\n", DIFFICULTY_CHAR[i], DIFFICULTY_NAME[i],
-                               i==D(difficulty)?" (default)":"");
+                               i==DEFAULT_difficulty?" (default)":"");
 #endif
     printf("Options:\n");
     for (size_t i=0; i<ARRAY_SIZE(options); i++) {
         const struct option* opt = options+i;
+        if (! opt->key) continue;
         printf("  %c: %s %s%s%s%s\n", opt->key, opt->def?"No":"  ",opt->text,
                   opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"");
     }
@@ -322,13 +327,14 @@ void print_settings_json()
     for (uint8_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++) {
         if (i != 0) printf(",\n");
         printf("  [ \"%c\", \"%s\", %s ]", DIFFICULTY_CHAR[i], DIFFICULTY_NAME[i],
-                               i==D(difficulty)?"true":"false");
+                               i==DEFAULT_difficulty?"true":"false");
     }
     printf("\n ],\n");
 #endif
     printf(" \"Options\": [\n");
     for (size_t i=0; i<ARRAY_SIZE(options); i++) {
         const struct option* opt = options+i;
+        if (! opt->key) continue;
         if (i != 0) printf(",\n");
         printf("  [ \"%c\", \"%s%s%s%s\", %s ]", opt->key, opt->text,
                   opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"",
@@ -348,20 +354,14 @@ int main(int argc, const char** argv)
     
     #ifdef NO_RANDO // open world + fixes only
     (void)alchemy_locations; // suppress warning
+    #else // only in rando
+    uint8_t difficulty;
     #endif
+    bool option_values[ARRAY_SIZE(options)];
     
     // default settings
     #if !defined NO_RANDO && !defined NO_UI // only rando has interactive mode (yet)
-    bool interactive = true;           // show settings ui
-    #endif
-    #ifdef NO_RANDO
-    bool openworld, fixsequence, fixcheats;
-    #else
-    bool openworld, fixsequence, fixcheats,
-         ingredienizer, alchemizer, bossdropamizer, gourdomizer, sniffamizer,
-       //doggomizer, enemizer,
-         musicmizer, glitchless, chaos, spoilerlog;
-    uint8_t difficulty  = D(difficulty);     // 0=easy, 1=normal, 2=hard
+    bool interactive = true; // show settings ui
     #endif
     DEFAULT_SETTINGS();
     
@@ -438,22 +438,10 @@ int main(int argc, const char** argv)
                 if (c == DIFFICULTY_CHAR[i]) { difficulty = i; c = 0; }
             }
         #endif
-            if (c == '1') fixsequence = !fixsequence;
-            else if (c == '2') fixcheats = !fixcheats;
-        #ifndef NO_RANDO
-            else if (c == '3') glitchless = !glitchless;
-            else if (c == 'c') chaos = !chaos;
-            else if (c == 'a') alchemizer = !alchemizer;
-            else if (c == 'i') ingredienizer = !ingredienizer;
-            else if (c == 'b') bossdropamizer = !bossdropamizer;
-            else if (c == 'g') gourdomizer = !gourdomizer;
-            else if (c == 's') sniffamizer = !sniffamizer;
-          //else if (c == 'd') doggomizer = !doggomizer;
-          //else if (c == 'y') enemizer = !enemizer;
-            else if (c == 'm') musicmizer = !musicmizer;
-            else if (c == 'l') spoilerlog = !spoilerlog;
-        #endif
-            else if (c == 'r') DEFAULT_SETTINGS();
+            for (size_t i=0; i<ARRAY_SIZE(options); i++) {
+                if (c == options[i].key) { option_values[i] = !option_values[i]; c=0; }
+            }
+            if (c == 'r') DEFAULT_SETTINGS();
             else if (c != 0) {
                 fprintf(stderr, "Unknown setting '%c' in \"%s\"\n",
                         c, argv[2]);
@@ -530,24 +518,20 @@ int main(int argc, const char** argv)
             printf(APPNAME " " VERSION "\n");
             printf("Seed: %" PRIx64 "\n", seed);
             SETTINGS2STR(settings);
-            printf("Settings: %-14s(Press R to reset)\n", settings);
+            printf("Settings: %-18s(Press R to reset)\n", settings);
             printf("\n");
-            printf("Difficulty:      %-6s (E/N/H to change)\n", 
-                   DIFFICULTY_NAME[difficulty]);
-            printf("Chaos:               %s    (C to toggle)\n", chaos?"on ":"off");
-            printf("Open World:          %s\n", openworld?"on ":"off");
-            printf("Fix sequence:        %s    (1 to toggle)\n", fixsequence?   "on ":"off");
-            printf("Fix cheats:          %s    (2 to toggle)\n", fixcheats?     "on ":"off");
-            printf("Glitchless beatable: %s    (3 to toggle)\n", glitchless?    "on ":"off");
-            printf("Alchemizer:          %s    (A to toggle)\n", alchemizer?    "on ":"off");
-            printf("Ingredienizer:       %s    (I to toggle)\n", ingredienizer? "on ":"off");
-            printf("Boss dropamizer:     %s    (B to toggle)\n", bossdropamizer?"on ":"off");
-            printf("Gourdomizer:         %s    (G to toggle) [Dummy]\n", gourdomizer? "on ":"off");
-            printf("Sniffamizer:         %s    (S to toggle)\n", sniffamizer? "on ":"off");
-          //printf("Doggomizer:          %s    (D to toggle) [Dummy]\n", doggomizer?  "on ":"off");
-          //printf("Enemizer:            %s    (Y to toggle) [Dummy]\n", enemizer?    "on ":"off");
-            printf("Musicmizer:          %s    (M to toggle) [Demo]\n",  musicmizer?  "on ":"off");
-            printf("Spoiler Log:         %s    (L to toggle)\n", spoilerlog?    "on ":"off");
+            printf("Difficulty:          %-6s (%c",
+                    DIFFICULTY_NAME[difficulty], toupper(DIFFICULTY_CHAR[0]));
+            for (size_t i=1; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++)
+                printf("/%c", toupper(DIFFICULTY_CHAR[i]));
+            printf(" to change)\n");
+            for (size_t i=0; i<ARRAY_SIZE(options); i++) {
+                const struct option* opt = options+i;
+                char col1[32]; snprintf(col1, sizeof(col1), "%s:", opt->text);
+                printf("%-20s %s    %c%c%s%s%s%s\n", col1, O(i)?"on ":"off",
+                        opt->key?'(':' ', opt->key?toupper(opt->key):' ', opt->key?" to toggle)":"",
+                        opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"");
+            }
             printf("\n");
             printf("Press ESC to abort, ENTER to continue");
             fflush(stdout);
@@ -560,19 +544,8 @@ int main(int argc, const char** argv)
             c = tolower(c);
             for (size_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++)
                 if (c == DIFFICULTY_CHAR[i]) difficulty = i;
-            if (c == 'c') chaos = !chaos;
-            if (c == '1') fixsequence = !fixsequence;
-            if (c == '2') fixcheats = !fixcheats;
-            if (c == '3') glitchless = !glitchless;
-            if (c == 'a') alchemizer = !alchemizer;
-            if (c == 'i') ingredienizer = !ingredienizer;
-            if (c == 'b') bossdropamizer = !bossdropamizer;
-            if (c == 'g') gourdomizer = !gourdomizer;
-            if (c == 's') sniffamizer = !sniffamizer;
-          //if (c == 'd') doggomizer = !doggomizer;
-          //if (c == 'y') enemizer = !enemizer;
-            if (c == 'm') musicmizer = !musicmizer;
-            if (c == 'l') spoilerlog = !spoilerlog;
+            for (size_t i=0; i<ARRAY_SIZE(options); i++)
+                if (c == options[i].key) option_values[i] = !option_values[i];
             if (c == 'r') DEFAULT_SETTINGS();
         }
         clrscr();
