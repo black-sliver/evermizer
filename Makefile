@@ -13,30 +13,43 @@ ifeq ($(OS),Windows_NT)
 WIN32CC?=$(CC)
 WIN32CFLAGS?=$(CFLAGS)
 WIN32WINDRES?=windres
-CPPCHECK:=$(shell shere cppcheck)
+# tools
+MV?=move
+CPPCHECK:=$(shell where cppcheck)
+CLOSURECOMPILER:=$(shell where closure-compiler)
+SED:=$(shell where sed)
 else
 # cross compile
 WIN32CC?=i686-w64-mingw32-gcc
 WIN32CFLAGS?=-Wall -Werror -DWITH_ASSERT -D_FORTIFY_SOURCE=2 -pie -fPIE -static -static-libgcc -ffunction-sections -fdata-sections -Wl,--gc-sections -s -flto=4 -Os
 WIN32WINDRES?=i686-w64-mingw32-windres
+# tools
+MV?=mv
 CPPCHECK:=$(shell which cppcheck)
+CLOSURECOMPILER:=$(shell which closure-compiler)
+SED:=$(shell which sed)
 endif
+
+EMCC?=emcc
+EMFLAGS?=-D NO_ASSERT -s WASM=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=0 -s ASSERTIONS=0 -Os #--closure 1
 
 PATCH_FILES := $(wildcard patches/*.txt) # this is replaced by pre-built gen.h in release to reduce build dependencies
 SOURCE_FILES = main.c
 INCLUDE_FILES = data.h sniff.h patches.h gen.h tinymt64.h
 
 
-.PHONY: clean clean-temps all native win32 test release
+.PHONY: clean clean-temps all native win32 wasm test release
 
 ifeq ($(OS),Windows_NT)
 native: win32
 win32: evermizer.exe ow-patch.exe
+wasm: evermizer.js
 all: native
 else
 native: evermizer ow-patch
 win32: evermizer.exe ow-patch.exe
-all: native win32
+wasm: evermizer.js
+all: native win32 wasm
 endif
 
 ifneq ($(strip $(PATCH_FILES)),) # assume we have a pre-built gen.h if patches/ is missing
@@ -59,8 +72,25 @@ evermizer.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main.res
 ow-patch.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main.res
 	$(WIN32CC) -DNO_RANDO -o $@ $(SOURCE_FILES) $(WIN32CFLAGS) main.res
 
+evermizer.js: $(SOURCE_FILES) $(INCLUDE_FILES)
+	$(EMCC) -DNO_UI -o $@ $(SOURCE_FILES) $(EMFLAGS)
+ifneq ($(strip $(SED)),) # reduce emscripten verbosity, skip if no sed installed
+	$(SED) -i "s/Arguments to path.resolve must be strings/args must be strings/g" $@
+	$(SED) -i "s/Unknown file open mode/Unknown mode/g" $@
+	$(SED) -i "s/operations in flight at once, probably just doing extra work/ops active/g" $@
+	$(SED) -i "s/threw an exception/threw/g" $@
+	$(SED) -i "s/encoding type/encoding/g" $@
+	$(SED) -i "s/Lazy loading should have been performed (contents set) in createLazyFile, but it was not. Lazy loading only works in web workers. Use --embed-file or --preload-file in emcc on the main thread/No lazy loading/g" $@
+	$(SED) -i "s/Use --embed-file or --preload-file in emcc//g" $@
+	$(SED) -i 's/out("LazyFiles on gzip forces download of the whole file when length is accessed");//g' $@
+endif
+ifneq ($(strip $(CLOSURECOMPILER)),) # skip if not installed, also see EMFLAGS
+	$(CLOSURECOMPILER) --compilation_level SIMPLE_OPTIMIZATIONS --js="$@" --js_output_file="evermizer.min.js"
+	$(MV) "evermizer.min.js" "$@"
+endif
+
 clean: clean-temps
-	rm -rf evermizer evermizer.exe ow-patch ow-patch.exe
+	rm -rf evermizer evermizer.exe ow-patch ow-patch.exe evermizer.html evermizer.js evermizer.wasm
 
 clean-temps:
 	rm -rf main.res

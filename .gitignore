@@ -6,6 +6,8 @@
 evermizer
 ow-patch
 *.exe
+*.js
+*.wasm
 
 #build temps
 *.res
