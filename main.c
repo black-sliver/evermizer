@@ -290,6 +290,7 @@ void print_usage(const char* appname)
     fprintf(stderr, "       %s --help     to show this output\n", appname);
     fprintf(stderr, "       %s --version  to print version\n", appname);
     fprintf(stderr, "       %s --settings to show available settings\n", appname);
+    fprintf(stderr, "       %s --settings.json above as json\n", appname);
 #if defined(WIN32) || defined(_WIN32)
     fprintf(stderr, "       or simply drag & drop your ROM onto the EXE\n");
 #ifndef NO_UI
@@ -313,6 +314,27 @@ void print_settings()
                   opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"");
     }
     printf("\n");
+}
+void print_settings_json()
+{
+#ifndef NO_RANDO
+    printf("{\"Difficulty\": [\n");
+    for (uint8_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++) {
+        if (i != 0) printf(",\n");
+        printf("  [ \"%c\", \"%s\", %s ]", DIFFICULTY_CHAR[i], DIFFICULTY_NAME[i],
+                               i==D(difficulty)?"true":"false");
+    }
+    printf("\n ],\n");
+#endif
+    printf(" \"Options\": [\n");
+    for (size_t i=0; i<ARRAY_SIZE(options); i++) {
+        const struct option* opt = options+i;
+        if (i != 0) printf(",\n");
+        printf("  [ \"%c\", \"%s%s%s%s\", %s ]", opt->key, opt->text,
+                  opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"",
+                  opt->def?"true":"false");
+    }
+    printf("\n ]\n}\n\n");
 }
 int main(int argc, const char** argv)
 {
@@ -380,6 +402,9 @@ int main(int argc, const char** argv)
             return 0;
         } else if (strcmp(argv[1], "--settings") == 0) {
             print_settings();
+            return 0;
+        } else if (strcmp(argv[1], "--settings.json") == 0) {
+            print_settings_json();
             return 0;
         } else {
             break;
