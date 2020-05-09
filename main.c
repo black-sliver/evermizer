@@ -264,6 +264,25 @@ const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard"};
 #define ARGS " [settings [seed]]"
 #endif
 
+struct option { char key; bool def; const char* text; const char* info; };
+const static struct option options[] = {
+#ifndef NO_RANDO
+    { 'c', false, "Chaos", NULL },
+#endif
+    { '1', true,  "Fix sequence", NULL },
+    { '2', true,  "Fix cheats", NULL },
+#ifndef NO_RANDO
+    { '3', true,  "Glitchless beatable", NULL },
+    { 'a', true,  "Alchemizer", NULL },
+    { 'i', true,  "Ingredienizer", NULL },
+    { 'b', true,  "Boss dropamizer", NULL },
+    { 'g', true,  "Gourdomizer", "Dummy" },
+    { 's', true,  "Sniffamizer", NULL },
+    { 'm', false, "Musicmizer", "Testing" },
+    { 'l', false, "Spoiler Log", NULL },
+#endif
+};
+
 // The actual program
 void print_usage(const char* appname)
 {
@@ -281,30 +300,18 @@ void print_usage(const char* appname)
 void print_settings()
 {
     printf("%s %s settings:\n", APPNAME, VERSION);
-#ifdef NO_RANDO
-    printf("Options:\n");
-    printf("  1: %s Fix sequence\n", D(fixsequence)?"No":"");
-    printf("  2: %s Fix cheats\n",   D(fixcheats)?  "No":"");
-#else
+#ifndef NO_RANDO
     printf("Difficulty:\n");
     for (uint8_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++)
         printf("  %c: %s%s\n", DIFFICULTY_CHAR[i], DIFFICULTY_NAME[i],
                                i==D(difficulty)?" (default)":"");
-    printf("Options:\n");
-    printf("  c: %s Chaos\n",               D(chaos)         ?"No":"  ");
-    printf("  1: %s Fix sequence\n",        D(fixsequence)   ?"No":"  ");
-    printf("  2: %s Fix cheats\n",          D(fixcheats)     ?"No":"  ");
-    printf("  3: %s Glitchless beatable\n", D(glitchless)    ?"No":"  ");
-    printf("  a: %s Alchemizer\n",          D(alchemizer)    ?"No":"  ");
-    printf("  i: %s Ingredienizer\n",       D(ingredienizer) ?"No":"  ");
-    printf("  b: %s Boss dropamizer\n",     D(bossdropamizer)?"No":"  ");
-    printf("  g: %s Gourdomizer [Dummy]\n", D(gourdomizer)   ?"No":"  ");
-    printf("  s: %s Sniffamizer\n",         D(sniffamizer)   ?"No":"  ");
-  //printf("  d: %s Doggomizer\n",          D(doggomizer)    ?"No":"  ");
-  //printf("  y: %s Enemizer\n",            D(enemizer)      ?"No":"  ");
-    printf("  m: %s Musicmizer [Testing]\n",D(musicmizer)    ?"No":"  ");
-    printf("  l: %s Spoiler Log\n",         D(spoilerlog)    ?"No":"  ");
 #endif
+    printf("Options:\n");
+    for (size_t i=0; i<ARRAY_SIZE(options); i++) {
+        const struct option* opt = options+i;
+        printf("  %c: %s %s%s%s%s\n", opt->key, opt->def?"No":"  ",opt->text,
+                  opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"");
+    }
     printf("\n");
 }
 int main(int argc, const char** argv)
