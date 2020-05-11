@@ -473,7 +473,7 @@ int main(int argc, const char** argv)
     uint8_t* buf = (uint8_t*)malloc(sz+GROW_BY); // allow to grow by 1MB
     memset(buf+sz, 0, GROW_BY); // or 0xff?
     size_t len = fread(buf, 1, sz, fsrc);
-    if (len!=sz) die("Could not read input file!\n");
+    if (len!=sz) { free(buf); fclose(fsrc); die("Could not read input file!\n"); }
     
     // check ROM header
     const char cart_header[] = "SECRET OF EVERMORE   \x31\x02\x0c\x03\x01\x33\x00";
@@ -486,11 +486,14 @@ int main(int argc, const char** argv)
                         (char*)buf+rom_off+cart_header_loc,
                         buf[i+0], buf[i+1], buf[i+2], buf[i+3],
                         buf[i+4], buf[i+5], buf[i+6]);
-        
+        free(buf);
+        fclose(fsrc);
         die(NULL);
     }
     if (verify) {
         printf("OK");
+        free(buf);
+        fclose(fsrc);
         return 0;
     }
     
