@@ -291,10 +291,11 @@ enum option_indices {
 void print_usage(const char* appname)
 {
     fprintf(stderr, "Usage: %s " FLAGS "<src file.sfc>" ARGS "\n", appname);
-    fprintf(stderr, "       %s --help     to show this output\n", appname);
-    fprintf(stderr, "       %s --version  to print version\n", appname);
-    fprintf(stderr, "       %s --settings to show available settings\n", appname);
-    fprintf(stderr, "       %s --settings.json above as json\n", appname);
+    fprintf(stderr, "       %s --help             show this output\n", appname);
+    fprintf(stderr, "       %s --version          print version\n", appname);
+    fprintf(stderr, "       %s --verify <rom.sfc> check if rom is compatible\n", appname);
+    fprintf(stderr, "       %s --settings         show available settings\n", appname);
+    fprintf(stderr, "       %s --settings.json    above as json\n", appname);
 #if defined(WIN32) || defined(_WIN32)
     fprintf(stderr, "       or simply drag & drop your ROM onto the EXE\n");
 #ifndef NO_UI
@@ -363,6 +364,7 @@ int main(int argc, const char** argv)
     #if !defined NO_RANDO && !defined NO_UI // only rando has interactive mode (yet)
     bool interactive = true; // show settings ui
     #endif
+    bool verify = false; // verify ROM and exit
     DEFAULT_SETTINGS();
     
     const char* ofn=NULL;
@@ -370,7 +372,7 @@ int main(int argc, const char** argv)
     bool modeforced=false;
     
     // parse command line arguments
-    while (true) {
+    while (argc>1) {
         if (strcmp(argv[1], "-b") == 0) {
             modeforced = true;
             batch = true;
@@ -406,6 +408,9 @@ int main(int argc, const char** argv)
         } else if (strcmp(argv[1], "--settings.json") == 0) {
             print_settings_json();
             return 0;
+        } else if (strcmp(argv[1], "--verify") == 0) {
+            argv++; argc--;
+            verify=true;
         } else {
             break;
         }
@@ -483,6 +488,10 @@ int main(int argc, const char** argv)
                         buf[i+4], buf[i+5], buf[i+6]);
         
         die(NULL);
+    }
+    if (verify) {
+        printf("OK");
+        return 0;
     }
     
     // show command line settings in batch mode
