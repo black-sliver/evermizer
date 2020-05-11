@@ -481,7 +481,7 @@ int main(int argc, const char** argv)
     if (memcmp((char*)buf + rom_off + cart_header_loc, cart_header, sizeof(cart_header)-1) != 0)
     {
         size_t i = rom_off+cart_header_loc + 0x15;
-        fprintf(stderr, "Wrong Header: %.21s %02X %02X %02X %02X %02x %02x %02x\n"
+        fprintf(stderr, "Wrong Header: %.21s %02x %02x %02x %02x %02x %02x %02x\n"
                         "Expected:     SECRET OF EVERMORE    31 02 0c 03 01 33 00\n",
                         (char*)buf+rom_off+cart_header_loc,
                         buf[i+0], buf[i+1], buf[i+2], buf[i+3],
