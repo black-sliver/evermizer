@@ -260,7 +260,7 @@ enum option_indices {
         assert(ARRAY_SIZE(s)>ARRAY_SIZE(options)+2);\
         *t++ = 'r'; *t++ = DIFFICULTY_CHAR[difficulty];\
         for (size_t i=0; i<ARRAY_SIZE(options); i++)\
-            if (C(i)) *t++ = options[i].key;\
+            if (C(i) && options[i].key) *t++ = options[i].key;\
         *t++ = 0;\
     } while (false)
 #else
@@ -270,7 +270,7 @@ enum option_indices {
         assert(ARRAY_SIZE(s)>ARRAY_SIZE(options)+2);\
         *t++ = 'r';\
         for (size_t i=0; i<ARRAY_SIZE(options); i++)\
-            if (C(i)) *t++ = options[i].key;\
+            if (C(i) && options[i].key) *t++ = options[i].key;\
         *t++ = 0;\
     } while (false)
 #endif
