@@ -889,12 +889,18 @@ int main(int argc, const char** argv)
     // apply patches
     #define APPLY(n) APPLY_PATCH(buf, PATCH##n, rom_off + PATCH_LOC##n)
     
-    if (fixsequence && !openworld)
+    if (fixsequence && !openworld) {
+        free(buf);
+        fclose(fsrc);
         die("Cannot fix glitches without applying open world patch-set!\n");
+    }
     
     #ifndef NO_RANDO
-    if (bossdropamizer && !openworld)
+    if (bossdropamizer && !openworld) {
+        free(buf);
+        fclose(fsrc);
         die("Cannot randomize boss drops without open world patch-set (yet)!\n");
+    }
     #endif
     
     if (openworld) {
@@ -1143,7 +1149,7 @@ int main(int argc, const char** argv)
     // TODO: recalculate checksum
     len = fwrite(buf, 1, sz, fdst);
     fclose(fdst); fdst=NULL;
-    if (len<sz) die("Could not write output file!\n");
+    if (len<sz) { fclose(fsrc); free(buf); die("Could not write output file!\n"); }
     printf("Rom saved as %s!\n", dst);
     
     // write spoiler log
