@@ -444,7 +444,7 @@ int main(int argc, const char** argv)
             }
         #endif
             for (size_t i=0; i<ARRAY_SIZE(options); i++) {
-                if (c == options[i].key) { option_values[i] = !option_values[i]; c=0; }
+                if (options[i].key && c == options[i].key) { option_values[i] = !option_values[i]; c=0; break; }
             }
             if (c == 'r') DEFAULT_SETTINGS();
             else if (c != 0) {
@@ -567,7 +567,7 @@ int main(int argc, const char** argv)
     printf("Seed: %" PRIx64 "\n", seed);
     srand64(seed);
     bool randomized = alchemizer || ingredienizer || bossdropamizer ||
-                      gourdomizer /*|| sniffamizer || doggomizer ||enemizer*/;
+                      gourdomizer || sniffamizer /*|| doggomizer ||enemizer*/;
     #else
     printf("SoE OpenWorld " VERSION "\n");
     #endif
