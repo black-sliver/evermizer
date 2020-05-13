@@ -1,5 +1,9 @@
+v022:
+  Added lots of stuff to support in-browser version + code clean-up
+
 v021:
   Removed 1-piece-limit for Mud Pepper pick-up for OW and Sniffamizer
+
 v020:
   Fixed one sniffing spot loot flag
   Added sniffamizer
