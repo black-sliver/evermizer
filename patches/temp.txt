@@ -1,0 +1,5 @@
+// temp fixes
+@0x95d797
+4d 4d // replace nobilia square->shop door sound by NOP NOP
+@0x95e2db
+4d 4d // replace nobilia shop->square door sound by NOP NOP

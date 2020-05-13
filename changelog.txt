@@ -1,4 +1,7 @@
 v022:
+  Added option to keep the dog (after blimp trench/palace cutscene)
+  Remove door sound when going from Nobilia Sqare to Shop/Atlas and back for now
+    (Permanent solution will have to fix gathering in square)
   Added lots of stuff to support in-browser version + code clean-up
 
 v021:

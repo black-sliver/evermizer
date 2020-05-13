@@ -197,6 +197,7 @@ const static struct option options[] = {
     { 'c', false, "Chaos", NULL },
 #endif
     { 0,   true,  "Open World", NULL },
+    { 'k', true,  "Keep dog", NULL },
     { '1', true,  "Fix sequence", NULL },
     { '2', true,  "Fix cheats", NULL },
 #ifndef NO_RANDO
@@ -214,7 +215,7 @@ enum option_indices {
 #ifndef NO_RANDO
     chaos_idx,
 #endif
-    openworld_idx, fixsequence_idx, fixcheats_idx,
+    openworld_idx, keepdog_idx, fixsequence_idx, fixcheats_idx,
 #ifndef NO_RANDO
     glitchless_idx, alchemizer_idx, ingredienizer_idx, bossdropamizer_idx,
     gourdomizer_idx, sniffamizer_idx, /*doggomizer_idx, enemizer_idx,*/
@@ -226,6 +227,7 @@ enum option_indices {
 #define C(IDX) ( O(IDX) != D(IDX) )
 #define chaos O(chaos_idx)
 #define openworld O(openworld_idx)
+#define keepdog O(keepdog_idx)
 #define fixsequence O(fixsequence_idx)
 #define fixcheats O(fixcheats_idx)
 #define glitchless O(glitchless_idx)
@@ -498,7 +500,7 @@ int main(int argc, const char** argv)
     }
     
     // show command line settings in batch mode
-    char settings[15];
+    char settings[16];
     //if (argc>2) strncpy(settings, argv[2], sizeof(settings)); else memcpy(settings, "rn", 3);
     SETTINGS2STR(settings);
     
@@ -938,6 +940,11 @@ int main(int argc, const char** argv)
         APPLY(MARKET_REWORK);
         APPLY(ACT3_OW);  APPLY(ACT3_OW2); APPLY(ACT3_OW3);
         APPLY(MUD_PEPPER_LIMIT);
+        APPLY(TEMP); APPLY(TEMP2); // TODO: resolve underlying issue
+    }
+    if (keepdog) {
+        printf("Applying patches to keep the dog...\n");
+        APPLY(KEEP_DOG); APPLY(KEEP_DOG2);
     }
     
     // General bug fixes
@@ -1098,6 +1105,8 @@ int main(int argc, const char** argv)
     if (sniffamizer)    seedcheck |= 0x00040000;
   //if (doggomizer)     seedcheck |= 0x00080000;
   //if (enemizer)       seedcheck |= 0x00100000;
+    if (keepdog)        seedcheck |= 0x00200000;
+    // 0x00400000 and 0x00800000 = difficulty
     if (chaos)          seedcheck |= 0x01000000; // 25bits in use -> 5 b32 chars
     seedcheck |= ((uint32_t)difficulty<<22);
     printf("\nCheck: %c%c%c%c%c (Please compare before racing)\n",
