@@ -1061,6 +1061,11 @@ int main(int argc, const char** argv)
             buf[rom_off + boss_drop_jumps[i] + 2] = (uint8_t)(tgt>>16)&0xff;
         }
     }
+    if (gourdomizer) {
+        // v023:
+        printf("Applying fixes for randomized gourds...\n");
+        APPLY(REVERSE_BBM); APPLY(REVERSE_BBM2); APPLY(REVERSE_BBM3);
+    }
     if (musicmizer) {
         printf("Applying musicmizer...\n");
         // NOTE: this is actually for jukebox, not musicmizer
