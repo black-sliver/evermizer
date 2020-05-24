@@ -4,6 +4,7 @@
 @0x96db5b+1
 05 61 00 29 05 0b 00 // has DEs AND has Escape
 
+@
 // TODO: merge this with horace spawn changes instead of escape fix
 // Don't make Horace walk if he did not spaw
 //@0x96db1e Orig: 08 05 07 04 29 05 06 04 a8 06 00
@@ -11,6 +12,7 @@
 @0x96db1e+1
 05 61 00 29 05 0d 04 a7 // has DEs OR DEs stolen
 
+@
 // Don't access/despawn/...? Horace if he did not spaw
 //@0x96dba7 Orig: 08 05 07 04 29 05 06 04 a8 08 00
 //@0x96dba7 New:  08 05 61 00 29 05 0d 04 a7 08 00

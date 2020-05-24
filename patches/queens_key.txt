@@ -7,6 +7,7 @@
 @0x929803
 36 16 03
 
+@
 // directly reward Queen's key into inventory at old lady
 @0x989497+1
 // 09 07 fa 00 94 0d 00 -> 09 05 64 00 94 0d 00 // IF has key SKIP ...
@@ -15,11 +16,13 @@
 // 14 fa 00 b1 -> 0c 64 00 b1 // set bit (instead of write)
 0c 64 00
 
+@
 // change fire power dude to check key flag instead of (redundant) variable
 @0x97e9fc+1
 // 09 87 fb 00 3c 00 -> 09 85 64 00 3c 00
 85 64 00
 
+@
 // change doors to check key flag instead of (redundant) variable
 @0x97ede9+1
 // 09 87 fb 00 e6 01 -> 09 85 64 00 e6 01
