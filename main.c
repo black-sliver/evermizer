@@ -4,7 +4,7 @@
 // see google doc for documentation on the actual patches used below
 // the idea is to "manually" patch the game to a state where we simply swap
 // out some numbers to make it random (without rewriting/relocating everything)
-#define VERSION "v022"
+#define VERSION "v022d"
 
 #include <stdio.h>
 #include <stdlib.h>
