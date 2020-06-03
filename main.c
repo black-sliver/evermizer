@@ -119,9 +119,7 @@ void shuffle_u8(uint8_t *array, size_t n)
         for (i = 0; i < n - 1; i++) 
         {
           size_t j = i + rand64() / (UINT64_MAX / (n - i) + 1);
-          uint8_t t = array[j];
-          array[j] = array[i];
-          array[i] = t;
+          SWAP(array[j], array[i], uint8_t);
         }
     }
 }
@@ -133,13 +131,8 @@ void shuffle_u8_pairs(uint8_t *array, size_t n/*pairs*/)
         for (i = 0; i < n - 1; i++) 
         {
           size_t j = i + rand64() / (UINT64_MAX / (n - i) + 1);
-          uint8_t t;
-          t = array[j*2];
-          array[j+2] = array[i*2];
-          array[i+2] = t;
-          t = array[j*2+1];
-          array[j+2+1] = array[i*2+1];
-          array[i+2+1] = t;
+          SWAP(array[j*2],   array[i*2],   uint8_t);
+          SWAP(array[j*2+1], array[i*2+1], uint8_t);
         }
     }
 }
@@ -151,9 +144,7 @@ void shuffle_u16(uint16_t *array, size_t n)
         for (i = 0; i < n - 1; i++) 
         {
           size_t j = i + rand64() / (UINT64_MAX / (n - i) + 1);
-          uint16_t t = array[j];
-          array[j] = array[i];
-          array[i] = t;
+          SWAP(array[j], array[i], uint16_t);
         }
     }
 }
