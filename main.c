@@ -159,7 +159,7 @@ void shuffle_u16(uint16_t *array, size_t n)
 }
 uint8_t rand_u8(uint8_t min, uint8_t max)
 {
-    if (max<=min) return min;
+    if (max<=min) { rand64(); return min; }
     return (min+(uint8_t)(rand64()%(max-min+1)));
 }
 uint8_t rand_u8_except(uint8_t min, uint8_t max, uint8_t except)
