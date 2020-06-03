@@ -961,6 +961,8 @@ int main(int argc, const char** argv)
     APPLY(QUEENS_KEY5);
     // v020:
     APPLY(FIX_FLAGS);
+    // v023:
+    APPLY(FIX_FLAGS2); APPLY(FIX_FLAGS3);
     
     #ifndef NO_RANDO
     if (gourdomizer || bossdropamizer) {
