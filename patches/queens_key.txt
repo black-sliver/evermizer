@@ -27,3 +27,8 @@
 @0x97ede9+1
 // 09 87 fb 00 e6 01 -> 09 85 64 00 e6 01
 85 64 00
+
+@
+// don't write to "Queen's Key on Boy" variable so we can reuse it
+@0x97ea18
+04 01 00 00
