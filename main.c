@@ -168,13 +168,13 @@ uint8_t rand_u8_except(uint8_t min, uint8_t max, uint8_t except)
     if (res>=except) res++;
     return res;
 }
-uint8_t rand_amount(uint8_t min, uint8_t max, float cur_minus_expected)
+uint8_t rand_amount(uint8_t min, uint8_t max, int cur_minus_expected_times_100)
 {
     // cur_minus_expected >0: decrease max
     // cur_minus_expected <0: increase min
     // NOTE: a probability curve would better than just setting limits here.
-    if (cur_minus_expected<-3.0) return rand_u8(min+1, max);
-    if (cur_minus_expected> 3.0) return rand_u8(min, max-1);
+    if (cur_minus_expected_times_100<-300) return rand_u8(min+1, max);
+    if (cur_minus_expected_times_100> 300) return rand_u8(min, max-1);
     return rand_u8(min, max);
 }
 uint16_t rand_u16(uint16_t min, uint16_t max)
@@ -678,10 +678,10 @@ int main(int argc, const char** argv)
             const uint8_t min_single_cost = 1;
             const uint8_t max_single_cost = 3;
             const uint8_t max_spell_cost = MIN(4+difficulty, 2*max_single_cost);
-            const uint8_t est_total_cost = 92-6 + difficulty*6; // 92/34 for vanilla
+            int est_total_cost = 92-6 + difficulty*6; // 92/34 for vanilla
             uint8_t cheap_spell_location = (difficulty==0) ? ((rand64()%2) ? HARD_BALL_IDX : FLASH_IDX) : 0xff;
             
-            uint8_t cur_total_cost = 0;
+            int cur_total_cost = 0;
             if (chaos) {
                 for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
                     uint8_t type1;
@@ -695,13 +695,13 @@ int main(int argc, const char** argv)
                         type1 = rand_u8(0, 21);
                         type2 = rand_u8_except(0, 21, type1);
                     }
-                    uint8_t amount1 = rand_amount(min_single_cost, max_single_cost, 
-                                          (float)cur_total_cost - (float)est_total_cost/ALCHEMY_COUNT*i);
+                    int off = (int)cur_total_cost*100 - (int)est_total_cost*100*i/ALCHEMY_COUNT;
+                    uint8_t amount1 = rand_amount(min_single_cost, max_single_cost,  off);
                     if (i==LEVITATE_IDX && type1==DRY_ICE)
                         amount1 = 1; // only allow 1 dry ice for levitate
                     cur_total_cost += amount1;
-                    uint8_t amount2 = rand_amount(min_single_cost, MIN(max_single_cost,max_spell_cost-amount1), 
-                                          (float)cur_total_cost - (float)est_total_cost/ALCHEMY_COUNT*(0.5f+i));
+                    off = (int)cur_total_cost*100 - (int)est_total_cost*(100*i+50)/ALCHEMY_COUNT;
+                    uint8_t amount2 = rand_amount(min_single_cost, MIN(max_single_cost,max_spell_cost-amount1), off);
                     if (i==LEVITATE_IDX && type2==DRY_ICE)
                         amount2 = 1; // only allow 1 dry ice for levitate
                     cur_total_cost += amount2;
@@ -733,13 +733,13 @@ int main(int argc, const char** argv)
                     shuffle_u8(ingredient_types, ARRAY_SIZE(ingredient_types));
                 }
                 for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
-                    uint8_t amount1 = rand_amount(min_single_cost, max_single_cost, 
-                                          (float)cur_total_cost - (float)est_total_cost/ALCHEMY_COUNT*i);
+                    int off = (int)cur_total_cost*100 - (int)est_total_cost*100*i/ALCHEMY_COUNT;
+                    uint8_t amount1 = rand_amount(min_single_cost, max_single_cost, off);
                     if (i==LEVITATE_IDX && ingredient_types[i*2] == DRY_ICE)
                         amount1 = 1; // only allow 1 dry ice for levitate
                     cur_total_cost += amount1;
-                    uint8_t amount2 = rand_amount(min_single_cost, MIN(max_single_cost,max_spell_cost-amount1), 
-                                          (float)cur_total_cost - (float)est_total_cost/ALCHEMY_COUNT*(0.5f+i));
+                    off = (int)cur_total_cost*100 - (int)est_total_cost*(100*i+50)/ALCHEMY_COUNT;
+                    uint8_t amount2 = rand_amount(min_single_cost, MIN(max_single_cost,max_spell_cost-amount1), off);
                     if (i==LEVITATE_IDX && ingredient_types[i*2+1] == DRY_ICE)
                         amount2 = 1; // only allow 1 dry ice for levitate
                     cur_total_cost += amount2;
