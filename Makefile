@@ -35,7 +35,7 @@ EMFLAGS?=-D NO_ASSERT -s WASM=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=0 -s ASSERTIONS=
 
 PATCH_FILES := $(wildcard patches/*.txt) # this is replaced by pre-built gen.h in release to reduce build dependencies
 SOURCE_FILES = main.c
-INCLUDE_FILES = data.h sniff.h patches.h gen.h tinymt64.h
+INCLUDE_FILES = data.h sniff.h gourds.h patches.h gen.h tinymt64.h
 
 
 .PHONY: clean clean-temps all native win32 wasm test release
@@ -55,6 +55,10 @@ endif
 ifneq ($(strip $(PATCH_FILES)),) # assume we have a pre-built gen.h if patches/ is missing
 gen.h: $(PATCH_FILES) everscript2h.py
 	$(PYTHON3) everscript2h.py $@ $(PATCH_FILES)
+endif
+ifneq (,$(wildcard gourds.csv)) # assume we have a pre-built gourds.h if gourds.csv is missing
+gourds.h: gourds.csv gourds2h.py
+	$(PYTHON3) gourds2h.py $@ gourds.csv $(ROM)
 endif
 
 main.res: icon.ico
@@ -96,6 +100,9 @@ clean-temps:
 	rm -rf main.res
 ifneq ($(strip $(PATCH_FILES)),) # only if not pre-built
 	rm -rf gen.h
+endif
+ifneq (,$(wildcard gourds.csv)) # only if not pre-built
+	rm -rf gourds.h
 endif
 
 test: all

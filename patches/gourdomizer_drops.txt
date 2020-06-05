@@ -1,0 +1,189 @@
+#ifndef NO_RANDO
+
+// additional item IDs for gourdomizer: drops
+@0x92a5c6
+29 51 89 0f // jump to custom code for item IDs 0x0100..0x01ff (except 0x0101)
+00 // END
+@
+
+// additional item IDs for gourdomizer: loot messages
+@0x92b154
+29 00 c0 0f // jump to custom code for item IDs 0x0100..0x01ff (except 0x0101)
+00 // END
+@
+
+// additional item IDs for gourdomizer: inv full messages
+@0x92bead
+29 00 d0 0f // jump to custom code for unknown item IDs // TODO: show generic message instead?
+00 // END
+@
+
+// added actual drops
+@0xb18951
+09 08 39 01 29 04 f1 01 a2 32 00    // IF $2391 != 0x01f1 (colosseum breast) SKIP 50
+08 87 c8 00 08 00                   // IF bronze chestplate ($2320) SKIP 8
+17 39 01 04 04                      // prize ($2391) = bronze chestplate (0x0404)
+a3 3e 00                            // call loot part1, end
+08 87 c9 00 08 00                   // IF stone vest ($2321) SKIP 8
+17 39 01 05 04                      // prize ($2391) = stone vest (0x0405)
+a3 3e 00                            // call loot part1, end
+08 87 ca 00 08 00                   // IF centurian cape ($2322) SKIP 8
+17 39 01 06 04                      // prize ($2391) = centurian cape (0x0406)
+a3 3e 00                            // call loot part1, end
+17 39 01 03 01                      // prize ($2391) = thug's cloak (0x0103)
+a3 3e 00                            // call loot part1, end
+
+09 08 39 01 29 04 f2 01 a2 37 00    // IF $2391 != 0x01f2 (colosseum gloves) SKIP 55
+08 87 e0 00 08 00                   // IF serpent bracelet ($2338) SKIP 8
+17 39 01 1c 04                      // prize ($2391) = serpent bracelet (0x041c)
+a3 3e 00                            // call loot part1, end
+08 87 e1 00 08 00                   // IF bronze gauntlet ($2339) SKIP 8
+17 39 01 1d 04                      // prize ($2391) = bronze gauntlet (0x041d)
+a3 3e 00                            // call loot part1, end
+08 87 e2 00 08 00                   // IF gloves of ra ($233a) SKIP 8
+17 39 01 1e 04                      // prize ($2391) = gloves of ra (0x041e)
+a3 3e 00                            // call loot part1, end
+17 39 01 01 00                      // prize ($2391) = moniez (0x0001)
+17 3b 01 64 00                      // amount ($2393) = 100 (0x0064)
+a3 3e 00                            // call loot part1, end
+
+09 08 39 01 29 04 f3 01 a2 37 00    // IF $2391 != 0x01f3 (colloseum helmet) SKIP 55
+08 87 d4 00 08 00                   // IF bronze helmet ($232c) SKIP 8
+17 39 01 10 04                      // prize ($2391) = bronze helmet (0x0410)
+a3 3e 00                            // call loot part1, end
+08 87 d5 00 08 00                   // IF obsidian helmet ($232d) SKIP 8
+17 39 01 11 04                      // prize ($2391) = obsidian helmet (0x0411)
+a3 3e 00                            // call loot part1, end
+08 87 d6 00 08 00                   // IF centurian helmet ($232e) SKIP 8
+17 39 01 12 04                      // prize ($2391) = centurian helmet (0x0412)
+a3 3e 00                            // call loot part1, end
+17 39 01 01 00                      // prize ($2391) = moniez (0x0001)
+17 3b 01 64 00                      // amount ($2393) = 100 (0x0064)
+a3 3e 00                            // call loot part1, end
+
+09 08 39 01 29 04 03 01 a2 09 00    // IF $2391 != 0x0103 (thug's cloak) SKIP 9
+0c 59 00 b1                         // set thug's cloak bit ($2263 |= 0x02)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 25 01 a2 09 00    // IF $2391 != 0x0125 (gauge) SKIP 9
+0c 62 00 b1                         // set gauge bit ($2264 |= 0x04)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 41 01 a2 09 00    // IF $2391 != 0x0141 (regenerate) SKIP 9
+// 09 ... 00                        // TODO: test if horace is unlocked?
+0c 1f 04 b1                         // set regenerate bit ($22db |= 0x80)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 42 01 a2 09 00    // IF $2391 != 0x0142 (aura) SKIP 9
+// 09 ... 00                        // TODO: test if horace is unlocked?
+0c 1e 04 b1                         // set aura bit ($22db |= 0x40)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 17 01 a2 0a 00    // IF $2391 != 0x0117 (knight basher) SKIP 10
+17 e9 01 0e 00                      // get weapon ($2441) = knight basher (0x0e)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 18 01 a2 0a 00    // IF $2391 != 0x0118 (atom smasher) SKIP 10
+17 e9 01 10 00                      // get weapon ($2441) = atom smasher (0x10)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 1c 01 a2 0a 00    // IF $2391 != 0x011c (laser lance) SKIP 10
+17 e9 01 18 00                      // get weapon ($2441) = laser lance (0x18)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 1c 01 a2 1d 00    // IF $2391 != 0x011d (bazooka) SKIP 29
+09 07 ed 00 29 02 63 9e 09 00       // IF thunderball ($2345) >= 99 (0x63) SKIP 9
+14 ed 00 07 ed 00 29 31 9a          // thunderball = thunderball + 1
+17 e9 01 1a 00                      // get weapon ($2441) = bazooka (0x1a)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 31 01 a2 18 00    // IF $2391 != 0x0131 (amulet of annihilation) SKIP 24
+// TODO: support amount?
+09 07 bf 02 29 02 63 9e 0d 00       // IF amulet of annihilation ($2517) >= 99 (0x63) SKIP 13
+14 bf 02 07 bf 02 29 31 9a          // amulet of annihilation ($2517) += 1
+0c 90 04 b1                         // loot success ($22ea) |= yes (0x01)
+00                                  // end
+
+09 08 39 01 29 04 e1 01 a2 1d 00            // IF $2391 != 0x01e1 (thunderball) SKIP 29
+// TODO: support amount?
+09 07 ed 00 29 02 1d 1a 29 02 63 9e 0e 00   // IF thunderball ($2345) + 29 (0x1d) >= 99 (0x63) SKIP 14
+14 ed 00 07 ed 00 29 02 1e 9a               // thunderball ($2345) += 30 (0x1e)
+0c 90 04 b1                                 // loot success ($22ea) |= yes (0x01)
+00                                          // end
+
+09 08 39 01 29 04 e2 01 a2 1d 00            // IF $2391 != 0x01e2 (particle bomb) SKIP 29
+// TODO: support amount?
+09 07 ee 00 29 02 1d 1a 29 02 63 9e 0e 00   // IF particle bomb ($2346) + 29 (0x1d) >= 99 (0x63) SKIP 14
+14 ee 00 07 ee 00 29 02 1e 9a               // particle bomb ($2346) += 30 (0x1e)
+0c 90 04 b1                                 // loot success ($22ea) |= yes (0x01)
+00                                          // end
+
+09 08 39 01 29 04 e3 01 a2 1d 00            // IF $2391 != 0x01e3 (cryo blast) SKIP 29
+// TODO: support amount?
+09 07 ef 00 29 02 1d 1a 29 02 63 9e 0e 00   // IF cryo blast ($2347) + 29 (0x1d) >= 99 (0x63) SKIP 14
+14 ef 00 07 ef 00 29 02 1e 9a               // cryo blast ($2347) += 30 (0x1e)
+0c 90 04 b1                                 // loot success ($22ea) |= yes (0x01)
+00                                          // end
+
+00 // END
+@
+
+// added loot messages, TODO: move this right behind the end of "actual drops" (0xb18b65)
+@0xb1c000
+09 08 39 01 29 04 03 01 a2 04 00    // IF $2391 != 0x0103 (thug's cloak) SKIP 4
+52 0c 0c 00                         // Show text, end
+
+09 08 39 01 29 04 25 01 a2 04 00    // IF $2391 != 0x0125 (gauge) SKIP 4
+52 f1 05 00                         // Show text, end
+
+09 08 39 01 29 04 41 01 a2 04 00    // IF $2391 != 0x0141 (regenerate) SKIP 4
+52 6b 0a 00                         // Show text, end
+
+09 08 39 01 29 04 42 01 a2 04 00    // IF $2391 != 0x0142 (aura) SKIP 4
+52 c4 17 00                         // Show text, end
+
+09 08 39 01 29 04 17 01 a2 04 00    // IF $2391 != 0x0117 (knight basher) SKIP 4
+52 96 1b 00                         // Show text, end
+
+09 08 39 01 29 04 18 01 a2 04 00    // IF $2391 != 0x0118 (atom smasher) SKIP 4
+52 93 1b 00                         // Show text, end
+
+09 08 39 01 29 04 1c 01 a2 04 00    // IF $2391 != 0x011c (laser lance) SKIP 4
+52 47 22 00                         // Show text, end
+
+09 08 39 01 29 04 1c 01 a2 04 00    // IF $2391 != 0x011d (bazooka) SKIP 4
+52 46 1a 00                         // Show text, end
+
+09 08 39 01 29 04 31 01 a2 04 00    // IF $2391 != 0x0131 (amulet of annihilation) SKIP 4
+// TODO: support amount?
+52 c7 17 00                         // Show text, end
+
+09 08 39 01 29 04 e1 01 a2 04 00    // IF $2391 != 0x01e1 (thunderball) SKIP 4
+// TODO: support amount?
+52 12 21 00                         // Show text, end
+
+09 08 39 01 29 04 e2 01 a2 04 00    // IF $2391 != 0x01e2 (particle bomb) SKIP 4
+// TODO: support amount?
+52 15 21 00                         // Show text, end
+
+09 08 39 01 29 04 e3 01 a2 04 00    // IF $2391 != 0x01e3 (cryo blast) SKIP 4
+// TODO: support amount?
+52 06 21 00                         // Show text, end
+
+00 // END
+@
+
+// added loot error messages, TODO: move this right behind "loot messages" (+180)
+@0xb1d000
+1c e1 02 88 39 01   // WRITE arg1 ($2539) = prize ($2391)
+52 88 02            // show generic message
+00                  // END
+@
+
+// replace "unknown","item" with "any","more" and remove <arg1> from "Can't carry unknown item <arg1>"
+// TODO: c00c29+7
+@0x800c29+7
+c0 10 00 d8 0f 00 00 00 00 00
+@
+
+#endif

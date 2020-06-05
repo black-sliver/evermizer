@@ -285,13 +285,17 @@ struct progression_provider {
 #define REQ2(p,q) { {1,p},{1,q},NO_REQ,NO_REQ }
 #define REQ3(p,q,r) { {1,p},{1,q},{1,r},NO_REQ }
 #define REQ4(p,q,r,s) { {1,p},{1,q},{1,r},{1,s} }
+#define REQ1N(n,p) { {n,p},NO_REQ,NO_REQ,NO_REQ }
 #define REQ2N(n,p,m,q) { {n,p},{m,q},NO_REQ,NO_REQ }
+#define REQ3N(k,p,l,q,n,r) { {k,p},{l,q},{n,r},NO_REQ }
 #define REQ4N(k,p,l,q,n,r,m,s) { {k,p},{l,q},{n,r},{m,s} }
 #define PVD1 REQ1
 #define PVD2 REQ2
 #define PVD3 REQ3
 #define PVD4 REQ4
+#define PVD1N REQ1N
 #define PVD2N REQ2N
+#define PVD3N REQ3N
 #define PVD4N REQ4N
 
 enum check_tree_item_type {
@@ -305,14 +309,14 @@ enum check_tree_item_type {
 typedef struct check_tree_item {
     bool reached;
     enum check_tree_item_type type; // spell, boss or gourd
-    uint8_t index; // which spell, boss or gourd
+    uint16_t index; // which spell, boss or gourd
     bool missable;
     struct progression_requirement requires[4];
     struct progression_provider provides[4];
 } check_tree_item;
 typedef struct drop_tree_item {
     enum check_tree_item_type type; // spell, boss or gourd
-    uint8_t index; // which spell, boss or gourd
+    uint16_t index; // which spell, boss or gourd
     struct progression_provider provides[4];
 } drop_tree_item;
 static const check_tree_item blank_check_tree[] = {
@@ -353,7 +357,7 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_ALCHEMY,SUPER_HEAL_IDX,      0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
     // Boss checks
     {0, CHECK_BOSS,THRAXX_IDX,        0, NOTHING_REQUIRED,                        NOTHING_PROVIDED},
-    {0, CHECK_BOSS,COLEOPTERA_IDX,    0, NOTHING_REQUIRED,                        NOTHING_PROVIDED},
+    {0, CHECK_BOSS,COLEOPTERA_IDX,    0, REQ1(P_WEAPON),                          NOTHING_PROVIDED}, // NOTE: we added REQ(P_WEAPON) since the boss is too hard to get the first weapon
     {0, CHECK_BOSS,MAMMOTH_VIPER_IDX, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
     {0, CHECK_BOSS,CAVE_RAPTORS_IDX,  0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
     {0, CHECK_BOSS,SALABOG_IDX,       0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
@@ -373,19 +377,21 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_BOSS,TINY_IDX,          0, REQ2N(1,P_WEAPON,2,P_DE),                NOTHING_PROVIDED},
     // Required checks that are not randomized (yet)
     {0, CHECK_RULE,P_JAGUAR_RING,     0, NOTHING_REQUIRED,           PVD1(P_JAGUAR_RING)},
-    {0, CHECK_RULE,P_KNIGHT_BASHER,   0, REQ1(P_WEAPON),             PVD4(P_WEAPON, P_NON_SWORD, P_BRONZE_AXE_PLUS, P_KNIGHT_BASHER)},
-    {0, CHECK_RULE,P_GAUGE,           0, REQ1(P_VOLCANO_EXPLODED),   PVD1(P_GAUGE)},
     {0, CHECK_RULE,P_ROCKET,          0, REQ4N(1,P_MUNGOLA,1,P_GAUGE,1,P_WHEEL,2,P_DE), PVD2N(1,P_ROCKET,-2,P_DE)},
     {0, CHECK_RULE,P_ENERGY_CORE,     0, REQ1(P_ROCKET),             PVD1(P_ENERGY_CORE)},
     {0, CHECK_RULE,P_VOLCANO_ENTERED, 0, REQ2(P_WEAPON,P_LEVITATE),  PVD1(P_VOLCANO_ENTERED)},
-    {0, CHECK_RULE,P_ROCK_SKIP,       0, REQ2(P_WEAPON,P_ROCK_SKIP), PVD1(P_VOLCANO_ENTERED)}
+    {0, CHECK_RULE,P_ROCK_SKIP,       0, REQ2(P_WEAPON,P_ROCK_SKIP), PVD1(P_VOLCANO_ENTERED)},
+    // Gourd checks included from generated gourds.h
+    #define CHECK_TREE
+    #include "gourds.h"
+    #undef CHECK_TREE
 };
 static const drop_tree_item drops[] = {
-    // alchemy drops with progression
+    // Alchemy drops with progression
     {CHECK_ALCHEMY,ATLAS_IDX,    PVD1(P_ATLAS)},
     {CHECK_ALCHEMY,REVEALER_IDX, PVD1(P_REVEALER)},
     {CHECK_ALCHEMY,LEVITATE_IDX, PVD1(P_LEVITATE)},
-    // boss drops with progression
+    // Boss drops with progression
     {CHECK_BOSS,WHEEL_IDX,            PVD1(P_WHEEL)},
     {CHECK_BOSS,GLADIATOR_SWORD_IDX,  PVD1(P_WEAPON)},
     {CHECK_BOSS,CRUSADER_SWORD_IDX,   PVD1(P_WEAPON)},
@@ -395,6 +401,10 @@ static const drop_tree_item drops[] = {
     {CHECK_BOSS,BRONZE_SPEAR_IDX,     PVD3(P_WEAPON,P_NON_SWORD,P_BRONZE_SPEAR)},
     {CHECK_BOSS,LANCE_WEAPON_IDX,     PVD2(P_WEAPON,P_NON_SWORD)},
     {CHECK_BOSS,DIAMOND_EYE_DROP_IDX, PVD1(P_DE)},
+    // Gourd drops with progression included from generated gourds.h
+    #define DROP_TREE
+    #include "gourds.h"
+    #undef DROP_TREE
 };
 
 
@@ -426,7 +436,7 @@ static inline void drop_progress(const drop_tree_item* drop, int* progress)
     for (size_t i=0; i<ARRAY_SIZE(drop->provides); i++)
         progress[drop->provides[i].progress] += drop->provides[i].pieces;
 }
-static inline const drop_tree_item* get_drop(enum check_tree_item_type type, uint8_t idx)
+static inline const drop_tree_item* get_drop(enum check_tree_item_type type, uint16_t idx)
 {
     for (size_t i=0; i<ARRAY_SIZE(drops); i++)
         if (drops[i].type == type && drops[i].index == idx) return drops+i;
@@ -436,6 +446,7 @@ const char* check2str(const check_tree_item* check)
 {
     if (check->type == CHECK_BOSS) return boss_names[check->index];
     if (check->type == CHECK_ALCHEMY) return alchemy_locations[check->index].name;
+    if (check->type == CHECK_GOURD) return gourd_data[check->index].name;
     if (check->index == P_JAGUAR_RING) return "Jaguar Ring NPC";
     if (check->index == P_KNIGHT_BASHER) return "Knight Baser Chest";
     if (check->index == P_GAUGE) return "Gauge Gourd";
@@ -450,6 +461,7 @@ const char* drop2str(const drop_tree_item* drop)
     if (!drop) return ""; // get_drop may return NULL
     if (drop->type == CHECK_BOSS) return boss_drop_names[drop->index];
     if (drop->type == CHECK_ALCHEMY) return alchemy_locations[drop->index].name;
+    if (drop->type == CHECK_GOURD) return gourd_drops_data[drop->index].name;
     return "Unknown";
 }
 bool alchemy_in_act4(uint8_t alchemy_idx) {

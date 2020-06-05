@@ -1,0 +1,12 @@
+#ifndef NO_RANDO
+// Collapse knight basher/atom smasher into one chest with new flag $2353&0x02
+@0x998d1e+2
+d9 07
+@0x998d29+2
+d9 07
+@
+// Use new flag for gauge gourd
+@0x93ee83+3
+d8 07
+@
+#endif

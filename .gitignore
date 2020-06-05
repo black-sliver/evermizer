@@ -12,6 +12,7 @@ ow-patch
 #build temps
 *.res
 gen.h
+gourds.h
 
 #releases
 old

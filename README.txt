@@ -8,7 +8,8 @@ HOWTO:
    file's directory and print out the complete filename
 5. Checksum is wrong, but neither sd2snes nor (most) emulators seem to care
 6. You can skip the intro by pressing start (even without a prior save)
-7. You have to kill Thraxx (or cheat) to get a weapon that can cut grass
+7. You have to kill Thraxx to get a weapon that can cut grass or find one in a
+   gourd (or cheat) to get access to the Windwalker.
 
 
 CHANGES SO FAR:
@@ -39,6 +40,7 @@ CHANGES SO FAR:
     Horace spawn should be fixed (tied to DEs in inventory or DEs lost)
     Horace dialog should correcly indicate how many DEs you have
     Tinker taking away your diamond eyes sets flag to not lock-out Aegis
+  Gourdomizer: shuffle gourd/pot/chest drops
   Sniffamizer: non-chaos shuffles, chaos randomizes dog-sniff ingredients
   Musicmizer: randomize music, in testing stage
   Fix sequence:

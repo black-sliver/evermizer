@@ -1,3 +1,7 @@
+v023:
+  Added gourdomizer
+  Various small fixes (see git commit messages)
+
 v022:
   Added option to keep the dog (after blimp trench/palace cutscene)
   Remove door sound when going from Nobilia Square to Shop/Atlas and back for now

@@ -88,6 +88,9 @@ char getch() {
 #define ZERO_IF_ARRAY(a) 0
 #endif
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]) + ZERO_IF_ARRAY(a))
+#ifndef NO_RANDO
+static bool stris(const char* s, const char* t) { if (s==t) return true; return strcmp(s,t)==0; }
+#endif
 #ifdef NO_UI
 static bool batch = true;
 #else
@@ -175,6 +178,9 @@ uint16_t rand_u16(uint16_t min, uint16_t max)
 }
 
 
+#ifndef NO_RANDO
+#include "gourds.h" // generated list of gourds and gourd drops
+#endif
 #include "data.h"
 
 
@@ -196,7 +202,7 @@ const static struct option options[] = {
     { 'a', true,  "Alchemizer", NULL },
     { 'i', true,  "Ingredienizer", NULL },
     { 'b', true,  "Boss dropamizer", NULL },
-    { 'g', true,  "Gourdomizer", "Dummy" },
+    { 'g', true,  "Gourdomizer", NULL },
     { 's', true,  "Sniffamizer", NULL },
     { 'm', false, "Musicmizer", "Demo" },
     { 'l', false, "Spoiler Log", NULL },
@@ -635,7 +641,8 @@ int main(int argc, const char** argv)
         }
     }
     uint8_t boss_drops[] = BOSS_DROPS;
-    
+    uint16_t gourd_drops[ARRAY_SIZE(gourd_drops_data)];
+    for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (uint16_t)i;
     uint16_t sniff_drops[ARRAY_SIZE(sniffs)];
     for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) sniff_drops[i] = sniffs[i].val;
     
@@ -748,6 +755,57 @@ int main(int argc, const char** argv)
         if (bossdropamizer) {
             shuffle_u8(boss_drops, ARRAY_SIZE(boss_drops));
         }
+        if (gourdomizer) {
+            shuffle_u16(gourd_drops, ARRAY_SIZE(gourd_drops));
+            // make sure amulet of annihilation is available in ivor tower
+            {
+                uint8_t amuletNo = rand_u8(0,3);
+                uint8_t ivorGourdNo = rand_u8(0,23);
+                size_t amuletSrcIdx=(size_t)-1, ivorGourdIdx=(size_t)-1;
+                for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) {
+                    if (stris(gourd_data[i].name, "Ivor Houses")) {
+                        if (ivorGourdNo == 0) {
+                            ivorGourdIdx = i;
+                            if (amuletSrcIdx != (size_t)-1) break;
+                        }
+                        ivorGourdNo--;
+                    }
+                    if (stris(gourd_drops_data[gourd_drops[i]].name, "Amulet of Annihilation")) {
+                        if (amuletNo == 0) {
+                            amuletSrcIdx = i;
+                            if (ivorGourdIdx != (size_t)-1) break;
+                        }
+                        amuletNo--;
+                    }
+                }
+                assert(amuletSrcIdx<ARRAY_SIZE(gourd_drops) && ivorGourdIdx<ARRAY_SIZE(gourd_drops));
+                SWAP(gourd_drops[ivorGourdIdx],gourd_drops[amuletSrcIdx],uint16_t);
+            }
+            // make sure wings are available in halls NE room
+            {
+                uint8_t wingsNo = rand_u8(0,4);
+                uint8_t hallsNEGourdNo = rand_u8(0,3);
+                size_t wingsSrcIdx=(size_t)-1, hallsNEGourdIdx=(size_t)-1;
+                for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) {
+                    if (stris(gourd_data[i].name, "Halls NE")) {
+                        if (hallsNEGourdNo == 0) {
+                            hallsNEGourdIdx = i;
+                            if (wingsSrcIdx != (size_t)-1) break;
+                        }
+                        hallsNEGourdNo--;
+                    }
+                    if (stris(gourd_drops_data[gourd_drops[i]].name, "Wings")) {
+                        if (wingsNo == 0) {
+                            wingsSrcIdx = i;
+                            if (hallsNEGourdIdx != (size_t)-1) break;
+                        }
+                        wingsNo--;
+                    }
+                }
+                assert(wingsSrcIdx<ARRAY_SIZE(gourd_drops) && hallsNEGourdIdx<ARRAY_SIZE(gourd_drops));
+                SWAP(gourd_drops[hallsNEGourdIdx],gourd_drops[wingsSrcIdx],uint16_t);
+            }
+        }
         if (sniffamizer && !chaos) {
             shuffle_u16(sniff_drops, ARRAY_SIZE(sniff_drops));
         } else if (sniffamizer) {
@@ -759,8 +817,8 @@ int main(int argc, const char** argv)
         // general logic checking
         #define REROLL() continue;
         
-        // boss drop logic: thraxx has to drop a weapon unless gourdomizer is on and we can get back from thraxx and a gourd has a weapon
-        if (bossdropamizer)
+        // boss drop logic: thraxx has to drop a weapon unless gourdomizer is on. we can get back from thraxx to bug muck
+        if (bossdropamizer && !gourdomizer)
         {
             if (!boss_drop_is_a_weapon(boss_drops[THRAXX_IDX])) REROLL();
         }
@@ -853,8 +911,9 @@ int main(int argc, const char** argv)
                     if (check_requires(checks+i, goal)) continue; // don't iterate past goal
                     if (check_reached(checks+i, progress)) {
                         // NOTE: alchemy[a] = b moves a to vanilla b location
-                        uint8_t idx = checks[i].type==CHECK_ALCHEMY ? alchemy_lookup(alchemy,checks[i].index) :
-                                      checks[i].type==CHECK_BOSS ? boss_drops[checks[i].index] : 0;
+                        uint16_t idx = checks[i].type==CHECK_ALCHEMY ? alchemy_lookup(alchemy,checks[i].index) :
+                                       checks[i].type==CHECK_BOSS ? boss_drops[checks[i].index] :
+                                       checks[i].type==CHECK_GOURD ? gourd_drops[checks[i].index] : 0;
                         const drop_tree_item* drop = get_drop(checks[i].type, idx);
                         check_progress(checks+i, progress);
                         drop_progress(drop, progress);
@@ -998,7 +1057,7 @@ int main(int argc, const char** argv)
         APPLY(67);
     }
     
-    #ifdef NO_RANDO // ger rid of unused warnings
+    #ifdef NO_RANDO // get rid of unused warnings
     UNUSED(74);
     UNUSED(77);
     #else
@@ -1045,6 +1104,9 @@ int main(int argc, const char** argv)
         // v015:
         APPLY(78a); APPLY(78b); APPLY(78c); APPLY(78d); APPLY(78e);
         APPLY(143); APPLY(144);
+        if (!gourdomizer) {
+            // TODO: move wings to halls NE to avoid softlock
+        }
         printf("Applying boss dropamizer...\n");
         APPLY(77);
         APPLY(81);  APPLY(82);  APPLY(83);  APPLY(84);  APPLY(85);  APPLY(86);
@@ -1064,6 +1126,26 @@ int main(int argc, const char** argv)
         // v023:
         printf("Applying fixes for randomized gourds...\n");
         APPLY(REVERSE_BBM); APPLY(REVERSE_BBM2); APPLY(REVERSE_BBM3);
+        printf("Applying gourdomizer...\n");
+        grow = true;
+        APPLY(GOURDOMIZER_FIXES); APPLY(GOURDOMIZER_FIXES2);
+        APPLY(GOURDOMIZER_FIXES3);
+        APPLY(GOURDOMIZER_DROPS);  APPLY(GOURDOMIZER_DROPS2);
+        APPLY(GOURDOMIZER_DROPS3); APPLY(GOURDOMIZER_DROPS4);
+        APPLY(GOURDOMIZER_DROPS5); APPLY(GOURDOMIZER_DROPS6);
+        APPLY(GOURDOMIZER_DROPS7);
+        for (size_t i=0; i<ARRAY_SIZE(gourd_drops_data); i++) {
+            const struct gourd_drop_item* d = &(gourd_drops_data[i]);
+            memcpy(buf + rom_off + d->pos, d->data, d->len);
+        }
+        for (size_t i=0; i<ARRAY_SIZE(gourd_data); i++) {
+            const struct gourd_data_item* g = &(gourd_data[i]);
+            const struct gourd_drop_item* d = &(gourd_drops_data[gourd_drops[i]]);
+            memcpy(buf + rom_off + g->pos, g->data, g->len);
+            buf[rom_off + g->call_target_addr+0] = (d->call_addr>> 0) & 0xff;
+            buf[rom_off + g->call_target_addr+1] = (d->call_addr>> 8) & 0xff;
+            buf[rom_off + g->call_target_addr+2] = (d->call_addr>>16) & 0xff;
+        }
     }
     if (musicmizer) {
         printf("Applying musicmizer...\n");
@@ -1179,7 +1261,7 @@ int main(int argc, const char** argv)
     if (!flog) { fclose(fsrc); free(buf); die("Could not open spoiler log file!\n"); }
     #define ENDL "\r\n"
     fprintf(flog,"Spoiler log for evermizer %s settings %s seed %" PRIx64 "%s", VERSION, shortsettings, seed, ENDL);
-    fprintf(flog,"%s", ENDL);
+    fprintf(flog, ENDL);
     fprintf(flog,"     %-15s  %-15s  %-15s   %s" ENDL, "Spell", "Location", "Ingredient 1", "Ingredient 2"); 
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     for (size_t i=0; i<ALCHEMY_COUNT; i++) {
@@ -1194,13 +1276,24 @@ int main(int argc, const char** argv)
             f->amount2, ingredient_names[f->type2]);
     }
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
-    fprintf(flog,"%s", ENDL);
+    fprintf(flog, ENDL);
     fprintf(flog,"     %-13s  %s" ENDL, "Boss", "Drop");
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++) {
         fprintf(flog,"(%02d) %-13s  %s" ENDL, (int)i, boss_names[i], boss_drop_names[boss_drops[i]]);
     }
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
+    if (gourdomizer) {
+    fprintf(flog, ENDL);
+    fprintf(flog,"      %-19s  %s" ENDL, "Gourd", "Drop");
+    fprintf(flog,"------------------------------------------------------------------------" ENDL);
+    for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) {
+        size_t j=gourd_drops[i];
+        if (!gourd_drops_data[j].name || !gourd_drops_data[j].name[0]) continue;
+        fprintf(flog,"(%03d) %-19s  %s" ENDL, (int)i, gourd_data[i].name, gourd_drops_data[j].name);
+    }
+    fprintf(flog,"------------------------------------------------------------------------" ENDL);
+    }
     #undef ENDL
     fclose(flog); flog=NULL;
     printf("Spoiler log saved as %s!\n", logdstbuf);
