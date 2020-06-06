@@ -1,3 +1,6 @@
+v24:
+  Fixed logic tree
+
 v023:
   Added gourdomizer
   Various small fixes (see git commit messages)

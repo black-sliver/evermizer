@@ -139,6 +139,7 @@ requirements = {
     'levitate': 'P_LEVITATE',
     'bronze axe+': 'P_BRONZE_AXE_PLUS',
     'bronze axe': 'P_BRONZE_AXE',
+    'bronze spear+': 'P_BRONZE_SPEAR_PLUS',
     'aegis': '2*P_DE',
     'knight basher': 'P_KNIGHT_BASHER',
     'jaguar ring': 'P_JAGUAR_RING',

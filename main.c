@@ -4,7 +4,7 @@
 // see google doc for documentation on the actual patches used below
 // the idea is to "manually" patch the game to a state where we simply swap
 // out some numbers to make it random (without rewriting/relocating everything)
-#define VERSION "v023"
+#define VERSION "v024"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -916,10 +916,11 @@ int main(int argc, const char** argv)
                                        checks[i].type==CHECK_GOURD ? gourd_drops[checks[i].index] : 0;
                         const drop_tree_item* drop = get_drop(checks[i].type, idx);
                         check_progress(checks+i, progress);
-                        drop_progress(drop, progress);
+                        if (! checks[i].missable)
+                            drop_progress(drop, progress);
                         #ifdef DEBUG_CHECK_TREE
                         printf("Reached %s\n", check2str(checks+i));
-                        if (drop) printf("Got %s\n", drop2str(drop));
+                        if (drop) printf("Got %s%s\n", checks[i].missable?"missable ":"", drop2str(drop));
                         #endif
                         complete=false;
                     }
