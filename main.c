@@ -37,18 +37,6 @@ char getch() {
 #endif
 #endif
 
-#ifdef __cplusplus
-#define _Static_assert static_assert
-#endif
-#ifdef WITH_ASSERT // include or override assert
-#include <assert.h>
-#else
-#ifndef NO_ASSERT
-#define NO_ASSERT
-#pragma message "NOTE: Defaulting to NO_ASSERT"
-#endif
-#define assert(x) do { if(x){} } while(false);
-#endif
 #if defined(WIN32) || defined(_WIN32)
 #define DIRSEP '\\'
 #ifndef PRIx64
@@ -59,35 +47,8 @@ char getch() {
 #define DIRSEP '/'
 #endif
 
-// Utility functions
-#ifndef MIN
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#endif
-#ifndef SWAP
-#define SWAP(a,b,T) do {\
-    T SWAP = a;\
-    a = b;\
-    b = SWAP;\
-} while(0)
-#endif
-#if (!defined(__STDC_VERSION__) || (__STDC_VERSION__ < 201112L)) && !defined(_Static_assert)
-#   define _Static_assert(a,b)
-#endif
-#if defined __GNUC__ && !defined __clang__ && __GNUC__>=9 && defined __OPTIMIZE__
-#   define GCC_Static_assert _Static_assert // non-standard static assert
-#else
-#   define GCC_Static_assert(a,b) assert(a) // fall back to runtime assert
-#endif
-#ifndef __has_builtin
-  #define __has_builtin(x) 0
-#endif
-#if defined __GNUC__ && !defined __STRICT_ANSI__ && (__GNUC__>5 || __has_builtin(__builtin_types_compatible_p))
-#define BUILD_BUG_OR_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
-#define ZERO_IF_ARRAY(a) BUILD_BUG_OR_ZERO(__builtin_types_compatible_p(typeof(a), typeof(&a[0])))
-#else
-#define ZERO_IF_ARRAY(a) 0
-#endif
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]) + ZERO_IF_ARRAY(a))
+#include "util.h"
+
 #ifndef NO_RANDO
 static bool stris(const char* s, const char* t) { if (s==t) return true; return strcmp(s,t)==0; }
 #endif
@@ -110,73 +71,7 @@ const char B32[] = "abcdefghijklmnopqrstuvwxyz234567=";
 char b32(unsigned v) { return B32[v&0x1f]; }
 #define APPLY_PATCH(buf, patch, loc) memcpy(buf+loc, patch, sizeof(patch)-1)
 
-// RNG functions
-static struct TINYMT64_T mt;
-#define rand64() tinymt64_generate_uint64(&mt)
-#define srand64(seed) tinymt64_init(&mt, seed)
-void shuffle_u8(uint8_t *array, size_t n)
-{
-    if (n > 1) 
-    {
-        size_t i;
-        for (i = 0; i < n - 1; i++) 
-        {
-          size_t j = i + rand64() / (UINT64_MAX / (n - i) + 1);
-          SWAP(array[j], array[i], uint8_t);
-        }
-    }
-}
-void shuffle_u8_pairs(uint8_t *array, size_t n/*pairs*/)
-{
-    if (n > 1) 
-    {
-        size_t i;
-        for (i = 0; i < n - 1; i++) 
-        {
-          size_t j = i + rand64() / (UINT64_MAX / (n - i) + 1);
-          SWAP(array[j*2],   array[i*2],   uint8_t);
-          SWAP(array[j*2+1], array[i*2+1], uint8_t);
-        }
-    }
-}
-void shuffle_u16(uint16_t *array, size_t n)
-{
-    if (n > 1) 
-    {
-        size_t i;
-        for (i = 0; i < n - 1; i++) 
-        {
-          size_t j = i + rand64() / (UINT64_MAX / (n - i) + 1);
-          SWAP(array[j], array[i], uint16_t);
-        }
-    }
-}
-uint8_t rand_u8(uint8_t min, uint8_t max)
-{
-    if (max<=min) { rand64(); return min; }
-    return (min+(uint8_t)(rand64()%(max-min+1)));
-}
-uint8_t rand_u8_except(uint8_t min, uint8_t max, uint8_t except)
-{
-    uint8_t res = rand_u8(min, max-1);
-    if (res>=except) res++;
-    return res;
-}
-uint8_t rand_amount(uint8_t min, uint8_t max, int cur_minus_expected_times_100)
-{
-    // cur_minus_expected >0: decrease max
-    // cur_minus_expected <0: increase min
-    // NOTE: a probability curve would better than just setting limits here.
-    if (cur_minus_expected_times_100<-300) return rand_u8(min+1, max);
-    if (cur_minus_expected_times_100> 300) return rand_u8(min, max-1);
-    return rand_u8(min, max);
-}
-uint16_t rand_u16(uint16_t min, uint16_t max)
-{
-    if (max<=min) return min;
-    return (min+(uint16_t)(rand64()%(max-min+1)));
-}
-
+#include "rng.h"
 
 #ifndef NO_RANDO
 #include "gourds.h" // generated list of gourds and gourd drops
