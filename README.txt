@@ -92,11 +92,6 @@ CHANGES SO FAR:
   Allow skipping of intro with no prior save file
 
 
-TO BE TESTED:
-  v019 change to Madronius may also fix double Horace
-    (talking to Madronius after beating Pyramid+Halls without having 2DEs)
-
-
 STILL TO BE FIXED:
   (with feature set outlined above)
   Show info to the player if market timer is over but vigor won't spawn yet
