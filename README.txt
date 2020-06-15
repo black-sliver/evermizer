@@ -117,6 +117,9 @@ WINDOWS BUILD INSTRUCTIONS:
   the github source tree requires you to have python3 in PATH to build gen.h
   the zip distribution includes a pre-built gen.h
 
+EMSCRIPTEN BUILD INSTRUCTIONS:
+  make sure emscripten/emcc is configured and in PATH, run make wasm
+  you may need to set some env variables, like EM_CONFIG=~/.emscripten
 
 CREDITS:
   Written by black_sliver
