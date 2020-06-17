@@ -186,7 +186,7 @@ enum option_indices {
 #endif
 
 // The actual program
-void print_usage(const char* appname)
+static void print_usage(const char* appname)
 {
     fprintf(stderr, "Usage: %s " FLAGS "<src file.sfc>" ARGS "\n", appname);
     fprintf(stderr, "       %s --help             show this output\n", appname);
@@ -201,7 +201,7 @@ void print_usage(const char* appname)
 #endif
 #endif
 }
-void print_settings()
+static void print_settings()
 {
     printf("%s %s settings:\n", APPNAME, VERSION);
 #ifndef NO_RANDO
@@ -219,7 +219,7 @@ void print_settings()
     }
     printf("\n");
 }
-void print_settings_json()
+static void print_settings_json()
 {
 #ifndef NO_RANDO
     printf("{\"Difficulty\": [\n");
