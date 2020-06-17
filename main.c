@@ -192,8 +192,12 @@ static void print_usage(const char* appname)
     fprintf(stderr, "       %s --help             show this output\n", appname);
     fprintf(stderr, "       %s --version          print version\n", appname);
     fprintf(stderr, "       %s --verify <rom.sfc> check if rom is compatible\n", appname);
+#ifndef __EMSCRIPTEN__
     fprintf(stderr, "       %s --settings         show available settings\n", appname);
     fprintf(stderr, "       %s --settings.json    above as json\n", appname);
+#else
+    fprintf(stderr, "       %s --settings.json    available settings as json\n", appname);
+#endif
 #if defined(WIN32) || defined(_WIN32)
     fprintf(stderr, "       or simply drag & drop your ROM onto the EXE\n");
 #ifndef NO_UI
@@ -201,6 +205,7 @@ static void print_usage(const char* appname)
 #endif
 #endif
 }
+#ifndef __EMSCRIPTEN__
 static void print_settings()
 {
     printf("%s %s settings:\n", APPNAME, VERSION);
@@ -219,6 +224,7 @@ static void print_settings()
     }
     printf("\n");
 }
+#endif
 static void print_settings_json()
 {
 #ifndef NO_RANDO
@@ -243,7 +249,11 @@ static void print_settings_json()
 }
 int main(int argc, const char** argv)
 {
+#ifndef __EMSCRIPTEN__
     const char* appname = argv[0];
+#else
+    const char* appname = APPNAME;
+#endif
     
     // verify at least one agument is given
     if (argc<2 || !argv[1] || !argv[1][0]) {
@@ -300,9 +310,11 @@ int main(int argc, const char** argv)
         } else if (strcmp(argv[1], "--help") == 0) {
             print_usage(appname);
             return 0;
+    #ifndef __EMSCRIPTEN__
         } else if (strcmp(argv[1], "--settings") == 0) {
             print_settings();
             return 0;
+    #endif
         } else if (strcmp(argv[1], "--settings.json") == 0) {
             print_settings_json();
             return 0;
