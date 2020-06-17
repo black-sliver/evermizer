@@ -79,6 +79,10 @@ char b32(unsigned v) { return B32[v&0x1f]; }
 #include "data.h"
 
 
+#define float DO_NOT_USE_FLOATS
+#define double DO_NOT_USE_FLOATS
+
+
 // Misc consts
 const char DIFFICULTY_CHAR[] = {'e','n','h'};
 const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard"};
