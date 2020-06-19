@@ -86,7 +86,7 @@ CHANGES SO FAR:
     Removed option to save at Madronius' Brother
   Fix missables:
     Directly reward Queen's Key to inventory
-    Make Escape still obtainable when Horace is gone
+    Make Revealer and Escape still obtainable when Horace is gone
   Uses tinymt64 for platform-independend RNG. See tinymt64.h for lincense
   Allow for ROM to grow to 4MB if required
   Allow skipping of intro with no prior save file
