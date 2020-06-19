@@ -35,7 +35,7 @@ EMFLAGS?=-D NO_ASSERT -s WASM=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=0 -s ASSERTIONS=
 
 PATCH_FILES := $(wildcard patches/*.txt) # this is replaced by pre-built gen.h in release to reduce build dependencies
 SOURCE_FILES = main.c
-INCLUDE_FILES = data.h sniff.h gourds.h patches.h gen.h tinymt64.h
+INCLUDE_FILES = rng.h util.h data.h sniff.h gourds.h patches.h gen.h tinymt64.h
 
 
 .PHONY: clean clean-temps all native win32 wasm test release
