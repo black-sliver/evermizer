@@ -1,0 +1,4 @@
+@0x9797f7
+// fix unframed text disappearing until room room change in Halls NW
+80 // vanilla: 81 = hide (instead of unhide/restore)
+@

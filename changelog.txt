@@ -1,5 +1,6 @@
 v025:
   Fixed Call Bead gourd in FE's hut
+  Fixed unframed texts disappearing in Halls NW
   Change Levitate and Revealer ingredients to not spoil player
   Clean-up and other code improvements
 

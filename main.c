@@ -921,6 +921,8 @@ int main(int argc, const char** argv)
     // v017:
     APPLY(146);
     APPLY(148);
+    // v025:
+    APPLY(HALLS_BUGS); // (actually not a softlock but a bug)
     
     printf("Fixing some missables...\n");
     // v018:
