@@ -44,7 +44,7 @@ ifeq ($(OS),Windows_NT)
 native: win32
 win32: evermizer.exe ow-patch.exe
 wasm: evermizer.js
-all: native
+all: native wasm
 else
 native: evermizer ow-patch
 win32: evermizer.exe ow-patch.exe
