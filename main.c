@@ -760,6 +760,8 @@ int main(int argc, const char** argv)
             if (!can_buy_ingredients(revealer_formula)) REROLL(); // reroll, unbeatable or would give away a hint
             if (alchemy_missable(alchemy[LEVITATE_IDX])) REROLL(); // NOTE: alchemy[a] = b moves a to vanilla b location
             if (alchemy_missable(alchemy[REVEALER_IDX])) REROLL(); // reroll, unbeatable or would give away a hint
+            if (!alchemy_in_act4(alchemy[LEVITATE_IDX]) && !can_buy_in_act3(levitate_formula)) REROLL(); // as above
+            if (!alchemy_in_act4(alchemy[REVEALER_IDX]) && !can_buy_in_act3(revealer_formula)) REROLL(); // as above
             // make sure atlas can be cast on easy in act1-3
             if (difficulty == 0) { // easy
                 if (gourdomizer) {
@@ -842,10 +844,7 @@ int main(int argc, const char** argv)
             // make sure atlas is reachable if it should be
             if (difficulty==milestone && progress[P_ATLAS]<1) REROLL();
             // FIXME: add ingredients to check-table, so we don't have to do this?
-            if (milestone==0) {
-                if (progress[P_LEVITATE] && !allow_rockskip && !can_buy_in_act3(levitate_formula)) REROLL();
-                if (progress[P_REVEALER] && !can_buy_in_act3(revealer_formula)) REROLL();
-            }
+            // NOTE: ingredient requirements always active now and moved to pre-check
         }
         #undef REROLL
         if (reroll) continue;
