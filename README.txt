@@ -40,6 +40,7 @@ CHANGES SO FAR:
     Horace spawn should be fixed (tied to DEs in inventory or DEs lost)
     Horace dialog should correcly indicate how many DEs you have
     Tinker taking away your diamond eyes sets flag to not lock-out Aegis
+    If gourdomizer is on as well, you can go back through Big Bug after Thraxx
   Gourdomizer: shuffle gourd/pot/chest drops
   Sniffamizer: non-chaos shuffles, chaos randomizes dog-sniff ingredients
   Musicmizer: randomize music, in testing stage
