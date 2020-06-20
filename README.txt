@@ -83,6 +83,7 @@ CHANGES SO FAR:
     Fix softlock when entering west prison with dead dog
     Fix softlock when opening mosquito cell last (exit will be bottom left cell)
     Fix softlock when you have more than 3 rocket parts
+    Fix texts disappearing when you fall down in Ruins NW room
     Removed option to save at Madronius' Brother
   Fix missables:
     Directly reward Queen's Key to inventory
@@ -95,13 +96,13 @@ CHANGES SO FAR:
 STILL TO BE FIXED:
   (with feature set outlined above)
   Show info to the player if market timer is over but vigor won't spawn yet
-  Remove now unnecessary parts of first WW patch
   Act3 has camera location bugs in houses until blindly talked to Lance
   Lance is still somewhat buggy
-  Stop and Lance are missabe, Fire Power location still marked as missable
+  Stop and Lance are missabe
   Put rocket behind mungola / change tinker progression?
   Remove some cutscenes?
   Desaturnate 2.0: make sure *NO* hatches can be skipped
+  Remove unnecessary parts of first WW/open world patch
 
 
 LINUX AND MAC BUILD INSTRUCTIONS:
