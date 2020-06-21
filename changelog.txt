@@ -1,3 +1,6 @@
+v026:
+  Mark chests locked behind queen's key as non-missable
+
 v025:
   Fixed Call Bead gourd in FE's hut
   Fixed unframed texts disappearing in Halls NW
