@@ -5,7 +5,7 @@ d9 07
 @0x998d29+2
 d9 07
 @
-// Use new flag for gauge gourd
+// Use new flag $2353&0x01 for gauge gourd
 @0x93ee83+3
 d8 07
 @
