@@ -937,6 +937,8 @@ int main(int argc, const char** argv)
     APPLY(QUEENS_KEY5);
     // v023:
     APPLY(QUEENS_KEY6);
+    // v026:
+    APPLY(QUEENS_KEY7);
     // v020:
     APPLY(FIX_FLAGS);
     // v023:

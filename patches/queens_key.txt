@@ -6,8 +6,8 @@
 // + 109 free bytes @ $9895c8
 @0x929803
 36 16 03
-
 @
+
 // directly reward Queen's key into inventory at old lady
 @0x989497+1
 // 09 07 fa 00 94 0d 00 -> 09 05 64 00 94 0d 00 // IF has key SKIP ...
@@ -15,20 +15,40 @@
 @0x9894a4+0
 // 14 fa 00 b1 -> 0c 64 00 b1 // set bit (instead of write)
 0c 64 00
-
 @
+
 // change fire power dude to check key flag instead of (redundant) variable
 @0x97e9fc+1
 // 09 87 fb 00 3c 00 -> 09 85 64 00 3c 00
 85 64 00
-
 @
+
 // change doors to check key flag instead of (redundant) variable
 @0x97ede9+1
 // 09 87 fb 00 e6 01 -> 09 85 64 00 e6 01
 85 64 00
-
 @
+
 // don't write to "Queen's Key on Boy" variable so we can reuse it
 @0x97ea18
 04 01 00 00
+@
+
+// rewrite the "Open Queen's Key Door" script to save 4 bytes
+// and extend the IF to also check for controlled char == boy for 4 bytes
+@0x97ede9
+09 05 64 00 29 57 14 a8 e2 01 // if !(queens key && !controlled char==dog)) skip 0x01e2
+
+09 12 00 29 31 a2 11 00 // if !... skip 0x11 (17)
+08 8a 01 00 d1 01 // if ... skip by 0x1d1 to 0x97efd2 // @+24
+5c b0 82 7e // set obj #0 state
+0d 01 00 b1 // $2834 |= 0x02
+04 c4 01 // skip by 0x1c4 to 0x97efd0 // @+35
+
+09 12 00 29 32 a2 11 00 // if !... skip 0x11 (17)
+08 8a 02 00 b8 01 // if ... skip by 0x1b8 to 0x97efd2 // @+49
+5c b1 82 7e // set obj #1 state
+0d 02 00 b1 // $2834 |= 0x04
+04 ab 01 // skip by 0x1ab to 0x97efd0 // @+60
+
+@

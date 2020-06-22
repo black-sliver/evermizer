@@ -1,5 +1,6 @@
 v026:
   Mark chests locked behind queen's key as non-missable
+  Change Doors locked with Queen's Key to only open with Boy
 
 v025:
   Fixed Call Bead gourd in FE's hut
