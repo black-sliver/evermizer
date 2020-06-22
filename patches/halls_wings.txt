@@ -1,0 +1,23 @@
+#ifndef NO_RANDO
+
+// swap Halls SW Wings with Halls NE Wax
+// if Boss drop rando is ON and Gourdomizer is OFF
+@0x928747
+47 9d 02 // swap scripts (0x978e8c -> 0x979d47)
+@0x92893f
+8c 8e 02 // swap scripts (0x979d47 -> 0x978e8c)
+@0x978e98+3
+0d // swap map refs (06 -> 0d)
+@0x979d57+3
+06 // swap map refs (0d -> 06)
+@0x979d47+2
+6d 01 // swap flag test ($2274&0x04 -> $2283&0x20 == 00e2 -> 015d)
+@0x978e8c+2
+e2 00 // swap flag test ($2283&0x20 -> $2274&0x04 == 015d -> 00e2)
+@0x979d5e+1
+5d 01 // swap flag set ($2274|=0x04 -> $2283|=0x20 == 00e2 -> 015d)
+@0x978e9f+1
+e2 00 // swap flag set ($2283|=0x20 -> $2274|=0x04 == 015d -> 00e2)
+@
+
+#endif

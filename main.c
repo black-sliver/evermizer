@@ -1020,7 +1020,11 @@ int main(int argc, const char** argv)
         APPLY(78a); APPLY(78b); APPLY(78c); APPLY(78d); APPLY(78e);
         APPLY(143); APPLY(144);
         if (!gourdomizer) {
-            // TODO: move wings to halls NE to avoid softlock
+            // v026: swap Halls SW Wings with Halls NE Wax
+            APPLY(HALLS_WINGS);  APPLY(HALLS_WINGS2);
+            APPLY(HALLS_WINGS3); APPLY(HALLS_WINGS4);
+            APPLY(HALLS_WINGS5); APPLY(HALLS_WINGS6);
+            APPLY(HALLS_WINGS7); APPLY(HALLS_WINGS8);
         }
         printf("Applying boss dropamizer...\n");
         APPLY(77);
