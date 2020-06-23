@@ -42,6 +42,7 @@ CHANGES SO FAR:
     Tinker taking away your diamond eyes sets flag to not lock-out Aegis
     If gourdomizer is on as well, you can go back through Big Bug after Thraxx
   Gourdomizer: shuffle gourd/pot/chest drops
+    Also makes sure almost no gourds are missable
   Sniffamizer: non-chaos shuffles, chaos randomizes dog-sniff ingredients
   Musicmizer: randomize music, in testing stage
   Fix sequence:

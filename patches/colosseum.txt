@@ -1,0 +1,68 @@
+#ifndef NO_RANDO
+
+@0x9286ab
+00 e0 0f // call our new script from north market that allows re-entering if vigor is dead
+
+@0xb1e000
+09 85 3d 00 0e 00   // IF !Vigor defeated ($225f & 0x20) skip 14 (0x0e)
+a3 2a               // CALL Prepare Room Change North - North
+18 35 01 b1         // WRITE CHANGE MUSIC ($238d) = 0x0001
+a3 00               // CALL stop music
+22 14 05 1e 00      // CHANGE MAP = 1e @ 0x0014<<4 | 0x0005<<4
+00                  // END
+29 0d c5 01         // CALL original script at 0x95c50d
+00                  // END
+
+@0x9280b1
+19 e0 0f // call our new script on colosseum holding room enter
+
+@0xb1e000+25
+09 85 3d 00 3a 00   // IF !Vigor defeated ($225f & 0x20) skip 58 (0x3a)
+33 02               // PLAY AUDIO TRACK 02
+a3 01               // CALL start music
+5c b0 b4            // unload gate
+5d b1 c8 00         // conditionally unload gourd1
+5d b2 c9 00         // conditionally unload gourd2
+5d b3 ca 00         // conditionally unload gourd3
+5d b4 cb 00         // conditionally unload gourd4
+5d b5 cc 00         // conditionally unload gourd5 (this is wrong in vanilla)
+5d b6 cd 00         // conditionally unload gourd6 (this is wrong in vanilla)
+5d b7 ce 00         // conditionally unload gourd7 (this is wrong in vanilla)
+5d b8 cf 00         // conditionally unload gourd8 (this is wrong in vanilla)
+29 75 5e 00         // CALL unknown (screen fade-in?)
+6e d0 14 11         // let boy walk to x=0x14,y=0x11
+a7 03               // Wait 3 frames
+6e d1 14 10         // let dog walk to x=0x14,y=0x10
+2e d1               // wait for dog to reach target
+bd                  // Boy = player controlled
+bf                  // Dog = player controlled
+00                  // END
+29 aa cf 01         // CALL original script at 0x95cfaa
+00                  // END
+
+@0x9286f0
+5e e0 0f // call our new script on colosseum holding room exit
+
+@0xb1e000+94
+09 85 3d 00 0e 00   // IF !Vigor defeated ($225f & 0x20) skip 14 (0x0e)
+a3 2a               // CALL Prepare Room Change North - North
+18 35 01 b1         // WRITE CHANGE MUSIC ($238d) = 0x0001
+a3 00               // CALL stop music
+22 40 04 1c 00      // CHANGE MAP = 1c @ 0x0020<<3 | 0x0004<<3
+00                  // END
+29 9a cb 01         // CALL original script at 0x95cb9a
+00                  // END
+
+@
+#endif
+
+@0x95c520+1
+d2 // East of guard: Make played character face west instead of boy
+@0x95c52a+1
+d2 // West of guard: Make played character face east instead of boy
+@0x95c542+1
+d2 // Guard: Move played character instead of boy
+@0x95c546+1
+d2 // Guard: Wait for played character to reach destination instead of boy
+@
+

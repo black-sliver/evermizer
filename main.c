@@ -923,6 +923,9 @@ int main(int argc, const char** argv)
     APPLY(148);
     // v025:
     APPLY(HALLS_BUGS); // (actually not a softlock but a bug)
+    // v026: fix colosseum entrance with dog available
+    APPLY(COLOSSEUM7);APPLY(COLOSSEUM8);
+    APPLY(COLOSSEUM9);APPLY(COLOSSEUM10);
     
     printf("Fixing some missables...\n");
     // v018:
@@ -1053,6 +1056,10 @@ int main(int argc, const char** argv)
         APPLY(GOURDOMIZER_DROPS3); APPLY(GOURDOMIZER_DROPS4);
         APPLY(GOURDOMIZER_DROPS5); APPLY(GOURDOMIZER_DROPS6);
         APPLY(GOURDOMIZER_DROPS7);
+        // v026: re-enter colosseum
+        APPLY(COLOSSEUM);  APPLY(COLOSSEUM2);
+        APPLY(COLOSSEUM3); APPLY(COLOSSEUM4);
+        APPLY(COLOSSEUM5); APPLY(COLOSSEUM6);
         for (size_t i=0; i<ARRAY_SIZE(gourd_drops_data); i++) {
             const struct gourd_drop_item* d = &(gourd_drops_data[i]);
             memcpy(buf + rom_off + d->pos, d->data, d->len);
