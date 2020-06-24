@@ -181,8 +181,7 @@ a3 3e 00                            // call loot part1, end
 @
 
 // replace "unknown","item" with "any","more" and remove <arg1> from "Can't carry unknown item <arg1>"
-// TODO: c00c29+7
-@0x800c29+7
+@0xc00c29+7
 c0 10 00 d8 0f 00 00 00 00 00
 @
 

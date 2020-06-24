@@ -33,7 +33,12 @@ with open(os.path.splitext(argv[1])[0]+'.h','wb') as fout:
                         addr = int(a,0) + int(b,0)
                     else:
                         addr = int(line[1:].strip(),0)
-                    fout.write(b'DEF(%b, 0x%06x - 0x800000,\n' % (patchname.encode('ascii'), addr))
+                    if addr>=0xc00000: # hirom, fast, "raw"
+                        fout.write(b'DEF(%b, 0x%06x - 0xC00000,\n' % (patchname.encode('ascii'), addr))
+                    elif addr>=0x800000: # hirom, fast, "script"
+                        fout.write(b'DEF(%b, 0x%06x - 0x800000,\n' % (patchname.encode('ascii'), addr))
+                    else: # assume absolute address
+                        fout.write(b'DEF(%b, 0x%06x,\n' % (patchname.encode('ascii'), addr))
                     in_patch = True
                     continue
                 if '//' in line:
