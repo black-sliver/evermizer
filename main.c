@@ -888,6 +888,7 @@ int main(int argc, const char** argv)
         APPLY(60); APPLY(61); APPLY(62); APPLY(63); APPLY(64); APPLY(65);
         // v008:
         APPLY(66); /*67-68: see below*/  APPLY(69);
+        // v026: travel forth and back through oglin cave
         APPLY(OGLIN_CAVE);  APPLY(OGLIN_CAVE2); APPLY(OGLIN_CAVE3);
         APPLY(OGLIN_CAVE4); APPLY(OGLIN_CAVE5); APPLY(OGLIN_CAVE6);
         // v009:
@@ -908,6 +909,8 @@ int main(int argc, const char** argv)
         APPLY(ACT3_OW);  APPLY(ACT3_OW2); APPLY(ACT3_OW3);
         APPLY(MUD_PEPPER_LIMIT);
         APPLY(TEMP); APPLY(TEMP2); // TODO: resolve underlying issue
+        // v026: levitate last rock entering magmar fight to avoid softlock
+        APPLY(VOLCANO);
     }
     if (keepdog) {
         printf("Applying patches to keep the dog...\n");

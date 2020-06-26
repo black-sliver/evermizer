@@ -1,0 +1,8 @@
+// make entering magmar fight set levitate flag on last rock to avoid softlock
+// instead of debug code
+@0x94bd7c
+0c 34 00 b1 // set bit $225e & 0x10
+04 08 00    // skip 8 bytes to 0x94bd8b
+00          // 8 free bytes
+@
+
