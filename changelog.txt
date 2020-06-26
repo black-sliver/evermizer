@@ -5,6 +5,8 @@ v026:
   Add trigger to re-enter colosseum once vigor is dead if gourdomizer is on
   Fix oddities at colosseum entrance with two characters
   Mark chests in colosseum holding room as non-missable
+  Move Oglin Cave changes to patches/, allow to re-enter Oglin Cave
+  Mark Oglin Cave gourd as non-missable
 
 v025:
   Fixed Call Bead gourd in FE's hut

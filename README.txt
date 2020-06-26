@@ -41,8 +41,7 @@ CHANGES SO FAR:
     Horace dialog should correcly indicate how many DEs you have
     Tinker taking away your diamond eyes sets flag to not lock-out Aegis
     If gourdomizer is on as well, you can go back through Big Bug after Thraxx
-  Gourdomizer: shuffle gourd/pot/chest drops
-    Also makes sure almost no gourds are missable
+  Gourdomizer: shuffle gourd/pot/chest drops, no gourds are missable
   Sniffamizer: non-chaos shuffles, chaos randomizes dog-sniff ingredients
   Musicmizer: randomize music, in testing stage
   Fix sequence:
@@ -90,6 +89,7 @@ CHANGES SO FAR:
   Fix missables:
     Directly reward Queen's Key to inventory
     Make Revealer and Escape still obtainable when Horace is gone
+    All rooms with gourds/chests/pots can be re-entered with gourdomizer on
   Uses tinymt64 for platform-independend RNG. See tinymt64.h for lincense
   Allow for ROM to grow to 4MB if required
   Allow skipping of intro with no prior save file

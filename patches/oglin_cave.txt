@@ -1,0 +1,60 @@
+// Make Oglin cave / Aquagoth accessible
+@0x97da0e
+04 22 00 04 00 00 // always
+//09 85 23 00 1f 00 // once
+@
+
+// Fix up aquagoth room-enter
+@0x97e836
+0c 2e 04 b0 // Clear bit to set correct side of Act3
+0c 23 00 b1 // Set bit to indicate aquagoth was fought
+04 04 00    // Jump over dead code
+@
+
+// Change trigger leading to aquagoth to new code @0x9895c8
+@0x928ed6
+c8 15 03
+@
+
+// Change trigger leading to aquagoth to spawn at act3 if AG is already dead
+// (at freed up 109 bytes of queen key transfer trigger)
+// NOTE: alternatively we could do it the other way round and jump from original trigger here
+@0x9895c8
+08 85 23 00 05 00   // IF aquagoth defeated SKIP 5
+29 c3 cd 02         // CALL original script at 0x97cdc3
+00                  // END
+0c 2e 04 b0         // Clear bit to set correct side of Act3
+a3 26               // CALL Prepare room change north -> south
+18 37 01 b0         // Overwrite movement: WRITE $238f = 0x0000
+18 35 01 b1         // WRITE CHANGE MUSIC ($238d) = 0x0001
+a3 00               // STOP MUSIC
+                    // $22ee & 0x01 = 0 // to skip cutscene?, already 0
+                    // $22ed & 0x08 = 0 // to skip cutscene!, already 0
+0c ab 04 b1         // $22ed & 0x08 = 1 // to run cutscene!
+22 1d 1f 6c 00      // Change map = 0x6c ("Well") @ 0x1d,0x1f
+00                  // END
+@
+
+// Dialog to get back through the well to horace camp
+@0xc3056b
+"\x69\x96Want me to push you back in?\n\x97\x8bOK.\n\x8bNo.\x00"
+@
+// Rewrite well dude to only have that one dialog + option to save
+@0x9ab886
+a3 02           // CALL "show textbox"
+51 f8 1f        // SHOW TEXT 1ff8 from c3056b as above
+09 30 ac 06 00  // IF dialog result == 0 SKI6 6
+a3 4e           // CALL "save dialog"
+55              // CLEAR TEXT
+a3 33           // CALL "npc end"
+00              // END
+55              // CLEAR TEXT
+a3 33           // CALL "npc end"
+0c af 04 b1     // $22ed |= 0x80 (Falling into a pit)
+a3 2e           // CALL prepare room change - falling
+18 eb 01 b6     // WRITE CHANGE DOGGO = 0x06 (Grey Hound)
+a3 00           // CALL stop music
+22 33 28 2f 00  // CHANGE MAP = 0x2f @ 0x0198 | 0x0140: "Horace camp"
+00              // END (3 free bytes remain)
+@
+

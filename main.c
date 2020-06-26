@@ -887,7 +887,9 @@ int main(int argc, const char** argv)
         // v006:
         APPLY(60); APPLY(61); APPLY(62); APPLY(63); APPLY(64); APPLY(65);
         // v008:
-        APPLY(66); /*67-68: see below*/  APPLY(69); APPLY(70); APPLY(71);
+        APPLY(66); /*67-68: see below*/  APPLY(69);
+        APPLY(OGLIN_CAVE);  APPLY(OGLIN_CAVE2); APPLY(OGLIN_CAVE3);
+        APPLY(OGLIN_CAVE4); APPLY(OGLIN_CAVE5); APPLY(OGLIN_CAVE6);
         // v009:
         APPLY(72); /*73,74: see below*/  APPLY(75); APPLY(76);
         // v015:

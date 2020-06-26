@@ -218,12 +218,6 @@ DEF(67, 0x95d608 - 0x800000, "\x00");
 DEF(68, 0x9aef47 - 0x800000, "\x08\x85\x0d\x05\x02\x00\x00");
 // Spawn Madrionus also if aegis is already defeated
 DEF(69, 0x96dfd7 - 0x800000, "\x08\x05\x08\x04\x29\x05\x0b\x04\x27\x94");
-// Make Oglin cave / Aquagoth accessible
-//DEF(70, 0x97da0e - 0x800000, "\x04\x22\x00\x04\x00\x00"); // always
-DEF(70, 0x97da0e - 0x800000, "\x09\x85\x23\x00\x1f\x00"); // once
-// Clear bit to set correct side of Act3 and Jump over dead code
-// Set bit to indicate aquagoth was fought
-DEF(71, 0x97e836 - 0x800000, "\x0c\x2e\x04\xb0\x0c\x23\x00\xb1\x04\x04\x00");
 // Allow to skip verm (put prison door to castle behind opening cells)
 DEF(72, 0x98a486 - 0x800000 + 1, "\x87\xf7\x00");
 // Allow entering west prison with dead dog by not assigning dog-died-script
