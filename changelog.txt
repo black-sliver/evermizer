@@ -7,6 +7,7 @@ v026:
   Mark chests in colosseum holding room as non-missable
   Move Oglin Cave changes to patches/, allow to re-enter Oglin Cave
   Mark Oglin Cave gourd as non-missable
+  Allow traveling back from Act3 to Act2 via Well Guy
   Fix potential softlock using rock skip with Magmar already defeated
 
 v025:
