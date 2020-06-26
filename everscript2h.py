@@ -53,6 +53,9 @@ with open(os.path.splitext(argv[1])[0]+'.h','wb') as fout:
                 if comment.strip()=='': comment==''
                 if comment and not data:
                     fout.write(b'%s//%s\n' % (spaces[in_patch],comment.encode('ascii')))
+                elif data and data[0]=='"' and data[-1]=='"':
+                    if comment!='': comment=' //'+comment
+                    fout.write(b'%s%s%s\n' % (spaces[in_patch], data.encode('ascii'), comment.encode('ascii')))
                 elif data:
                     if comment!='': comment=' //'+comment
                     b = data.split(' ')
