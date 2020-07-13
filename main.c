@@ -103,6 +103,7 @@ const static struct option options[] = {
     { 'b', true,  "Boss dropamizer", NULL },
     { 'g', true,  "Gourdomizer", NULL },
     { 's', true,  "Sniffamizer", NULL },
+    { 'd', false, "Doggomizer", "Testing" },
     { 'm', false, "Musicmizer", "Demo" },
     { 'l', false, "Spoiler Log", NULL },
 #endif
@@ -114,7 +115,7 @@ enum option_indices {
     openworld_idx, keepdog_idx, fixsequence_idx, fixcheats_idx,
 #ifndef NO_RANDO
     glitchless_idx, alchemizer_idx, ingredienizer_idx, bossdropamizer_idx,
-    gourdomizer_idx, sniffamizer_idx, /*doggomizer_idx, enemizer_idx,*/
+    gourdomizer_idx, sniffamizer_idx, doggomizer_idx, /*enemizer_idx,*/
     musicmizer_idx, spoilerlog_idx
 #endif
 };
@@ -418,7 +419,7 @@ int main(int argc, const char** argv)
     }
     
     // show command line settings in batch mode
-    char settings[16];
+    char settings[17];
     //if (argc>2) strncpy(settings, argv[2], sizeof(settings)); else memcpy(settings, "rn", 3);
     SETTINGS2STR(settings);
     
@@ -487,7 +488,7 @@ int main(int argc, const char** argv)
     printf("Seed: %" PRIx64 "\n", seed);
     srand64(seed);
     bool randomized = alchemizer || ingredienizer || bossdropamizer ||
-                      gourdomizer || sniffamizer /*|| doggomizer ||enemizer*/;
+                      gourdomizer || sniffamizer || doggomizer /*||enemizer*/;
     #else
     printf("SoE OpenWorld " VERSION "\n");
     #endif
@@ -507,6 +508,7 @@ int main(int argc, const char** argv)
     #include "gen.h" // generated from patches/
     #ifndef NO_RANDO
     #include "sniff.h" // generated list of sniffing spots
+    #include "doggo.h" // generated list of doggo changes
     
     DEF(JUKEBOX_SJUNGLE,      0x938664 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
     DEF(JUKEBOX_RAPTORS_1,    0x9391fa - 0x800000, "\x29\x84\x00\x0f\x4d\x4d"); // CALL jukebox3, NOP, NOP
@@ -566,6 +568,10 @@ int main(int argc, const char** argv)
     for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (uint16_t)i;
     uint16_t sniff_drops[ARRAY_SIZE(sniffs)];
     for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) sniff_drops[i] = sniffs[i].val;
+    uint8_t doggo_map[ARRAY_SIZE(doggo_vals)]; // for non-chaos only
+    for (size_t i=0; i<ARRAY_SIZE(doggo_map); i++) doggo_map[i] = doggo_vals[i];
+    uint8_t doggo_changes[ARRAY_SIZE(doggos)]; // preset to vanilla
+    for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) doggo_changes[i] = doggos[i].val;
     
     int rollcount=0;
     if (randomized)
@@ -726,6 +732,19 @@ int main(int argc, const char** argv)
                 assert(wingsSrcIdx<ARRAY_SIZE(gourd_drops) && hallsNEGourdIdx<ARRAY_SIZE(gourd_drops));
                 SWAP(gourd_drops[hallsNEGourdIdx],gourd_drops[wingsSrcIdx],uint16_t);
             }
+        }
+        if (doggomizer && !chaos) {
+            shuffle_u8(doggo_map+1, ARRAY_SIZE(doggo_map)-1); // keep act0 dog
+            for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
+                for (size_t j=0; j<ARRAY_SIZE(doggo_map); j++) {
+                    if (doggo_changes[i] != doggo_vals[j]) continue;
+                    doggo_changes[i] = doggo_map[j];
+                    break;
+                }
+            }
+        } else if (doggomizer) {
+            for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++)
+                doggo_changes[i] = doggo_vals[rand_u8(0, ARRAY_SIZE(doggo_vals)-1)];
         }
         if (sniffamizer && !chaos) {
             shuffle_u16(sniff_drops, ARRAY_SIZE(sniff_drops));
@@ -1118,6 +1137,13 @@ int main(int argc, const char** argv)
             buf[rom_off + sniffs[i].addr + 1] = (uint8_t)(sniff_drops[i]>>8);
         }
     }
+    if (doggomizer) {
+        printf("Applying doggomizer...\n");
+        for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
+            if (doggos[i].hard && difficulty<2) continue; // skip
+            buf[rom_off + doggos[i].addr] = doggo_changes[i];
+        }
+    }
     
     // if check value differs, the generated ROMs are different.
     uint32_t seedcheck = (uint16_t)(rand64()&0x3ff); // 10bits=2 b32 chars
@@ -1130,7 +1156,7 @@ int main(int argc, const char** argv)
     if (ingredienizer)  seedcheck |= 0x00010000;
     if (gourdomizer)    seedcheck |= 0x00020000;
     if (sniffamizer)    seedcheck |= 0x00040000;
-  //if (doggomizer)     seedcheck |= 0x00080000;
+    if (doggomizer)     seedcheck |= 0x00080000;
   //if (enemizer)       seedcheck |= 0x00100000;
     if (keepdog)        seedcheck |= 0x00200000;
     // 0x00400000 and 0x00800000 = difficulty
