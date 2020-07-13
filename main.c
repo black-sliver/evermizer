@@ -371,10 +371,20 @@ int main(int argc, const char** argv)
     // load rom
     FILE* fsrc = fopen(src,"rb");
     if (!fsrc) die("Could not open input file!\n");
+    uint8_t zbuf[5] = {0,0,0,0,0};
+    if (fread(zbuf, sizeof(*zbuf), sizeof(zbuf), fsrc) && zbuf[0]=='P' &&
+            zbuf[1]=='K' && zbuf[2]==3 && zbuf[3]==4 && zbuf[4]>=10)
+    {
+        fclose(fsrc);
+        die("Compressed ROMs not supported! Please extract first!\n");
+    }
     fseek(fsrc, 0L, SEEK_END);
     size_t sz = ftell(fsrc);
+    if (sz != 3145728 && sz != 3145728+512) {
+        fclose(fsrc);
+        die("ROM has to be 3MB SFC with or without header!\n");
+    }
     fseek(fsrc, 0L, SEEK_SET);
-    if (sz != 3145728 && sz != 3145728+512) { fclose(fsrc); die("ROM has to be 3MB SFC with or without header!\n"); }
     
     const size_t rom_off = (sz == 3145728+512) ? 512 : 0;
     bool grow = false; // will be set by patches if gowing the rom is required

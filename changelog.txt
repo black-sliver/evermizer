@@ -1,5 +1,6 @@
 v027:
   Include dark forest and remove duplicates in sniffamizer
+  Detect and reject zipped files
 
 v026:
   Mark chests locked behind queen's key as non-missable
