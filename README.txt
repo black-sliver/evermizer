@@ -1,11 +1,13 @@
 HOWTO:
 0. ROM has to be NTSC/US and can be a 3MB .SFC file with or without 512B header
 1. Make a backup of your rom (just to be safe)
-2. Unpack the exe or compile main.c
-3. Drag and Drop your rom onto the .exe
-4. Should ask you for settings and spit out success or error in a dos window,
+2. Unpack the exe, compile main.c or visit the in-browser version
+3. Drag and Drop your rom onto the .exe or in-browser field
+4a Should ask you for settings and spit out success or error in a dos window,
    create a file starting with "Evermizer" or "SoE-OpenWorld" in the source
    file's directory and print out the complete filename
+4b Should present you checkboxes in your browser and offer the patched ROM as
+   "download" or show messages in an alert box.
 5. Checksum is wrong, but neither sd2snes nor (most) emulators seem to care
 6. You can skip the intro by pressing start (even without a prior save)
 7. You have to kill Thraxx to get a weapon that can cut grass or find one in a
