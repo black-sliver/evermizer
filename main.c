@@ -103,7 +103,7 @@ const static struct option options[] = {
     { 'b', true,  "Boss dropamizer", NULL },
     { 'g', true,  "Gourdomizer", NULL },
     { 's', true,  "Sniffamizer", NULL },
-    { 'd', false, "Doggomizer", "Testing" },
+    { 'd', false, "Doggomizer", "Act1-3" },
     { 'm', false, "Musicmizer", "Demo" },
     { 'l', false, "Spoiler Log", NULL },
 #endif
@@ -734,7 +734,7 @@ int main(int argc, const char** argv)
             }
         }
         if (doggomizer && !chaos) {
-            shuffle_u8(doggo_map+1, ARRAY_SIZE(doggo_map)-1); // keep act0 dog
+            shuffle_u8(doggo_map+1, ARRAY_SIZE(doggo_map)-2); // keep act0 and act4 dog
             for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
                 for (size_t j=0; j<ARRAY_SIZE(doggo_map); j++) {
                     if (doggo_changes[i] != doggo_vals[j]) continue;
@@ -743,8 +743,10 @@ int main(int argc, const char** argv)
                 }
             }
         } else if (doggomizer) {
-            for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++)
-                doggo_changes[i] = doggo_vals[rand_u8(0, ARRAY_SIZE(doggo_vals)-1)];
+            for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
+                if (doggo_changes[i] == DOGGO_ACT4) continue; // don't touch act4 spots
+                doggo_changes[i] = doggo_vals[rand_u8(0, ARRAY_SIZE(doggo_vals)-2)]; // act0-3 dogs only
+            }
         }
         if (sniffamizer && !chaos) {
             shuffle_u16(sniff_drops, ARRAY_SIZE(sniff_drops));
