@@ -104,6 +104,7 @@ const static struct option options[] = {
     { 'g', true,  "Gourdomizer", NULL },
     { 's', true,  "Sniffamizer", NULL },
     { 'd', false, "Doggomizer", "Act1-3" },
+    { 'p', false, "Pupdunk mode", "Act0 dog" },
     { 'm', false, "Musicmizer", "Demo" },
     { 'l', false, "Spoiler Log", NULL },
 #endif
@@ -115,8 +116,8 @@ enum option_indices {
     openworld_idx, keepdog_idx, fixsequence_idx, fixcheats_idx,
 #ifndef NO_RANDO
     glitchless_idx, alchemizer_idx, ingredienizer_idx, bossdropamizer_idx,
-    gourdomizer_idx, sniffamizer_idx, doggomizer_idx, /*enemizer_idx,*/
-    musicmizer_idx, spoilerlog_idx
+    gourdomizer_idx, sniffamizer_idx, doggomizer_idx, pupdunk_idx,
+    /*enemizer_idx,*/ musicmizer_idx, spoilerlog_idx
 #endif
 };
 #define D(IDX) options[ IDX ].def
@@ -134,6 +135,7 @@ enum option_indices {
 #define gourdomizer O(gourdomizer_idx)
 #define sniffamizer O(sniffamizer_idx)
 #define doggomizer O(doggomizer_idx)
+#define pupdunk O(pupdunk_idx)
 #define enemizer O(enemizer_idx)
 #define musicmizer O(musicmizer_idx)
 #define spoilerlog O(spoilerlog_idx)
@@ -419,7 +421,7 @@ int main(int argc, const char** argv)
     }
     
     // show command line settings in batch mode
-    char settings[17];
+    char settings[18];
     //if (argc>2) strncpy(settings, argv[2], sizeof(settings)); else memcpy(settings, "rn", 3);
     SETTINGS2STR(settings);
     
@@ -733,7 +735,11 @@ int main(int argc, const char** argv)
                 SWAP(gourd_drops[hallsNEGourdIdx],gourd_drops[wingsSrcIdx],uint16_t);
             }
         }
-        if (doggomizer && !chaos) {
+        if (pupdunk) {
+            for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
+                doggo_changes[i] = doggo_vals[0]; // act0 dog only
+            }
+        } else if (doggomizer && !chaos) {
             shuffle_u8(doggo_map+1, ARRAY_SIZE(doggo_map)-2); // keep act0 and act4 dog
             for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
                 for (size_t j=0; j<ARRAY_SIZE(doggo_map); j++) {
@@ -1165,10 +1171,11 @@ int main(int argc, const char** argv)
   //if (enemizer)       seedcheck |= 0x00100000;
     if (keepdog)        seedcheck |= 0x00200000;
     // 0x00400000 and 0x00800000 = difficulty
-    if (chaos)          seedcheck |= 0x01000000; // 25bits in use -> 5 b32 chars
+    if (chaos)          seedcheck |= 0x01000000;
+    if (pupdunk)        seedcheck |= 0x02000000; // 26bits in use -> 6 b32 chars
     seedcheck |= ((uint32_t)difficulty<<22);
-    printf("\nCheck: %c%c%c%c%c (Please compare before racing)\n",
-           b32(seedcheck>>20), b32(seedcheck>>15),
+    printf("\nCheck: %c%c%c%c%c%c (Please compare before racing)\n",
+           b32(seedcheck>>25), b32(seedcheck>>20), b32(seedcheck>>15),
            b32(seedcheck>>10), b32(seedcheck>>5),  b32(seedcheck>>0));
     #endif
     
