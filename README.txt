@@ -46,7 +46,8 @@ CHANGES SO FAR:
   Gourdomizer: shuffle gourd/pot/chest drops, no gourds are missable
   Sniffamizer: non-chaos shuffles, chaos randomizes dog-sniff ingredients
   Doggomizer: swap (non-chaos) or randomize (chaos) dogs
-    WARNING: toaster evasion sound glitches and hardlocks for some music tracks
+    Act1-3 only because toaster evasion sound hardlocks for some music tracks
+  Pupdunk: Act0 doggo everywhere!
   Musicmizer: randomize music, in testing stage
   Fix sequence:
     Desolarify: Act1 first rock skip is disabled (Levitation required)

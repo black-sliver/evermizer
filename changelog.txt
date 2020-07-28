@@ -1,8 +1,8 @@
 v027:
   Include dark forest and remove duplicates in sniffamizer
   Detect and reject zipped files
-  Added first version of doggomizer
-  WARNING: toaster evasion glitches the APU and hardlocks with some music tracks
+  Added first version of doggomizer (Act1-3 only because of sound issues)
+  Added Pupdunk mode to have act0 dog everywhere
 
 v026:
   Mark chests locked behind queen's key as non-missable
