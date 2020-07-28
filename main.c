@@ -1145,6 +1145,9 @@ int main(int argc, const char** argv)
             if (doggos[i].hard && difficulty<2) continue; // skip
             buf[rom_off + doggos[i].addr] = doggo_changes[i];
         }
+        // fix up act0 doggo
+        APPLY(ACT0_DOG);
+        APPLY(ACT0_DOG2);
     }
     
     // if check value differs, the generated ROMs are different.

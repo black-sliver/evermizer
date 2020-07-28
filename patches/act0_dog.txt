@@ -1,0 +1,16 @@
+#ifndef NO_RANDO
+@0xe0540e
+// act0 doggo status bar picture pixels
+03 00
+1c 04 1a 08 0b 0e 23 14 23 0c 17 03 1c 1c 1a 16
+1b 17 23 3c 2b 3c 17 18 03 00 18 20 58 10 d0 70
+c4 28 e4 30 e8 03 18 18 58 68 d8 e8 c4 3c f4 1c
+e8 18 c0 0b 03 02 11 06 0b 01 01 02 00 00 01 c0
+13 1e 19 1e 0b 0c 05 07 05 07 03 03 c0 d0 c0 40
+88 60 d0 80 80 40 00 00 80 c0 c8 78 98 78 d0 30
+a0 e0 a0 e0 c0 c0
+@0xcc3c91
+// act0 doggo status bar picture position
+00 00
+@
+#endif
