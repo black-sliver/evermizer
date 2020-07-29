@@ -1001,6 +1001,8 @@ int main(int argc, const char** argv)
     printf("Improving quality of life...\n");
     // v014:
     APPLY(106);
+    // v027:
+    APPLY(ALCHEMY_SELECTION_FIXES);
     
     if (fixsequence) {
         printf("Applying desolarify patch-set...\n");
