@@ -4,7 +4,7 @@
 // see google doc for documentation on the actual patches used below
 // the idea is to "manually" patch the game to a state where we simply swap
 // out some numbers to make it random (without rewriting/relocating everything)
-#define VERSION "v027"
+#define VERSION "v028"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -522,7 +522,6 @@ int main(int argc, const char** argv)
     DEF(JUKEBOX_ECRUSTACIAR,  0x95ba0b - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
     DEF(JUKEBOX_CRUSTACIAFP,  0x97c125 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
     DEF(JUKEBOX_NOBILIAF,     0x95d72c - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_PALACE,       0x95d43f - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // TODO: limit because of wall sounds in past-vigor cutscene
     DEF(JUKEBOX_NOBILIAFP,    0x97c579 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
     DEF(JUKEBOX_STRONGHHE,    0x94e625 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
     DEF(JUKEBOK_SWAMPPEPPER,  0x94dde6 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
@@ -550,6 +549,7 @@ int main(int argc, const char** argv)
   //DEF(JUKEBOX_HALLS_MAIN,   0x9795af - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // disabled until tested
   //DEF(JUKEBOX_HALLS_NE,     0x97a381 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // disabled until tested
   //DEF(JUKEBOX_HALLS_NE2,    0x97a16d - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // disabled until tested
+  //DEF(JUKEBOX_PALACE,       0x95d43f - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // wall sounds in past-vigor cutscene glitch out
     #endif
     
     #ifndef NO_RANDO
@@ -1132,7 +1132,6 @@ int main(int argc, const char** argv)
         APPLY(JUKEBOX_ECRUSTACIAR);
         APPLY(JUKEBOX_CRUSTACIAFP);
         APPLY(JUKEBOX_NOBILIAF);
-        APPLY(JUKEBOX_PALACE);
         APPLY(JUKEBOX_NOBILIAFP);
         APPLY(JUKEBOX_STRONGHHE);
         APPLY(JUKEBOK_SWAMPPEPPER);
