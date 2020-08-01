@@ -1,3 +1,5 @@
+v028:
+  Removed palace from musicmizer to avoid hard lock
 v027:
   Include dark forest and remove duplicates in sniffamizer
   Detect and reject zipped files
