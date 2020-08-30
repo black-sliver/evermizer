@@ -206,6 +206,8 @@ if __name__ == '__main__':
         for row in data:
             rownr+=1
             # since the csv has more data than required, we try to verify stuff
+            if row[17].lower() == r'unreachable':
+                continue
             if not tryint(row[6]) in prizes:
                 print('Bad item id in row %d: "%s"' % (rownr, row[6]))
             elif not prizes[tryint(row[6])].lower() in row[7].lower():
