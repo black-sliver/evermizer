@@ -9,7 +9,7 @@ d9 07
 @0x93ee83+3
 d8 07
 @
-// Make act chests 224 and 230 unmissible (wall would close when opening 249)
+// Make act3 chests 224 and 230 unmissible (wall would close when opening 249)
 @0x98e22a+2
 b0 // actually just load a different wall in that room that is always open
 @
