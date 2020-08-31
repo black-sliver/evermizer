@@ -1104,6 +1104,8 @@ int main(int argc, const char** argv)
         APPLY(COLOSSEUM);  APPLY(COLOSSEUM2);
         APPLY(COLOSSEUM3); APPLY(COLOSSEUM4);
         APPLY(COLOSSEUM5); APPLY(COLOSSEUM6);
+        // v029: make act3 chests unmissable
+        APPLY(GOURDOMIZER_FIXES4);
         for (size_t i=0; i<ARRAY_SIZE(gourd_drops_data); i++) {
             const struct gourd_drop_item* d = &(gourd_drops_data[i]);
             memcpy(buf + rom_off + d->pos, d->data, d->len);

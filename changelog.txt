@@ -1,5 +1,6 @@
 next:
   Remove unreachable act3 chests from gourdomizer - gourd numbering changed
+  Make chests 224 and 230 in Ebon Keep houses unmissable with gourdomizer
 
 v028:
   Removed palace from musicmizer to avoid hard lock
