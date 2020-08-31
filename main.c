@@ -1148,7 +1148,7 @@ int main(int argc, const char** argv)
             buf[rom_off + sniffs[i].addr + 1] = (uint8_t)(sniff_drops[i]>>8);
         }
     }
-    if (doggomizer) {
+    if (doggomizer || pupdunk) {
         printf("Applying doggomizer...\n");
         for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
             if (doggos[i].hard && difficulty<2) continue; // skip
