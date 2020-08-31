@@ -968,6 +968,8 @@ int main(int argc, const char** argv)
     // v026: fix colosseum entrance with dog available
     APPLY(COLOSSEUM7);APPLY(COLOSSEUM8);
     APPLY(COLOSSEUM9);APPLY(COLOSSEUM10);
+    // v029: fix softlock when leaving Tiny's lair after opening the gate
+    APPLY(TINY_FIX);
     
     printf("Fixing some missables...\n");
     // v018:

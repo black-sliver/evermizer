@@ -91,6 +91,7 @@ CHANGES SO FAR:
     Fix softlock when you have more than 3 rocket parts
     Fix texts disappearing when you fall down in Ruins NW room
     Removed option to save at Madronius' Brother
+    Fix softlock when leaving tiny's lair
   Fix missables:
     Directly reward Queen's Key to inventory
     Make Revealer and Escape still obtainable when Horace is gone

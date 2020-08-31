@@ -1,0 +1,3 @@
+// don't set "tiny gate open" flag to avoid softlock if you leave
+@0x959e12+3
+b0
