@@ -4,6 +4,7 @@ next:
   Added new dog change spots to doggomizer
   Allow Pupdunk mode with doggomizer turned off
   Fix softlock when leaving Tiny's lair after opening the gate
+  Fix musicmizer hardlock when shopping right after crush dialog
 
 v028:
   Removed palace from musicmizer to avoid hard lock
