@@ -1,11 +1,12 @@
-//TODO:  we should also swap animations based on what doggo we have
+//TODO:  we should also swap animations and palettes based on what doggo we have
 //FIXME: $2363 is used to dynamically load doggo, but rarely used
 enum doggo_consts { DOGGO_ACT0=0xba, DOGGO_ACT1=0xb2, DOGGO_ACT2=0xb6,
                     DOGGO_ACT3=0xb8, DOGGO_ACT4=0xbc, DOGGO_BONE=0xb4 };
 static const uint8_t doggo_vals[] = {
     DOGGO_ACT0, DOGGO_ACT1, DOGGO_ACT2, DOGGO_ACT3, DOGGO_ACT4
 };
-struct doggo { uint32_t addr; uint8_t val; uint8_t hard; };
+enum doggo_flags { DOGGO_FLAG_HARD=0x1, DOGGO_FLAG_OPENWORLD=0x2 };
+struct doggo { uint32_t addr; uint8_t val; uint8_t flags; };
 static const struct doggo doggos[] = {
     {0x12c9d2,0xb6,0}, {0x12c9dc,0xb8,0}, {0x12db8d,0xb2,0}, {0x12dba4,0xb2,0},
     {0x12dbbb,0xb6,0}, {0x12dbd2,0xb6,0}, {0x12dbe9,0xb8,0}, {0x12dbf7,0xb8,0},
@@ -33,5 +34,5 @@ static const struct doggo doggos[] = {
     {0x1b9f49,0xbc,0}, {0x1bb961,0xbc,1}, {0x1bb99b,0xbc,1}, {0x1bba37,0xbc,0},
     {0x1bbcdc,0xba,0}, {0x1bbeb5,0xb2,0}, {0x1bbef6,0xb6,0}, {0x1bbf37,0xb8,0},
     {0x1bbf7a,0xba,0}, {0x1bbf93,0xb2,0}, {0x1bdd36,0xbc,0}, {0x1bdd76,0xba,0},
-    {0x1bde0a,0xbc,0}, {0x1be2b7,0xbc,0},
+    {0x1bde0a,0xbc,0}, {0x1be2b7,0xbc,0}, {0x1ab8a2,0xb6,2},
 };

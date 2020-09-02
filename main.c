@@ -1153,7 +1153,8 @@ int main(int argc, const char** argv)
     if (doggomizer || pupdunk) {
         printf("Applying doggomizer...\n");
         for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
-            if (doggos[i].hard && difficulty<2) continue; // skip
+            if ((doggos[i].flags & DOGGO_FLAG_HARD) && difficulty<2) continue; // skip
+            if ((doggos[i].flags & DOGGO_FLAG_OPENWORLD) && !openworld) continue; // skip
             buf[rom_off + doggos[i].addr] = doggo_changes[i];
         }
         // fix up act0 doggo
