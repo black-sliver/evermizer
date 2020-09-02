@@ -1,4 +1,4 @@
-next:
+v029:
   Remove unreachable act3 chests from gourdomizer - gourd numbering changed
   Make chests 224 and 230 in Ebon Keep houses unmissable with gourdomizer
   Added new dog change spots to doggomizer
