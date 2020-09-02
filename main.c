@@ -442,7 +442,7 @@ int main(int argc, const char** argv)
         clrscr();
         printf(APPNAME " " VERSION "\n");
         if (argc<4) {
-            char seedbuf[17];
+            char seedbuf[18];
             printf("Seed (ENTER for random): ");
             fflush(stdout);
             if (! fgets(seedbuf, sizeof(seedbuf), stdin)) die("\nAborting...\n");
