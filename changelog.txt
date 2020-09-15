@@ -1,5 +1,6 @@
 next:
   Fix requirements for one gourd in Halls NW
+  Fix logic tree for mungola
 
 v029:
   Remove unreachable act3 chests from gourdomizer - gourd numbering changed
