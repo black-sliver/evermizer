@@ -2,6 +2,7 @@ next:
   Fix requirements for one gourd in Halls NW
   Fix logic tree for mungola
   Add logic and gameplay difficulty
+  Add accessibility flag (for full black out bingo)
 
 v029:
   Remove unreachable act3 chests from gourdomizer - gourd numbering changed

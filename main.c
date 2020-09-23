@@ -98,6 +98,7 @@ const static struct option options[] = {
     { '2', true,  "Fix cheats", NULL },
 #ifndef NO_RANDO
     { '3', true,  "Glitchless beatable", NULL },
+    { '4', false, "All accessible", NULL },
     { 'a', true,  "Alchemizer", NULL },
     { 'i', true,  "Ingredienizer", NULL },
     { 'b', true,  "Boss dropamizer", NULL },
@@ -115,9 +116,9 @@ enum option_indices {
 #endif
     openworld_idx, keepdog_idx, fixsequence_idx, fixcheats_idx,
 #ifndef NO_RANDO
-    glitchless_idx, alchemizer_idx, ingredienizer_idx, bossdropamizer_idx,
-    gourdomizer_idx, sniffamizer_idx, doggomizer_idx, pupdunk_idx,
-    /*enemizer_idx,*/ musicmizer_idx, spoilerlog_idx
+    glitchless_idx, accessible_idx, alchemizer_idx, ingredienizer_idx,
+    bossdropamizer_idx, gourdomizer_idx, sniffamizer_idx, doggomizer_idx,
+    pupdunk_idx, /*enemizer_idx,*/ musicmizer_idx, spoilerlog_idx
 #endif
 };
 #define D(IDX) options[ IDX ].def
@@ -129,6 +130,7 @@ enum option_indices {
 #define fixsequence O(fixsequence_idx)
 #define fixcheats O(fixcheats_idx)
 #define glitchless O(glitchless_idx)
+#define accessible O(accessible_idx)
 #define alchemizer O(alchemizer_idx)
 #define ingredienizer O(ingredienizer_idx)
 #define bossdropamizer O(bossdropamizer_idx)
@@ -421,7 +423,7 @@ int main(int argc, const char** argv)
     }
     
     // show command line settings in batch mode
-    char settings[18];
+    char settings[19];
     //if (argc>2) strncpy(settings, argv[2], sizeof(settings)); else memcpy(settings, "rn", 3);
     SETTINGS2STR(settings);
     
@@ -942,6 +944,14 @@ int main(int argc, const char** argv)
             if (difficulty==milestone && progress[P_ATLAS]<1) REROLL();
             // FIXME: add ingredients to check-table, so we don't have to do this?
             // NOTE: ingredient requirements always active now and moved to pre-check
+            if (accessible && milestone==1) {
+                bool not_accessible = false;
+                for (size_t i=P_NONE+1; i<P_END-1; i++) {
+                    if (i == P_DE || i == P_GAUGE || i == P_WHEEL || i == P_ORACLE_BONE || i == P_ROCK_SKIP) continue;
+                    if (progress[i]==0) { not_accessible = true; break; }
+                }
+                if (not_accessible) REROLL();
+            }
         }
         #undef REROLL
         if (reroll) continue;
@@ -1251,7 +1261,8 @@ int main(int argc, const char** argv)
     if (gourdomizer)    seedcheck |= 0x00020000;
     if (sniffamizer)    seedcheck |= 0x00040000;
     if (doggomizer)     seedcheck |= 0x00080000;
-  //if (enemizer)       seedcheck |= 0x00100000;
+    //if (enemizer)     seedcheck |= ??;
+    if (accessible)     seedcheck |= 0x00100000;
     if (keepdog)        seedcheck |= 0x00200000;
     // 0x00400000 and 0x00800000 = difficulty
     if (chaos)          seedcheck |= 0x01000000;
