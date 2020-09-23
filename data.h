@@ -267,6 +267,15 @@ enum progression {
     P_VOLCANO_ENTERED,
     P_VOLCANO_EXPLODED,
     P_MUNGOLA,
+    P_ACT1_WEAPON,
+    P_ACT2_WEAPON,
+    P_ACT3_WEAPON,
+    P_ACT4_WEAPON,
+    P_ARMOR,
+    P_AMMO,
+    P_GLITCHED_AMMO,
+    P_CALLBEAD,
+    P_WINGS,
     P_END
 };
 struct progression_requirement {
@@ -278,25 +287,29 @@ struct progression_provider {
     enum progression progress;
 };
 #define NO_REQ {0,P_NONE}
-#define NOTHING_REQUIRED { NO_REQ,NO_REQ,NO_REQ,NO_REQ }
+#define NOTHING_REQUIRED { NO_REQ,NO_REQ,NO_REQ,NO_REQ,NO_REQ }
 #define NO_PVD {0,P_NONE}
-#define NOTHING_PROVIDED { NO_PVD,NO_PVD,NO_PVD }
-#define REQ1(p) { {1,p},NO_REQ,NO_REQ,NO_REQ }
-#define REQ2(p,q) { {1,p},{1,q},NO_REQ,NO_REQ }
-#define REQ3(p,q,r) { {1,p},{1,q},{1,r},NO_REQ }
-#define REQ4(p,q,r,s) { {1,p},{1,q},{1,r},{1,s} }
-#define REQ1N(n,p) { {n,p},NO_REQ,NO_REQ,NO_REQ }
-#define REQ2N(n,p,m,q) { {n,p},{m,q},NO_REQ,NO_REQ }
-#define REQ3N(k,p,l,q,n,r) { {k,p},{l,q},{n,r},NO_REQ }
-#define REQ4N(k,p,l,q,n,r,m,s) { {k,p},{l,q},{n,r},{m,s} }
+#define NOTHING_PROVIDED { NO_PVD,NO_PVD,NO_PVD,NO_PVD,NO_PVD }
+#define REQ1(p) { {1,p},NO_REQ,NO_REQ,NO_REQ,NO_REQ }
+#define REQ2(p,q) { {1,p},{1,q},NO_REQ,NO_REQ,NO_REQ }
+#define REQ3(p,q,r) { {1,p},{1,q},{1,r},NO_REQ,NO_REQ }
+#define REQ4(p,q,r,s) { {1,p},{1,q},{1,r},{1,s},NO_REQ }
+#define REQ5(p,q,r,s,t) { {1,p},{1,q},{1,r},{1,s},{1,t} }
+#define REQ1N(n,p) { {n,p},NO_REQ,NO_REQ,NO_REQ,NO_REQ }
+#define REQ2N(n,p,m,q) { {n,p},{m,q},NO_REQ,NO_REQ,NO_REQ }
+#define REQ3N(k,p,l,q,n,r) { {k,p},{l,q},{n,r},NO_REQ,NO_REQ }
+#define REQ4N(k,p,l,q,n,r,m,s) { {k,p},{l,q},{n,r},{m,s},NO_REQ }
+#define REQ5N(k,p,l,q,n,r,m,s,o,t) { {k,p},{l,q},{n,r},{m,s},{o,t} }
 #define PVD1 REQ1
 #define PVD2 REQ2
 #define PVD3 REQ3
 #define PVD4 REQ4
+#define PVD5 REQ5
 #define PVD1N REQ1N
 #define PVD2N REQ2N
 #define PVD3N REQ3N
 #define PVD4N REQ4N
+#define PVD5N REQ5N
 
 enum check_tree_item_type {
     CHECK_NONE,
@@ -311,76 +324,77 @@ typedef struct check_tree_item {
     enum check_tree_item_type type; // spell, boss or gourd
     uint16_t index; // which spell, boss or gourd
     bool missable;
-    struct progression_requirement requires[4];
-    struct progression_provider provides[4];
+    int8_t difficulty;
+    struct progression_requirement requires[5];
+    struct progression_provider provides[5];
 } check_tree_item;
 typedef struct drop_tree_item {
     enum check_tree_item_type type; // spell, boss or gourd
     uint16_t index; // which spell, boss or gourd
-    struct progression_provider provides[4];
+    struct progression_provider provides[5];
 } drop_tree_item;
 static const check_tree_item blank_check_tree[] = {
-    // Alchemy checks               missable  requires                            provided by the check itself
-    {0, CHECK_ALCHEMY,ACID_RAIN_IDX,       0, NOTHING_REQUIRED,                              NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,ATLAS_IDX,           0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,BARRIER_IDX,         0, REQ2N(1,P_WEAPON,2,P_DE),                      NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,CALL_UP_IDX,         0, REQ1(P_ROCKET),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,CORROSION_IDX,       0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,CRUSH_IDX,           0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,CURE_IDX,            0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,DEFEND_IDX,          0, NOTHING_REQUIRED,                              NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,DOUBLE_DRAIN_IDX,    0, REQ2N(1,P_BRONZE_AXE_PLUS,2,P_DE),             NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,DRAIN_IDX,           0, REQ1(P_BRONZE_AXE_PLUS),                       NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,ENERGIZE_IDX,        0, REQ2(P_ROCKET,P_ENERGY_CORE),                  NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,ESCAPE_IDX,          0, REQ3(P_WEAPON,P_REVEALER,P_PYRAMID_OR_RUINS),  NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,EXPLOSION_IDX,       0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,FIREBALL_IDX,        0, REQ3(P_WEAPON,P_REVEALER,P_JAGUAR_RING),       NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,FIRE_POWER_IDX,      0, REQ2(P_WEAPON,P_QUEENS_KEY),                   NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,FLASH_IDX,           0, NOTHING_REQUIRED,                              NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,FORCE_FIELD_IDX,     0, REQ1(P_ROCKET),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,HARD_BALL_IDX,       0, NOTHING_REQUIRED,                              NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,HEAL_IDX,            0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,LANCE_SPELL_IDX,     1, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,LEVITATE_IDX,        0, REQ1(P_NON_SWORD),                             NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,LIGHTNING_STORM_IDX, 0, REQ1(P_KNIGHT_BASHER),                         NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,MIRACLE_CURE_IDX,    0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,NITRO_IDX,           0, REQ1(P_ROCKET),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,ONE_UP_IDX,          0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,REFLECT_IDX,         0, REQ1(P_ROCKET),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,REGROWTH_IDX,        0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,REVEALER_IDX,        0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,REVIVE_IDX,          0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,SLOW_BURN_IDX,       0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,SPEED_IDX,           0, REQ1(P_VOLCANO_ENTERED),                       NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,STING_IDX,           0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,STOP_IDX,            1, REQ2(P_ROCKET,P_ORACLE_BONE),                  NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,SUPER_HEAL_IDX,      0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    // Alchemy checks               missable  d. requires                            provided by the check itself
+    {0, CHECK_ALCHEMY,ACID_RAIN_IDX,       0, 0, NOTHING_REQUIRED,                              NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,ATLAS_IDX,           0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,BARRIER_IDX,         0, 1, REQ2N(1,P_WEAPON,2,P_DE),                      NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,CALL_UP_IDX,         0, 0, REQ1(P_ROCKET),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,CORROSION_IDX,       0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,CRUSH_IDX,           0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,CURE_IDX,            0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,DEFEND_IDX,          0, 0, NOTHING_REQUIRED,                              NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,DOUBLE_DRAIN_IDX,    0, 0, REQ2N(1,P_BRONZE_AXE_PLUS,2,P_DE),             NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,DRAIN_IDX,           0, 0, REQ1(P_BRONZE_AXE_PLUS),                       NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,ENERGIZE_IDX,        0, 0, REQ2(P_ROCKET,P_ENERGY_CORE),                  NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,ESCAPE_IDX,          0, 0, REQ3(P_WEAPON,P_REVEALER,P_PYRAMID_OR_RUINS),  NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,EXPLOSION_IDX,       0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,FIREBALL_IDX,        0, 1, REQ3(P_WEAPON,P_REVEALER,P_JAGUAR_RING),       NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,FIRE_POWER_IDX,      0, 0, REQ2(P_WEAPON,P_QUEENS_KEY),                   NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,FLASH_IDX,           0, 0, NOTHING_REQUIRED,                              NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,FORCE_FIELD_IDX,     0, 0, REQ1(P_ROCKET),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,HARD_BALL_IDX,       0, 0, NOTHING_REQUIRED,                              NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,HEAL_IDX,            0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,LANCE_SPELL_IDX,     1, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,LEVITATE_IDX,        0, 0, REQ1(P_NON_SWORD),                             NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,LIGHTNING_STORM_IDX, 0, 0, REQ1(P_KNIGHT_BASHER),                         NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,MIRACLE_CURE_IDX,    0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,NITRO_IDX,           0, 0, REQ1(P_ROCKET),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,ONE_UP_IDX,          0, 1, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,REFLECT_IDX,         0, 0, REQ1(P_ROCKET),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,REGROWTH_IDX,        0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,REVEALER_IDX,        0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,REVIVE_IDX,          0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,SLOW_BURN_IDX,       0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,SPEED_IDX,           0, 0, REQ1(P_VOLCANO_ENTERED),                       NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,STING_IDX,           0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,STOP_IDX,            1, 0, REQ2(P_ROCKET,P_ORACLE_BONE),                  NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,SUPER_HEAL_IDX,      0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
     // Boss checks
-    {0, CHECK_BOSS,THRAXX_IDX,        0, NOTHING_REQUIRED,                        NOTHING_PROVIDED},
-    {0, CHECK_BOSS,COLEOPTERA_IDX,    0, REQ1(P_WEAPON),                          NOTHING_PROVIDED}, // NOTE: we added REQ(P_WEAPON) since the boss is too hard to get the first weapon
-    {0, CHECK_BOSS,MAMMOTH_VIPER_IDX, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
-    {0, CHECK_BOSS,CAVE_RAPTORS_IDX,  0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
-    {0, CHECK_BOSS,SALABOG_IDX,       0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
-    {0, CHECK_BOSS,VOLCANO_VIPER_IDX, 0, REQ2(P_WEAPON,P_LEVITATE),               NOTHING_PROVIDED},
-    {0, CHECK_BOSS,MAGMAR_IDX,        0, REQ1(P_VOLCANO_ENTERED),                 PVD1(P_VOLCANO_EXPLODED)},
-    {0, CHECK_BOSS,VIGOR_IDX,         0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
-    {0, CHECK_BOSS,MONK_IDX,          0, REQ3(P_WEAPON,P_REVEALER,P_JAGUAR_RING), NOTHING_PROVIDED},
-    {0, CHECK_BOSS,MEGATAUR_IDX,      0, REQ2(P_BRONZE_SPEAR_PLUS,P_REVEALER),    PVD1(P_PYRAMID_OR_RUINS)},
-    {0, CHECK_BOSS,SONS_IDX,          0, REQ2(P_WEAPON,P_REVEALER),               NOTHING_PROVIDED},
-    {0, CHECK_BOSS,RIMSALA_IDX,       0, REQ2(P_BRONZE_AXE,P_REVEALER),           PVD1(P_PYRAMID_OR_RUINS)},
-    //{0, CHECK_BOSS,AEGIS_IDX,         0, REQ2N(1,P_WEAPON,2,P_DE),                NOTHING_PROVIDED},
-    {0, CHECK_BOSS,AQUAGOTH_IDX,      0, REQ2N(1,P_WEAPON,2,P_DE),                NOTHING_PROVIDED},
-    {0, CHECK_BOSS,BAD_BOYS_IDX,      0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
-    {0, CHECK_BOSS,TIMBERDRAKE_IDX,   0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
-    {0, CHECK_BOSS,VERMINATOR_IDX,    0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
-    {0, CHECK_BOSS,MUNGOLA_IDX,       0, REQ1(P_KNIGHT_BASHER),                   PVD1(P_MUNGOLA)},
-    {0, CHECK_BOSS,TINY_IDX,          0, REQ2N(1,P_WEAPON,2,P_DE),                NOTHING_PROVIDED},
+    {0, CHECK_BOSS,THRAXX_IDX,        0, 0, NOTHING_REQUIRED,                        NOTHING_PROVIDED},
+    {0, CHECK_BOSS,COLEOPTERA_IDX,    0, 1, REQ1(P_WEAPON),                          NOTHING_PROVIDED}, // NOTE: we added REQ(P_WEAPON) since the boss is too hard to get the first weapon
+    {0, CHECK_BOSS,MAMMOTH_VIPER_IDX, 0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
+    {0, CHECK_BOSS,CAVE_RAPTORS_IDX,  0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
+    {0, CHECK_BOSS,SALABOG_IDX,       0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
+    {0, CHECK_BOSS,VOLCANO_VIPER_IDX, 0, 0, REQ2(P_WEAPON,P_LEVITATE),               NOTHING_PROVIDED},
+    {0, CHECK_BOSS,MAGMAR_IDX,        0, 0, REQ1(P_VOLCANO_ENTERED),                 PVD1(P_VOLCANO_EXPLODED)},
+    {0, CHECK_BOSS,VIGOR_IDX,         0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
+    {0, CHECK_BOSS,MONK_IDX,          0, 0, REQ3(P_WEAPON,P_REVEALER,P_JAGUAR_RING), NOTHING_PROVIDED},
+    {0, CHECK_BOSS,MEGATAUR_IDX,      0, 0, REQ2(P_BRONZE_SPEAR_PLUS,P_REVEALER),    PVD1(P_PYRAMID_OR_RUINS)},
+    {0, CHECK_BOSS,SONS_IDX,          0, 0, REQ2(P_WEAPON,P_REVEALER),               NOTHING_PROVIDED},
+    {0, CHECK_BOSS,RIMSALA_IDX,       0, 0, REQ2(P_BRONZE_AXE,P_REVEALER),           PVD1(P_PYRAMID_OR_RUINS)},
+    //{0, CHECK_BOSS,AEGIS_IDX,         0, 0, REQ2N(1,P_WEAPON,2,P_DE),                NOTHING_PROVIDED},
+    {0, CHECK_BOSS,AQUAGOTH_IDX,      0, 0, REQ2N(1,P_WEAPON,2,P_DE),                NOTHING_PROVIDED},
+    {0, CHECK_BOSS,BAD_BOYS_IDX,      0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
+    {0, CHECK_BOSS,TIMBERDRAKE_IDX,   0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
+    {0, CHECK_BOSS,VERMINATOR_IDX,    0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
+    {0, CHECK_BOSS,MUNGOLA_IDX,       0, 0, REQ1(P_KNIGHT_BASHER),                   PVD1(P_MUNGOLA)},
+    {0, CHECK_BOSS,TINY_IDX,          0, 0, REQ2N(1,P_WEAPON,2,P_DE),                NOTHING_PROVIDED},
     // Required checks that are not randomized (yet)
-    {0, CHECK_RULE,P_JAGUAR_RING,     0, NOTHING_REQUIRED,           PVD1(P_JAGUAR_RING)},
-    {0, CHECK_RULE,P_ROCKET,          0, REQ3N(1,P_GAUGE,1,P_WHEEL,2,P_DE), PVD2N(1,P_ROCKET,-2,P_DE)},
-    {0, CHECK_RULE,P_ENERGY_CORE,     0, REQ1(P_ROCKET),             PVD1(P_ENERGY_CORE)},
-    {0, CHECK_RULE,P_VOLCANO_ENTERED, 0, REQ2(P_WEAPON,P_LEVITATE),  PVD1(P_VOLCANO_ENTERED)},
-    {0, CHECK_RULE,P_ROCK_SKIP,       0, REQ2(P_WEAPON,P_ROCK_SKIP), PVD1(P_VOLCANO_ENTERED)},
+    {0, CHECK_RULE,P_JAGUAR_RING,     0, 0, NOTHING_REQUIRED,           PVD1(P_JAGUAR_RING)},
+    {0, CHECK_RULE,P_ROCKET,          0, 0, REQ3N(1,P_GAUGE,1,P_WHEEL,2,P_DE), PVD2N(1,P_ROCKET,-2,P_DE)},
+    {0, CHECK_RULE,P_ENERGY_CORE,     0, 0, REQ1(P_ROCKET),             PVD1(P_ENERGY_CORE)},
+    {0, CHECK_RULE,P_VOLCANO_ENTERED, 0, 0, REQ2(P_WEAPON,P_LEVITATE),  PVD1(P_VOLCANO_ENTERED)},
+    {0, CHECK_RULE,P_ROCK_SKIP,       0, 0, REQ2(P_WEAPON,P_ROCK_SKIP), PVD1(P_VOLCANO_ENTERED)},
     // Gourd checks included from generated gourds.h
     #define CHECK_TREE
     #include "gourds.h"
@@ -393,13 +407,13 @@ static const drop_tree_item drops[] = {
     {CHECK_ALCHEMY,LEVITATE_IDX, PVD1(P_LEVITATE)},
     // Boss drops with progression
     {CHECK_BOSS,WHEEL_IDX,            PVD1(P_WHEEL)},
-    {CHECK_BOSS,GLADIATOR_SWORD_IDX,  PVD1(P_WEAPON)},
-    {CHECK_BOSS,CRUSADER_SWORD_IDX,   PVD1(P_WEAPON)},
-    {CHECK_BOSS,SPIDER_CLAW_IDX,      PVD2(P_WEAPON,P_NON_SWORD)},
-    {CHECK_BOSS,BRONZE_AXE_IDX,       PVD4(P_WEAPON,P_NON_SWORD,P_BRONZE_AXE,P_BRONZE_AXE_PLUS)},
-    {CHECK_BOSS,HORN_SPEAR_IDX,       PVD2(P_WEAPON,P_NON_SWORD)},
-    {CHECK_BOSS,BRONZE_SPEAR_IDX,     PVD3(P_WEAPON,P_NON_SWORD,P_BRONZE_SPEAR_PLUS)},
-    {CHECK_BOSS,LANCE_WEAPON_IDX,     PVD3(P_WEAPON,P_NON_SWORD,P_BRONZE_SPEAR_PLUS)},
+    {CHECK_BOSS,GLADIATOR_SWORD_IDX,  PVD2(P_WEAPON,P_ACT2_WEAPON)},
+    {CHECK_BOSS,CRUSADER_SWORD_IDX,   PVD2(P_WEAPON,P_ACT3_WEAPON)},
+    {CHECK_BOSS,SPIDER_CLAW_IDX,      PVD3(P_WEAPON,P_NON_SWORD,P_ACT1_WEAPON)},
+    {CHECK_BOSS,BRONZE_AXE_IDX,       PVD5(P_WEAPON,P_NON_SWORD,P_BRONZE_AXE,P_BRONZE_AXE_PLUS,P_ACT2_WEAPON)},
+    {CHECK_BOSS,HORN_SPEAR_IDX,       PVD3(P_WEAPON,P_NON_SWORD,P_ACT1_WEAPON)},
+    {CHECK_BOSS,BRONZE_SPEAR_IDX,     PVD4(P_WEAPON,P_NON_SWORD,P_BRONZE_SPEAR_PLUS,P_ACT2_WEAPON)},
+    {CHECK_BOSS,LANCE_WEAPON_IDX,     PVD4(P_WEAPON,P_NON_SWORD,P_BRONZE_SPEAR_PLUS,P_ACT3_WEAPON)},
     {CHECK_BOSS,DIAMOND_EYE_DROP_IDX, PVD1(P_DE)},
     // Gourd drops with progression included from generated gourds.h
     #define DROP_TREE
@@ -442,6 +456,13 @@ static inline const drop_tree_item* get_drop(enum check_tree_item_type type, uin
         if (drops[i].type == type && drops[i].index == idx) return drops+i;
     return NULL;
 }
+static int drop_provides(const drop_tree_item* drop, uint16_t progress)
+{
+    if (!drop) return 0;
+    for (size_t i=0; i<ARRAY_SIZE(drop->provides); i++)
+        if (drop->provides[i].progress == progress) return drop->provides[i].pieces;
+    return 0;
+}
 const char* check2str(const check_tree_item* check)
 {
     if (check->type == CHECK_BOSS) return boss_names[check->index];
@@ -468,6 +489,27 @@ bool alchemy_in_act4(uint8_t alchemy_idx) {
     return (alchemy_idx==CALL_UP_IDX || alchemy_idx==ENERGIZE_IDX ||
             alchemy_idx==FORCE_FIELD_IDX || alchemy_idx==NITRO_IDX ||
             alchemy_idx==REFLECT_IDX || alchemy_idx==STOP_IDX);
+}
+bool alchemy_is_good(uint8_t alchemy_idx) {
+    switch (alchemy_idx) {
+        case CRUSH_IDX:
+        case EXPLOSION_IDX:
+        case FIRE_POWER_IDX:
+        case FIREBALL_IDX:
+        case LIGHTNING_STORM_IDX:
+        case NITRO_IDX:
+        case STING_IDX:
+        case CALL_UP_IDX:
+            return true;
+        default:
+            return false;
+    }
+}
+bool ingredient_is_cheap(uint8_t i) {
+    return (i==WAX || i==WATER || i==VINEGAR || i==ROOT || i==OIL || i==LIMESTONE || i==ETHANOL || i==CRYSTAL || i==CLAY || i==BONE || i==ASH);
+}
+bool alchemy_is_cheap(const struct formula* f) {
+    return ingredient_is_cheap(f->type1) && ingredient_is_cheap(f->type2);
 }
 static bool can_buy_ingredient(uint8_t i) {
     // technically we CAN buy meteorite, but we don't want to use that

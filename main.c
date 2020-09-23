@@ -575,15 +575,19 @@ int main(int argc, const char** argv)
     uint8_t doggo_changes[ARRAY_SIZE(doggos)]; // preset to vanilla
     for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) doggo_changes[i] = doggos[i].val;
     
+    int treedepth=0;
+    int cyberlogicscore=0;
+    int cybergameplayscore=0;
+
     int rollcount=0;
     if (randomized)
         printf("Rolling");
     fflush(stdout);
     do {
-        if (rollcount>198) {
+        if (rollcount>4998) {
             free(buf);
             fclose(fsrc);
-            die("\nCould not satifsy logic in 200 tries. Giving up.\n");
+            die("\nCould not satifsy logic in 5k tries. Giving up.\n");
         }
         if (rollcount>0) printf(".");
         if ((rollcount+strlen("Rolling"))%79 == 0) printf("\n"); else fflush(stdout); // 79 chars per line
@@ -852,9 +856,27 @@ int main(int argc, const char** argv)
             check_tree_item checks[ARRAY_SIZE(blank_check_tree)];
             memcpy(checks, blank_check_tree, sizeof(blank_check_tree));
             int progress[P_END]; memset(progress, 0, sizeof(progress));
+            int nextprogress[P_END]; memset(nextprogress, 0, sizeof(nextprogress));
             if (allow_rockskip) progress[P_ROCK_SKIP]++;
             bool complete=false;
+            treedepth=0;
+            cyberlogicscore = 0;
+            cybergameplayscore = 0;
             while (!complete) {
+                bool ammofix = false;
+                bool wingsfix = false;
+                int ammopenalty=0;
+                int wingspenalty=0;
+                if (progress[goal]<1) treedepth++;
+                memcpy(progress,nextprogress,sizeof(progress));
+                if (treedepth == 3) {
+                    if (progress[P_ARMOR]==0)
+                        cybergameplayscore += 5;
+                    if (progress[P_ACT2_WEAPON]==0 && progress[P_ACT3_WEAPON]==0 && progress[P_ACT4_WEAPON]==0)
+                        cybergameplayscore += 5;
+                    if (progress[P_JAGUAR_RING]==0)
+                        cybergameplayscore += 15;
+                }
                 complete = true;
                 for (size_t i=0; i<ARRAY_SIZE(checks); i++) {
                     if (checks[i].reached) continue;
@@ -865,9 +887,47 @@ int main(int argc, const char** argv)
                                        checks[i].type==CHECK_BOSS ? boss_drops[checks[i].index] :
                                        checks[i].type==CHECK_GOURD ? gourd_drops[checks[i].index] : 0;
                         const drop_tree_item* drop = get_drop(checks[i].type, idx);
-                        check_progress(checks+i, progress);
+                        check_progress(checks+i, nextprogress);
                         if (! checks[i].missable)
-                            drop_progress(drop, progress);
+                            drop_progress(drop, nextprogress);
+                        if (drop && checks[i].difficulty<0) {
+                            cybergameplayscore -= 2*drop_provides(drop, P_CALLBEAD);
+                            if (!wingsfix && drop_provides(drop, P_WINGS)) {
+                                cybergameplayscore += wingspenalty-2;
+                                wingspenalty = 2;
+                            }
+                            if (drop_provides(drop, P_ACT1_WEAPON))
+                                cybergameplayscore -= 1;
+                            if (drop_provides(drop, P_ACT2_WEAPON))
+                                cybergameplayscore -= 4;
+                            if (drop_provides(drop, P_ACT3_WEAPON))
+                                cybergameplayscore -= 6;
+                            if (drop_provides(drop, P_ACT4_WEAPON))
+                                cybergameplayscore -= 10;
+                            if (drop_provides(drop, P_ARMOR))
+                                cybergameplayscore -= 2;
+                            if (!ammofix && drop_provides(drop, P_GLITCHED_AMMO) && ammopenalty < 20) {
+                                cybergameplayscore += ammopenalty-20;
+                                ammopenalty = 20;
+                            }
+                            else if (!ammofix && drop_provides(drop, P_AMMO) && ammopenalty < 1) {
+                                cybergameplayscore += ammopenalty-1;
+                                ammopenalty = 1;
+                            }
+                            if (ammofix && drop_provides(drop, P_AMMO))
+                                cybergameplayscore -= 1;
+                        }
+                        else if (drop && check_requires(checks+i, P_ROCKET)) {
+                            if (!ammofix && drop_provides(drop, P_GLITCHED_AMMO)) {
+                                cybergameplayscore += ammopenalty-15;
+                                ammopenalty = 15;
+                            } else if (ammofix && drop_provides(drop, P_GLITCHED_AMMO))
+                                cybergameplayscore -= 1;
+                        }
+                        if (drop && drop->provides[0].progress > P_NONE && drop->provides[0].progress < P_ARMOR) {
+                            if (checks[i].difficulty>0) cyberlogicscore++; // some checks increase difficulty
+                            if (checks[i].difficulty>1 && difficulty==0) cyberlogicscore+=99; // exclude hidden
+                        }
                         #ifdef DEBUG_CHECK_TREE
                         printf("Reached %s\n", check2str(checks+i));
                         if (drop) printf("Got %s%s\n", checks[i].missable?"missable ":"", drop2str(drop));
@@ -885,6 +945,23 @@ int main(int argc, const char** argv)
         }
         #undef REROLL
         if (reroll) continue;
+        int logicscore = (treedepth-5)*3 + cyberlogicscore;
+        if (randomized && difficulty==2 && logicscore<10) continue;
+        else if (randomized && difficulty==0 && logicscore>10) continue;
+        else if (randomized && difficulty==1 && (logicscore>16 || logicscore<4)) continue;
+        int spellmodifier=0;
+        for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
+            if (alchemy_is_good(i) && alchemy_is_cheap(&ingredients[i]))
+                spellmodifier -= 2;
+        }
+        if (can_buy_in_act3(&ingredients[CALL_UP_IDX])) {
+            cybergameplayscore -= 5;
+        }
+        if (spellmodifier == 0) cybergameplayscore += 10;
+        else cybergameplayscore += spellmodifier;
+        int gameplayscore = cybergameplayscore;
+        if (randomized && difficulty>1 && gameplayscore<-9) continue;
+        if (randomized && difficulty<1 && gameplayscore>-2) continue;
         break;
     } while (true);
     if (randomized) printf("\n");
@@ -1246,6 +1323,7 @@ int main(int argc, const char** argv)
     if (!flog) { fclose(fsrc); free(buf); die("Could not open spoiler log file!\n"); }
     #define ENDL "\r\n"
     fprintf(flog,"Spoiler log for evermizer %s settings %s seed %" PRIx64 "%s", VERSION, shortsettings, seed, ENDL);
+    fprintf(flog,"Tree depth: %d, cyber logic score: %d, cyber gameplay score: %d%s", treedepth, cyberlogicscore, cybergameplayscore, ENDL);
     fprintf(flog, ENDL);
     fprintf(flog,"     %-15s  %-15s  %-15s   %s" ENDL, "Spell", "Location", "Ingredient 1", "Ingredient 2"); 
     fprintf(flog,"------------------------------------------------------------------------" ENDL);

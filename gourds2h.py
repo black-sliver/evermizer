@@ -147,7 +147,25 @@ requirements = {
     'rocket': 'P_ROCKET',
     'gauge': 'P_GAUGE',
     'volcano entered': 'P_VOLCANO_ENTERED',
+    'act1 weapon': 'P_ACT1_WEAPON',
+    'act2 weapon': 'P_ACT2_WEAPON',
+    'act3 weapon': 'P_ACT3_WEAPON',
+    'act4 weapon': 'P_ACT4_WEAPON',
+    'armor': 'P_ARMOR',
+    'ammo': 'P_AMMO',
+    'glitched ammo': 'P_GLITCHED_AMMO',
+    'call bead': 'P_CALLBEAD',
+    '2x call bead': '2*P_CALLBEAD',
+    '3x call bead': '3*P_CALLBEAD',
+    'wings': 'P_WINGS',
 }
+difficulty_modifiers = {
+    'dumb':   1,
+    'far':    1,
+    'hidden': 2,
+    'early': -1,
+}
+
 
 def to_provides_or_requires(s, nothing, macro):
     s = s.strip()
@@ -232,6 +250,9 @@ if __name__ == '__main__':
                 locname = row[1]
                 itemname = row[7] if tryint(row[6])<0x200 or tryint(row[6])>0x2ff else '' # skip spoiler log for ingredients
                 special = row[16].lower() # special instructions for code generation
+                difficulty = 0
+                try: difficulty = difficulty_modifiers[row[20].lower()]
+                except: pass # used for cyberscore
                 if startaddr<1 or endaddr<1:
                     print('Bad address in row %d' % (rownr,))
                 #elif endaddr-startaddr<4 or (mapref>=0 and endaddr-startaddr<9) or (hasv239x and endaddr-startaddr<19): # <- call loot script in drop
@@ -249,7 +270,7 @@ if __name__ == '__main__':
                     print('Duplicate flag "%s" in row %d' % (row[5], rownr))
                 else: # ok, add to list
                     flagvals.append(flagval)
-                    locations.append([mapref,v2397,v2399,lootscript,startaddr,endaddr,missable,requires,locname,flagval,special])
+                    locations.append([mapref,v2397,v2399,lootscript,startaddr,endaddr,missable,requires,locname,flagval,special,difficulty])
                     drops.append([tryint(row[6]),tryint(row[8]),tryint(row[9]),tryint(row[10]), provides,itemname])
         print('%d locations and %d drops loaded from %d rows' % (len(locations),len(drops),rownr,))
         #from pprint import pprint
@@ -258,7 +279,7 @@ if __name__ == '__main__':
         with open(os.path.splitext(argv[1])[0]+'.h','wb') as fout:
             fout.write(b'#if defined CHECK_TREE\n')
             for i in range(0, len(locations)):
-                fout.write(b'    {0, CHECK_GOURD,%3d, %d,%-49s NOTHING_PROVIDED},\n' % (i, 1 if locations[i][6] else 0, (locations[i][7]+',').encode()))
+                fout.write(b'    {0, CHECK_GOURD,%3d, %d, %2d, %-49s NOTHING_PROVIDED},\n' % (i, 1 if locations[i][6] else 0, locations[i][11], (locations[i][7]+',').encode()))
             fout.write(b'#elif defined DROP_TREE\n')
             for i in range(0, len(drops)):
                 if drops[i][4] == 'NOTHING_PROVIDED': continue
