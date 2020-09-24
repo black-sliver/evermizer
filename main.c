@@ -1080,7 +1080,7 @@ int main(int argc, const char** argv)
     
     #ifndef NO_RANDO
     if (gourdomizer || bossdropamizer) {
-        // v0015:
+        // v015:
         APPLY(126); APPLY(127); APPLY(128); APPLY(129); APPLY(130); APPLY(131);
         APPLY(132); APPLY(133); APPLY(134); APPLY(135); APPLY(136); APPLY(137);
         APPLY(138); 
