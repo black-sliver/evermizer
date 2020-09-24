@@ -143,6 +143,7 @@ requirements = {
     'aegis': '2*P_DE',
     'knight basher': 'P_KNIGHT_BASHER',
     'jaguar ring': 'P_JAGUAR_RING',
+    'queen\'s key': 'P_QUEENS_KEY',
     'revealer': 'P_REVEALER',
     'rocket': 'P_ROCKET',
     'gauge': 'P_GAUGE',
