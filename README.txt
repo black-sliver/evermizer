@@ -55,6 +55,8 @@ CHANGES SO FAR:
     Disable double gauge: don't take away rocket parts until you have them all
   Fix cheats:
     Remove infinite call bead glitch
+  All accessible:
+    Make sure all checks/areas/bosses can be reached
   Open world: Unlock windwalker in every fire pit (slashing weapon required)
     Grant access to inner volcano
     Grant access to east swamp
