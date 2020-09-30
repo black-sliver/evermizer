@@ -47,7 +47,7 @@ a3 3e 00                            // call loot part1, end
 17 3b 01 64 00                      // amount ($2393) = 100 (0x0064)
 a3 3e 00                            // call loot part1, end
 
-09 08 39 01 29 04 f3 01 a2 37 00    // IF $2391 != 0x01f3 (colloseum helmet) SKIP 55
+09 08 39 01 29 04 f3 01 a2 37 00    // IF $2391 != 0x01f3 (colosseum helmet) SKIP 55
 08 87 d4 00 08 00                   // IF bronze helmet ($232c) SKIP 8
 17 39 01 10 04                      // prize ($2391) = bronze helmet (0x0410)
 a3 3e 00                            // call loot part1, end
@@ -59,6 +59,49 @@ a3 3e 00                            // call loot part1, end
 a3 3e 00                            // call loot part1, end
 17 39 01 01 00                      // prize ($2391) = moniez (0x0001)
 17 3b 01 64 00                      // amount ($2393) = 100 (0x0064)
+a3 3e 00                            // call loot part1, end
+
+// add progressive chest armor as id 01f4
+09 08 39 01 29 04 f4 01 a2 3e 00    // IF $2391 != 0x01f4 (progressive chest) SKIP 62
+08 85 da 07 0c 00                   // IF chest armor flag 1 SKIP 12
+17 39 01 03 04                      // prize ($2391) = dino skin (0x0403)
+0c da 07 b1                         // set chest armor flag 1
+a3 3e 00                            // call loot part1, end
+08 85 db 07 0c 00                   // IF chest armor flag 2 SKIP 12
+17 39 01 f1 01                      // prize ($2391) = colosseum breast (0x01f1)
+0c db 07 b1                         // set chest armor flag 2
+a3 3e 00                            // call loot part1, end
+08 85 1c 01 0c 00                   // IF chest armor flag 3 SKIP 12
+17 39 01 08 04                      // prize ($2391) = gold plated vest (0x0408)
+0c 1c 01 b1                         // set chest armor flag 3
+a3 3e 00                            // call loot part1, end
+17 39 01 0b 04                      // prize ($2391) = titanium vest (0x040b)
+a3 3e 00                            // call loot part1, end
+
+// add progressive gloves as id 01f5
+09 08 39 01 29 04 f5 01 a2 2c 00    // IF $2391 != 0x01f5 (progressive gloves) SKIP 44
+08 85 dc 07 0c 00                   // IF glove armor flag 1 SKIP 12
+17 39 01 1a 04                      // prize ($2391) = mammoth guard (0x041a)
+0c dc 07 b1                         // set glove armor flag 1
+a3 3e 00                            // call loot part1, end
+08 85 dd 07 0c 00                   // IF glove armor flag 2 SKIP 12
+17 39 01 f2 01                      // prize ($2391) = colosseum gloves (0x01f2)
+0c dd 07 b1                         // set glove armor flag 2
+a3 3e 00                            // call loot part1, end
+17 39 01 23 04                      // prize ($2391) = protector ring (0x0423)
+a3 3e 00                            // call loot part1, end
+
+// add progressive helmet as id 01f6
+09 08 39 01 29 04 f6 01 a2 2c 00    // IF $2391 != 0x01f6 (progressive helmet) SKIP 44
+08 85 de 07 0c 00                   // IF helmet armor flag 1 SKIP 12
+17 39 01 0e 04                      // prize ($2391) = shell hat (0x040e)
+0c de 07 b1                         // set helmet armor flag 1
+a3 3e 00                            // call loot part1, end
+08 85 df 07 0c 00                   // IF helmet armor flag 2 SKIP 12
+17 39 01 f3 01                      // prize ($2391) = colosseum helmet (0x01f3)
+0c df 07 b1                         // set helmet armor flag 2
+a3 3e 00                            // call loot part1, end
+17 39 01 17 04                      // prize ($2391) = old reliable (0x0417)
 a3 3e 00                            // call loot part1, end
 
 09 08 39 01 29 04 03 01 a2 09 00    // IF $2391 != 0x0103 (thug's cloak) SKIP 9

@@ -210,7 +210,7 @@ const static uint32_t boss_drop_jump_targets[] = { // has to match PATCH 82
     0x024159, // Bronze Spear
     0x024161, // Lance
     0x024169, // Honey
-    0x024176, // Dino Skin / Talons
+    0x024176, // Progressive armor / Dino Skin / Talons
     0x024190, // Bazooka+Shells / Shining Armor / 5,000 Gold Coins
     0x0241c3, // 10,000 Gold Coins
     0x0241cc, // Mud Pepper
@@ -225,7 +225,7 @@ enum boss_drop_indices { // has to match boss_drop_jump_targets
 const static char* boss_drop_names[] = {
     "Nothing", "Wheel", "Gladiator Sword", "Crusader Sword",
     "Spider Claw", "Bronze Axe", "Horn Spear", "Bronze Spear",
-    "Lance (Weapon)", "Honey", "Dino Skin / Talons",
+    "Lance (Weapon)", "Honey", "Progressive breast / Dino Skin / Talons",
     "Bazooka+Shells / Shining Armor / 5k Gold",
     "10,000 Gold Coins", "Mud Pepper", "Diamond Eye"
 };

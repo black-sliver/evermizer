@@ -74,7 +74,10 @@ char b32(unsigned v) { return B32[v&0x1f]; }
 #include "rng.h"
 
 #ifndef NO_RANDO
+#define progressive_armor (true) // NOTE: gourdomizer only supports true
 #include "gourds.h" // generated list of gourds and gourd drops
+#else
+#define progressive_armor (false) // NOTE: we don't add new items in non-rando
 #endif
 #include "data.h"
 
@@ -1083,7 +1086,19 @@ int main(int argc, const char** argv)
         // v015:
         APPLY(126); APPLY(127); APPLY(128); APPLY(129); APPLY(130); APPLY(131);
         APPLY(132); APPLY(133); APPLY(134); APPLY(135); APPLY(136); APPLY(137);
-        APPLY(138); 
+        APPLY(138);
+    }
+    if (bossdropamizer && !gourdomizer && progressive_armor) {
+        // v030: update vanilla armor gourds to have progressive drops
+        // NOTE: this requires part of gourdomizer to be applied, see below
+        APPLY(PROGRESSIVE_ARMOR2); APPLY(PROGRESSIVE_ARMOR3);
+        APPLY(PROGRESSIVE_ARMOR4); APPLY(PROGRESSIVE_ARMOR5);
+        APPLY(PROGRESSIVE_ARMOR6); APPLY(PROGRESSIVE_ARMOR7);
+        APPLY(PROGRESSIVE_ARMOR8); APPLY(PROGRESSIVE_ARMOR9);
+    }
+    if (gourdomizer && !bossdropamizer && progressive_armor) {
+        // v030: update vanilla boss drops to have progressive drops
+        APPLY(PROGRESSIVE_ARMOR);
     }
     #endif
     // General features
@@ -1177,24 +1192,27 @@ int main(int argc, const char** argv)
             buf[rom_off + boss_drop_jumps[i] + 2] = (uint8_t)(tgt>>16)&0xff;
         }
     }
-    if (gourdomizer) {
-        // v023:
-        printf("Applying fixes for randomized gourds...\n");
-        APPLY(REVERSE_BBM); APPLY(REVERSE_BBM2); APPLY(REVERSE_BBM3);
-        printf("Applying gourdomizer...\n");
+    if (gourdomizer || (bossdropamizer && progressive_armor)) {
+        printf("Adding new item IDs...\n");
         grow = true;
-        APPLY(GOURDOMIZER_FIXES); APPLY(GOURDOMIZER_FIXES2);
-        APPLY(GOURDOMIZER_FIXES3);
         APPLY(GOURDOMIZER_DROPS);  APPLY(GOURDOMIZER_DROPS2);
         APPLY(GOURDOMIZER_DROPS3); APPLY(GOURDOMIZER_DROPS4);
         APPLY(GOURDOMIZER_DROPS5); APPLY(GOURDOMIZER_DROPS6);
         APPLY(GOURDOMIZER_DROPS7);
+    }
+    if (gourdomizer) {
+        // v023:
+        printf("Applying fixes for randomized gourds...\n");
+        APPLY(REVERSE_BBM); APPLY(REVERSE_BBM2); APPLY(REVERSE_BBM3);
+        APPLY(GOURDOMIZER_FIXES); APPLY(GOURDOMIZER_FIXES2);
+        APPLY(GOURDOMIZER_FIXES3);
+        // v029: make act3 chests unmissable
+        APPLY(GOURDOMIZER_FIXES4);
         // v026: re-enter colosseum
         APPLY(COLOSSEUM);  APPLY(COLOSSEUM2);
         APPLY(COLOSSEUM3); APPLY(COLOSSEUM4);
         APPLY(COLOSSEUM5); APPLY(COLOSSEUM6);
-        // v029: make act3 chests unmissable
-        APPLY(GOURDOMIZER_FIXES4);
+        printf("Applying gourdomizer...\n");
         for (size_t i=0; i<ARRAY_SIZE(gourd_drops_data); i++) {
             const struct gourd_drop_item* d = &(gourd_drops_data[i]);
             memcpy(buf + rom_off + d->pos, d->data, d->len);
