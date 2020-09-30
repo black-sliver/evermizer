@@ -1,4 +1,4 @@
-next:
+v030:
   Fix requirements for one gourd in Halls NW
   Fix logic tree for mungola
   Add logic and gameplay difficulty
