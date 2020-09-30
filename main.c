@@ -18,8 +18,18 @@
 #ifndef NO_UI // includes and helpers for UI
 #if defined(WIN32) || defined(_WIN32)
 #include <process.h>
-#include <conio.h>
-#define clrscr() system("cls");
+#include <windows.h>
+int getch(void); // can't #include <conio.h> with <windows.h>
+void clrscr(void)
+{
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    COORD pos = {0,0};
+    int i;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    for (i=0; i<csbi.srWindow.Bottom-csbi.srWindow.Top+1+3; i++)
+        printf("\n");
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
 #else
 #include <termios.h>
 #include <unistd.h>
@@ -36,6 +46,7 @@ char getch() {
 }
 #endif
 #endif
+#define pause() do{printf("\nPress any key to quit ...\n"); getch();}while(false)
 
 #if defined(WIN32) || defined(_WIN32)
 #define DIRSEP '\\'
@@ -61,7 +72,7 @@ void die(const char* msg)
 {
     if (msg) fprintf(stderr, "%s", msg);
 #if (defined(WIN32) || defined(_WIN32)) && !defined(NO_UI)
-    if (!batch) system("pause");
+    if (!batch) pause();
 #else
     (void)batch; // ignore warnings
 #endif
@@ -209,7 +220,7 @@ static void print_usage(const char* appname)
 #if defined(WIN32) || defined(_WIN32)
     fprintf(stderr, "       or simply drag & drop your ROM onto the EXE\n");
 #ifndef NO_UI
-    if (!batch) system("pause");
+    if (!batch) pause();
 #endif
 #endif
 }
@@ -1395,6 +1406,6 @@ int main(int argc, const char** argv)
     free(buf);
     fclose(fsrc);
 #if (defined(WIN32) || defined(_WIN32)) && !defined(NO_UI)
-    if (!batch) system("pause");
+    if (!batch) pause();
 #endif
 }
