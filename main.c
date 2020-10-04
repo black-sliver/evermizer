@@ -1052,7 +1052,7 @@ int main(int argc, const char** argv)
     }
     if (keepdog) {
         printf("Applying patches to keep the dog...\n");
-        APPLY(KEEP_DOG); APPLY(KEEP_DOG2);
+        APPLY(KEEP_DOG); APPLY(KEEP_DOG2); APPLY(KEEP_DOG3);
     }
     
     // General bug fixes

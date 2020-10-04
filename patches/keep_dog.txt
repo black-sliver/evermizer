@@ -3,3 +3,5 @@
 c1 // player-control boy+dog after palace cutscene(s)
 @0x95d1db
 b0 // enable dog at end of dog palace cutscene instead of disable
+@0x96b8b5+1
+0d // enable dog in market after empty message
