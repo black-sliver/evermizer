@@ -108,7 +108,7 @@ const static struct alchemy_data alchemy_locations[] = {
     {"Force Field",     0x10, false, forcefield_locations,     {0x99da1e +4 -0x800000,LOC_END}},
     {"Hard Ball",       0x11, false, hardball_locations,       {0x94a3ef +4 -0x800000,LOC_END}},
     {"Heal",            0x12, false, heal_locations,           {0x93dbec +4 -0x800000,0x93dc8d +4 -0x800000}},
-    {"Lance",           0x13, true,  lance_locations,          {0x98d354 +4 -0x800000,LOC_END}},
+    {"Lance",           0x13, false, lance_locations,          {0x98d354 +4 -0x800000,LOC_END}},
     // no laser
     {"Levitate",        0x15, false, levitate_locations,       {0x94809d +4 -0x800000,LOC_END}},
     {"Lightning Storm", 0x16, false, lightningstorm_locations, {0x9996f4 +4 -0x800000,LOC_END}},
@@ -122,7 +122,7 @@ const static struct alchemy_data alchemy_locations[] = {
     {"Slow Burn",       0x1e, false, slowburn_locations,       {0x998847 +4 -0x800000,LOC_END}},
     {"Speed",           0x1f, false, speed_locations,          {0x949cc5 +4 -0x800000,LOC_END}},
     {"Sting",           0x20, false, sting_locations,          {0xb08060 +8 -0x800000,LOC_END}},
-    {"Stop",            0x21, true,  stop_locations,           {0xb0806a +4 -0x800000,LOC_END}},
+    {"Stop",            0x21, false, stop_locations,           {0xb0806a +4 -0x800000,LOC_END}},
     {"Super Heal",      0x22, false, superheal_locations,      {0x9abc1c +4 -0x800000,LOC_END}}
 };
 enum alchemy_indices { // has to match alchemy_locations
@@ -354,7 +354,7 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_ALCHEMY,FORCE_FIELD_IDX,     0, 0, REQ1(P_ROCKET),                                NOTHING_PROVIDED},
     {0, CHECK_ALCHEMY,HARD_BALL_IDX,       0, 0, NOTHING_REQUIRED,                              NOTHING_PROVIDED},
     {0, CHECK_ALCHEMY,HEAL_IDX,            0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,LANCE_SPELL_IDX,     1, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,LANCE_SPELL_IDX,     0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
     {0, CHECK_ALCHEMY,LEVITATE_IDX,        0, 0, REQ1(P_NON_SWORD),                             NOTHING_PROVIDED},
     {0, CHECK_ALCHEMY,LIGHTNING_STORM_IDX, 0, 0, REQ1(P_KNIGHT_BASHER),                         NOTHING_PROVIDED},
     {0, CHECK_ALCHEMY,MIRACLE_CURE_IDX,    0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
@@ -367,7 +367,7 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_ALCHEMY,SLOW_BURN_IDX,       0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
     {0, CHECK_ALCHEMY,SPEED_IDX,           0, 0, REQ1(P_VOLCANO_ENTERED),                       NOTHING_PROVIDED},
     {0, CHECK_ALCHEMY,STING_IDX,           0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
-    {0, CHECK_ALCHEMY,STOP_IDX,            1, 0, REQ2(P_ROCKET,P_ORACLE_BONE),                  NOTHING_PROVIDED},
+    {0, CHECK_ALCHEMY,STOP_IDX,            0, 0, REQ2(P_ROCKET,P_ORACLE_BONE),                  NOTHING_PROVIDED},
     {0, CHECK_ALCHEMY,SUPER_HEAL_IDX,      0, 0, REQ1(P_WEAPON),                                NOTHING_PROVIDED},
     // Boss checks
     {0, CHECK_BOSS,THRAXX_IDX,        0, 0, NOTHING_REQUIRED,                        NOTHING_PROVIDED},
@@ -392,6 +392,7 @@ static const check_tree_item blank_check_tree[] = {
     // Required checks that are not randomized (yet)
     {0, CHECK_RULE,P_JAGUAR_RING,     0, 0, NOTHING_REQUIRED,           PVD1(P_JAGUAR_RING)},
     {0, CHECK_RULE,P_QUEENS_KEY,      0, 0, REQ1(P_WEAPON),             PVD1(P_QUEENS_KEY)},
+    {0, CHECK_RULE,P_ORACLE_BONE,     0, 0, REQ1(P_WEAPON),             PVD1(P_ORACLE_BONE)},
     {0, CHECK_RULE,P_ROCKET,          0, 0, REQ3N(1,P_GAUGE,1,P_WHEEL,2,P_DE), PVD2N(1,P_ROCKET,-2,P_DE)},
     {0, CHECK_RULE,P_ENERGY_CORE,     0, 0, REQ1(P_ROCKET),             PVD1(P_ENERGY_CORE)},
     {0, CHECK_RULE,P_VOLCANO_ENTERED, 0, 0, REQ2(P_WEAPON,P_LEVITATE),  PVD1(P_VOLCANO_ENTERED)},

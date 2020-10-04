@@ -1091,6 +1091,9 @@ int main(int argc, const char** argv)
     APPLY(FIX_FLAGS);
     // v023:
     APPLY(FIX_FLAGS2); APPLY(FIX_FLAGS3);
+    // v031: make lance and stop unmissable
+    APPLY(ALCHEMY_ACCESSIBLE);
+    APPLY(ALCHEMY_ACCESSIBLE2);
     
     #ifndef NO_RANDO
     if (gourdomizer || bossdropamizer) {

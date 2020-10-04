@@ -1,0 +1,8 @@
+@0x99d9fb
+// make stop unmissable by not changing dialog
+04 01 00 00
+@
+// make lance unmissable by not checking the chests' flags
+@0x98dda9
+04 08 00 00 00 00 00 00 00 00 00
+@
