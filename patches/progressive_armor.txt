@@ -1,0 +1,57 @@
+#ifndef NO_RANDO
+
+// Change cave raptor's Dino Skin to progressive armor
+@0x94a775
+18 39 01 84 f4 01 // Drop = progressive Breast
+a3 3e a3 3f // Call loot part1 + part2
+04 11 00 // Skip 17 to 94a793
+00
+@
+
+// Change Shell Hat to progressive Helmet
+@0x93807f+4
+f6 01
+@
+
+// Change Mammoth Guard to progressive Gloves
+@0x93b402+4
+f5 01
+@
+
+// Change Colosseum Breast to progressive armor
+@0x95ce1a
+18 39 01 84 f4 01 // Drop = progressive Breast
+a3 3e a3 3f // Call loot part1 + part2
+2b d2 00 // Make controlled char player controlled, END
+@
+
+// Change Colosseum Gloves to progressive armor
+@0x95cec8
+18 39 01 84 f5 01 // Drop = progressive Gloves
+a3 3e a3 3f // Call loot part1 + part2
+2b d2 00 // Make controlled char player controlled, END
+@
+
+// Change Colosseum Helmet to progressive armor
+@0x95cf5d
+18 39 01 84 f6 01 // Drop = progressive Helmet
+a3 3e a3 3f // Call loot part1 + part2
+2b d2 00 // Make controlled char player controlled, END
+@
+
+// Change Titanium Vest to progressive armor
+@0x9b92c5+4
+f4 01
+@
+
+// Change Protector Ring to progressive armor
+@0x9b8f00+4
+f5 01
+@
+
+// Change Old Reliable to progressive armor
+@0x9bbc62+4
+f6 01
+@
+
+#endif
