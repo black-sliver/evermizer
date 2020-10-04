@@ -1121,6 +1121,8 @@ int main(int argc, const char** argv)
     APPLY(106);
     // v027:
     APPLY(ALCHEMY_SELECTION_FIXES);
+    // v031: fix one up dialog
+    APPLY(ONEUP_FIX);
     
     if (fixsequence) {
         printf("Applying desolarify patch-set...\n");
