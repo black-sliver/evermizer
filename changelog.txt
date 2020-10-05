@@ -1,8 +1,7 @@
-next:
+v031:
   Re-enable dog after market message if Keep Dog is enabled
   Make Lance and Stop unmissable
   Fix One Up dialog
-
 v030:
   Fix requirements for one gourd in Halls NW
   Fix logic tree for mungola
