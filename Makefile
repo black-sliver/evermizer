@@ -34,6 +34,7 @@ EMCC?=emcc
 EMFLAGS?=-D NO_ASSERT -s WASM=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=0 -s ASSERTIONS=0 -Os #--closure 1
 
 PATCH_FILES := $(wildcard patches/*.txt) # this is replaced by pre-built gen.h in release to reduce build dependencies
+IPS_INFO_FILES := $(wildcard ips/*.txt) # this is replaced by pre-built gen.h in release to reduce build dependencies
 SOURCE_FILES = main.c
 INCLUDE_FILES = rng.h util.h data.h sniff.h gourds.h doggo.h patches.h gen.h tinymt64.h
 
@@ -52,9 +53,10 @@ wasm: evermizer.js
 all: native win32 wasm
 endif
 
-ifneq ($(strip $(PATCH_FILES)),) # assume we have a pre-built gen.h if patches/ is missing
-gen.h: $(PATCH_FILES) everscript2h.py
+ifneq ($(strip $(PATCH_FILES) $(IPS_INFO_FILES)),) # assume we have a pre-built gen.h if patches/ and ips/ is missing
+gen.h: $(PATCH_FILES) everscript2h.py $(IPS_INFO_FILES) ips2h.py
 	$(PYTHON3) everscript2h.py $@ $(PATCH_FILES)
+	$(PYTHON3) ips2h.py -a $@ $(IPS_INFO_FILES)
 endif
 ifneq (,$(wildcard gourds.csv)) # assume we have a pre-built gourds.h if gourds.csv is missing
 gourds.h: gourds.csv gourds2h.py
@@ -98,7 +100,7 @@ clean: clean-temps
 
 clean-temps:
 	rm -rf main.res
-ifneq ($(strip $(PATCH_FILES)),) # only if not pre-built
+ifneq ($(strip $(PATCH_FILES) $(IPS_INFO_FILES)),) # only if not pre-built
 	rm -rf gen.h
 endif
 ifneq (,$(wildcard gourds.csv)) # only if not pre-built

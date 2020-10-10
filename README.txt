@@ -142,3 +142,4 @@ LICENSE:
   the terms of GPL v3. See LICENSE file.
   The patches found in patches/ directory are in public domain unless
   noted otherwise. See patches/LICENSE file.
+  For the patches found in ips/, see the corresponding .txt files.
