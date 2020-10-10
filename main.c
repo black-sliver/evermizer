@@ -1063,7 +1063,6 @@ int main(int argc, const char** argv)
     APPLY(141); APPLY(142);
     // v017:
     APPLY(146);
-    APPLY(148);
     // v025:
     APPLY(HALLS_BUGS); // (actually not a softlock but a bug)
     // v026: fix colosseum entrance with dog available
@@ -1071,6 +1070,8 @@ int main(int argc, const char** argv)
     APPLY(COLOSSEUM9);APPLY(COLOSSEUM10);
     // v029: fix softlock when leaving Tiny's lair after opening the gate
     APPLY(TINY_FIX);
+    // v032: complete east prison softlock fix
+    APPLY(PRISON_FIX); APPLY(PRISON_FIX2);
     
     printf("Fixing some missables...\n");
     // v018:

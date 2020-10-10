@@ -1,3 +1,5 @@
+next:
+  Complete east prison softlock fix
 v031:
   Re-enable dog after market message if Keep Dog is enabled
   Make Lance and Stop unmissable

@@ -407,8 +407,6 @@ DEF(145, 0x998bda - 0x800000, "\x04\x00\x00");
 DEF(146, 0x998d7e + 6 - 0x800000, "\x21"); // >= OP instead of == OP
 // Don't despawn Rock north of Nobilia Market when Aegis is dead
 DEF(147, 0x95cb0a + 1 - 0x800000, "\x30\x14\x14"); // !!FALSE instead of bit test
-// Use bottom left cell as town exit if you cleared mosquito cell last
-DEF(148, 0x98a66e + 3 - 0x800000, "\xb7\x00\x00");
 // Don't start vigor fight before crush cutscene
 // NOTE: this uses space freed with patch 36
 DEF(149a, 0x95d9dd - 0x800000, "\x29\x44\xc1\x02\x00\x00\x00\x00"); // Call away from sacred dog cutscene

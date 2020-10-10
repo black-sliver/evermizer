@@ -1,0 +1,9 @@
+// Use bottom left cell as town exit if you cleared mosquito cell last in prison
+@0x98a66e+3
+b7 00 00
+@
+
+// Use bottom left cell as town exit if you did not open mosquito cell in prison
+@0x98a712+3
+b7
+@
