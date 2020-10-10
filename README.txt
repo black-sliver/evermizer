@@ -11,7 +11,7 @@ HOWTO:
 5. Checksum is wrong, but neither sd2snes nor (most) emulators seem to care
 6. You can skip the intro by pressing start (even without a prior save)
 7. You have to kill Thraxx to get a weapon that can cut grass or find one in a
-   gourd (or cheat) to get access to the Windwalker.
+   gourd/chest (or use cheat codes) to get access to the Windwalker.
 
 
 CHANGES SO FAR:
