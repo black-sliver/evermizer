@@ -98,6 +98,9 @@ CHANGES SO FAR:
     Directly reward Queen's Key to inventory
     Make Revealer and Escape still obtainable when Horace is gone
     All rooms with gourds/chests/pots can be re-entered with gourdomizer on
+  Some quality of life improvements are always enabled, most notably:
+    Preselect the correct spell in alchemy selection screen
+    Bazooka charge/energize and stat display fix
   Uses tinymt64 for platform-independend RNG. See tinymt64.h for lincense
   Allow for ROM to grow to 4MB if required
   Allow skipping of intro with no prior save file
