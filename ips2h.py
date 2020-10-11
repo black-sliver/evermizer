@@ -17,7 +17,7 @@ def data2str(data, linelen=16, linesep=b'\n'):
         for i in range(0, len(data), linelen)
     )
 
-def ips2h(src, name, n):
+def ips2h(src, name, n, offset=0):
     ret = []
     with open(src,'rb') as fips:
         hdr = fips.read(5)
@@ -27,7 +27,7 @@ def ips2h(src, name, n):
             assert len(block_hdr)>=3
             if block_hdr[:3] == b'EOF': break # this is one drawback of IPS
             assert len(block_hdr)==5
-            block_off = (block_hdr[0]<<16) + (block_hdr[1]<<8) + block_hdr[2]
+            block_off = (block_hdr[0]<<16) + (block_hdr[1]<<8) + block_hdr[2] + offset
             block_len = (block_hdr[3]<<8) + block_hdr[4]
             if block_len==0:
                 print('RLE not implemented!')
@@ -82,7 +82,7 @@ if __name__ == '__main__':
                         elif in_notice:
                             fout.write(line.replace('*/', '* /').encode('ascii'))
                         elif line.rstrip('\r\n') != '' and not line.startswith('#'):
-                            sources.append(line.rstrip('\r\n'))
+                            sources.append(line.rstrip('\r\n').split(' ')[0])
                     if in_notice: fout.write(b'*/\n')
                     # rewind file
                     fin.seek(0)
@@ -94,9 +94,15 @@ if __name__ == '__main__':
                         if line.rstrip('\r\n') == '--':
                             break # end of patch section of txt file
                         src = line.rstrip('\r\n')
+                        offset = 0
+                        if ' ' in src:  # IPS patch is for headered rom?
+                            tmp = src.split(' ')
+                            assert(tmp[1] == 'headered')
+                            src = tmp[0]
+                            offset = -512
                         assert '../' not in src and '..\\' not in src
                         src = os.path.join(fdir, src)
-                        blocks = ips2h(src, name, n)
+                        blocks = ips2h(src, name, n, offset)
                         for block in blocks: fout.write(block)
                         n += len(blocks)
                 fout.write(b'\n')
