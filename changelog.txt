@@ -1,4 +1,4 @@
-next:
+v032:
   Complete east prison softlock fix
   Fix potential doggomizer softlock in palace grounds
   Include assassin17's bazooka stats and charge fix
@@ -7,6 +7,7 @@ v031:
   Re-enable dog after market message if Keep Dog is enabled
   Make Lance and Stop unmissable
   Fix One Up dialog
+
 v030:
   Fix requirements for one gourd in Halls NW
   Fix logic tree for mungola
