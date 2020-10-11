@@ -1,6 +1,6 @@
 Bazooka-Two-U.ips headered
 --
-Copyright assasin17 - http://assassin17.brinkster.net/
+Copyright assassin17 - http://assassin17.brinkster.net/
 
 NOTE:
 While the .ips files are provided as part of the project's source/distribution,
