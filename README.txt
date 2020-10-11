@@ -133,7 +133,7 @@ CREDITS:
   Thanks to all people pushing or commenting on the project, providing ideas or
     artwork, testing it, pointing out bugs and looking into SNES/SoE stuff
   ayame li, colin, cyb3r, darkmoon2321, dot, esmo88, flarezenyu, fronk,
-  greenambler, metasigma, mirapoix, nyrambler, queenanne, skarsnikus,
+  greenambler, metasigma, mirapoix, neagix, nyrambler, queenanne, skarsnikus,
   solarcell007, zheal
   Thanks to vr-interactive for providing the website's new background image
   Special thanks to elwismw for existing. #hereforelwis
