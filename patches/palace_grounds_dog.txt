@@ -1,0 +1,24 @@
+// Fix dog getting stuck in lillypad w/o jaguar ring/dead
+// (only really required with doggomizer)
+@0x96d519
+04 0e 00 // jump into duplicate code now at 0x96d52a
+be // this is code from 0x96d528 moved to 0x96d51c
+a9 d1 82 20
+6e d1 0f 25
+2e d1
+75 d1
+3a
+78 d1 46 00 b0 // 0x96d52a merge code paths here
+2e d1
+a9 d1 82 22
+6f d1 b1 b0 // move dog by 1 px in x
+2e d1 // wait for dog to arrive
+bf
+30
+72
+00 //[6 free bytes]
+@
+
+@0x928483
+1c // script moved from 0x96d528 to 1c
+@

@@ -1072,6 +1072,8 @@ int main(int argc, const char** argv)
     APPLY(TINY_FIX);
     // v032: complete east prison softlock fix
     APPLY(PRISON_FIX); APPLY(PRISON_FIX2);
+    // v032: fix dog getting stuck on lillypad (only required with doggomizer)
+    APPLY(PALACE_GROUNDS_DOG); APPLY(PALACE_GROUNDS_DOG2);
     
     printf("Fixing some missables...\n");
     // v018:
