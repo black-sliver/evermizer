@@ -1,6 +1,7 @@
 next:
   Complete east prison softlock fix
   Fix potential doggomizer softlock in palace grounds
+  Include assassin17's bazooka stats and charge fix
 
 v031:
   Re-enable dog after market message if Keep Dog is enabled

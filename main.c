@@ -1126,6 +1126,9 @@ int main(int argc, const char** argv)
     APPLY(ALCHEMY_SELECTION_FIXES);
     // v031: fix one up dialog
     APPLY(ONEUP_FIX);
+    // v032: fix bazooka weirdness
+    APPLY(BAZOOKA_TWO_U);  APPLY(BAZOOKA_TWO_U2);
+    APPLY(BAZOOKA_TWO_U3); APPLY(BAZOOKA_TWO_U4);
     
     if (fixsequence) {
         printf("Applying desolarify patch-set...\n");

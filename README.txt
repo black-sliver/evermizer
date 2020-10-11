@@ -129,6 +129,7 @@ EMSCRIPTEN BUILD INSTRUCTIONS:
 
 CREDITS:
   Written by black_sliver
+  Some patches by assassin17 - http://assassin17.brinkster.net
   Thanks to all people pushing or commenting on the project, providing ideas or
     artwork, testing it, pointing out bugs and looking into SNES/SoE stuff
   ayame li, colin, cyb3r, darkmoon2321, dot, esmo88, flarezenyu, fronk,
