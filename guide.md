@@ -76,7 +76,7 @@ Not randomized, please use vgmaps for now.
 
   Place the dog over a hatch. Pressing B should not attack. Open the menu with Y. Tap Y. While closing hold B+Y until in the menu again. Release B+Y. Tap Y. While closing hold SELECT.
 
-* __Rock skip__: unless fixed _(default: fixed)_, lets you enter Volcano (Marmar, Viper, Speed) without Levitate.
+* __Rock skip__: unless fixed _(default: fixed)_, lets you enter Volcano (Magmar, Viper, Speed) without Levitate.
 
   Let the dog sniff at the exit to FE Village, run to the rock with the boy. Press X to scroll the camera all the way to the dog, close the menu, while the camera is scrolling back hold A+Up.
 
