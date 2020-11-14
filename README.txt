@@ -10,9 +10,11 @@ HOWTO:
    "download" or show messages in an alert box.
 5. Checksum is wrong, but neither sd2snes nor (most) emulators seem to care
 6. You can skip the intro by pressing start (even without a prior save)
-7. You have to kill Thraxx to get a weapon that can cut grass or find one in a
-   gourd/chest (or use cheat codes) to get access to the Windwalker.
-
+7. You have to kill Thraxx or loot gourds/chests to get a weapon that can cut
+   grass (or use cheat codes) to get access to the Windwalker.
+8. If you have questions/need help continue reading below, check the guide at
+   https://github.com/black-sliver/evermizer/blob/master/guide.md
+   or join the discord.
 
 CHANGES SO FAR:
   This is in an early but working state.
@@ -122,13 +124,13 @@ LINUX AND MAC BUILD INSTRUCTIONS:
   run make
 
 WINDOWS BUILD INSTRUCTIONS:
-  run make for mingw, or create a VS project with main.c as (only) source file
-  the github source tree requires you to have python3 in PATH to build gen.h
-  the zip distribution includes a pre-built gen.h
+  Run make for mingw, or create a VS project with main.c as (only) source file.
+  The github source tree requires you to have python3 in PATH to build gen.h.
+  The zip distribution includes a pre-built gen.h.
 
 EMSCRIPTEN BUILD INSTRUCTIONS:
-  make sure emscripten/emcc is configured and in PATH, run make wasm
-  you may need to set some env variables, like EM_CONFIG=~/.emscripten
+  Make sure emscripten/emcc is configured and in PATH. run make wasm
+  You may need to set some env variables, like EM_CONFIG=~/.emscripten
 
 CREDITS:
   Written by black_sliver
