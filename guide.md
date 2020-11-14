@@ -1,5 +1,5 @@
 # Evermizer Guide
-*Version 2020-10-14 for v032+*
+*Version 2020-11-14 for v032+*
 
 ## Goal
 With default settings (not bingo) the goal is to defeat the final boss.
@@ -15,7 +15,7 @@ Required items are rocket parts (2 Diamond Eyes, Wheel, Gauge) and Energy Core, 
 * Lance, Bronze Spear and Bronze Axe being boss rewards
 * Knight Basher, Atom Smasher and Laser Lance coming from gourds/pots/chests
 
-See [General Strats](#general-strats) below for strats.
+See [General Strats](#general-strats) below for strats, see [FAQ](#faq) below if you are stuck.
 
 ## Drop locations
 With default settings
@@ -28,7 +28,7 @@ With default settings
 See [Boss Strats](#boss-strats) below for strats.
 
 1. __Thraxx__: immediately accessible
-2. __Coleoptera__: accessible after beating Thraxx and talking to Fire Eyes twice
+2. __Coleoptera__: accessible after beating Thraxx and talking to Fire Eyes twice (call beads cutscene)
 3. __Mammoth graveyard vipers__: accessible with any slashing weapon
 4. __Salabog__: accessible with any slashing weapon
 5. __Cave Raptors__: on the volcano path, accessible with any slashing weapon
@@ -41,7 +41,7 @@ See [Boss Strats](#boss-strats) below for strats.
 12. __Mad Monk__: accessible with slashing weapon and Jaguar Ring
 13. __Megataur__: accessible with Bronze Spear, Lance (weapon) or Laser Lance
 14. __Aegis__: **No drop.** accessible after getting two Diamond Eyes
-15. __Tiny__: accessible after beating Aegis
+15. __Tiny__: accessible after beating Aegis, Levitate required to reach him
 16. __Aquagoth__: accessible after beating Aegis
 17. __Foot Knight__: **No drop.** accessible with Windwalker after getting a slashing weapon
 18. __Bad Boys__: accessible with Windwalker after getting a slashing weapon
@@ -130,8 +130,9 @@ Until randomized, you get
 so you should **not** waste Call Beads at/before Thraxx, if possible,
 but you should use as many as possible before visiting Horace or Camellia.
 
-Use Storm for good damage per Bead, Flare if you want to multi-cast,
-Plague to kill the prison Robot with damage over time while invincible.
+Use Storm for good damage per bead, Flare if you want to multi-cast,
+Plague to kill the prison Robot with damage over time while invincible,
+First Aid or Life Spark if you are out of healing items.
 
 
 ## Boss Strats
@@ -154,3 +155,13 @@ Plague to kill the prison Robot with damage over time while invincible.
 
 * Don't attempt to defeat Salabog without good spells, Atlas glitch, bazooka or
 leveled spear (best combined with Energize). It will take forever.
+
+
+## FAQ
+* __Q__: Is there a video tutorial?
+* __A__: No tutorial yet, only regular VODs. Will update once someone uploads one.
+* __Q__: The market timer is over but I never started it?!
+* __A__: Once you have 2 diamond eyes the game always behaves as if the market timer has expired.
+* __Q__: The market is empty/square is filled but Vigor fight does not start?!
+* __A__: You have to jump down the ravine next to Blimp south of the desert to progress.
+
