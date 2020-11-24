@@ -28,7 +28,7 @@ With default settings
 See [Boss Strats](#boss-strats) below for strats.
 
 1. __Thraxx__: immediately accessible
-2. __Coleoptera__: accessible after beating Thraxx and talking to Fire Eyes twice (call beads cutscene)
+2. __Coleoptera__: accessible after beating Thraxx and talking to Fire Eyes twice (Call Beads cutscene)
 3. __Mammoth graveyard vipers__: accessible with any slashing weapon
 4. __Salabog__: accessible with any slashing weapon
 5. __Cave Raptors__: on the volcano path, accessible with any slashing weapon
@@ -55,15 +55,15 @@ See [Boss Strats](#boss-strats) below for strats.
 ### Gourds/pots/chests
 None missable, all included on normal and hard, some excluded on easy.
 
-Please use vgmaps if you don't know them all.
+Please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore) if you don't know them all.
 
 ### Alchemists
 **Important:** Strongheart only gives you his second spell. Get the other one from the fish guy in the market.
 
-Please use the [Secret of Evermore Wiki](https://secretofevermore.fandom.com/wiki/Alchemy) or vgmaps if you don't know them all.
+Please use the [Secret of Evermore Wiki](https://secretofevermore.fandom.com/wiki/Alchemy) or [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore) if you don't know them all.
 
 ### NPCs
-Not randomized, please use vgmaps for now.
+Not randomized, please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore) for now.
 
 
 ## General Strats
@@ -161,7 +161,7 @@ leveled spear (best combined with Energize). It will take forever.
 * __Q__: Is there a video tutorial?
 * __A__: No tutorial yet, only regular VODs. Will update once someone uploads one.
 * __Q__: The market timer is over but I never started it?!
-* __A__: Once you have 2 diamond eyes the game always behaves as if the market timer has expired.
+* __A__: Once you have 2 Diamond Eyes the game always behaves as if the market timer has expired.
 * __Q__: The market is empty/square is filled but Vigor fight does not start?!
 * __A__: You have to jump down the ravine next to Blimp south of the desert to progress.
 
