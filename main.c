@@ -113,6 +113,9 @@ const static struct option options[] = {
 #ifndef NO_RANDO
     { '3', true,  "Glitchless beatable", NULL },
     { '4', false, "All accessible", NULL },
+#endif
+    { '5', false, "Fix infinite ammo", NULL },
+#ifndef NO_RANDO
     { 'a', true,  "Alchemizer", NULL },
     { 'i', true,  "Ingredienizer", NULL },
     { 'b', true,  "Boss dropamizer", NULL },
@@ -130,7 +133,11 @@ enum option_indices {
 #endif
     openworld_idx, keepdog_idx, fixsequence_idx, fixcheats_idx,
 #ifndef NO_RANDO
-    glitchless_idx, accessible_idx, alchemizer_idx, ingredienizer_idx,
+    glitchless_idx, accessible_idx,
+#endif
+    fixammo_idx,
+#ifndef NO_RANDO
+    alchemizer_idx, ingredienizer_idx,
     bossdropamizer_idx, gourdomizer_idx, sniffamizer_idx, doggomizer_idx,
     pupdunk_idx, /*enemizer_idx,*/ musicmizer_idx, spoilerlog_idx
 #endif
@@ -145,6 +152,7 @@ enum option_indices {
 #define fixcheats O(fixcheats_idx)
 #define glitchless O(glitchless_idx)
 #define accessible O(accessible_idx)
+#define fixammo O(fixammo_idx)
 #define alchemizer O(alchemizer_idx)
 #define ingredienizer O(ingredienizer_idx)
 #define bossdropamizer O(bossdropamizer_idx)
@@ -437,7 +445,7 @@ int main(int argc, const char** argv)
     }
     
     // show command line settings in batch mode
-    char settings[19];
+    char settings[20];
     //if (argc>2) strncpy(settings, argv[2], sizeof(settings)); else memcpy(settings, "rn", 3);
     SETTINGS2STR(settings);
     
@@ -879,7 +887,6 @@ int main(int argc, const char** argv)
             cyberlogicscore = 0;
             cybergameplayscore = 0;
             while (!complete) {
-                bool ammofix = false;
                 bool wingsfix = false;
                 int ammopenalty=0;
                 int wingspenalty=0;
@@ -922,22 +929,22 @@ int main(int argc, const char** argv)
                                 cybergameplayscore -= 10;
                             if (drop_provides(drop, P_ARMOR))
                                 cybergameplayscore -= 2;
-                            if (!ammofix && drop_provides(drop, P_GLITCHED_AMMO) && ammopenalty < 20) {
+                            if (!fixammo && drop_provides(drop, P_GLITCHED_AMMO) && ammopenalty < 20) {
                                 cybergameplayscore += ammopenalty-20;
                                 ammopenalty = 20;
                             }
-                            else if (!ammofix && drop_provides(drop, P_AMMO) && ammopenalty < 1) {
+                            else if (!fixammo && drop_provides(drop, P_AMMO) && ammopenalty < 1) {
                                 cybergameplayscore += ammopenalty-1;
                                 ammopenalty = 1;
                             }
-                            if (ammofix && drop_provides(drop, P_AMMO))
+                            if (fixammo && drop_provides(drop, P_AMMO))
                                 cybergameplayscore -= 1;
                         }
                         else if (drop && check_requires(checks+i, P_ROCKET)) {
-                            if (!ammofix && drop_provides(drop, P_GLITCHED_AMMO)) {
+                            if (!fixammo && drop_provides(drop, P_GLITCHED_AMMO)) {
                                 cybergameplayscore += ammopenalty-15;
                                 ammopenalty = 15;
-                            } else if (ammofix && drop_provides(drop, P_GLITCHED_AMMO))
+                            } else if (fixammo && drop_provides(drop, P_GLITCHED_AMMO))
                                 cybergameplayscore -= 1;
                         }
                         if (drop && drop->provides[0].progress > P_NONE && drop->provides[0].progress < P_ARMOR) {
@@ -1144,9 +1151,14 @@ int main(int argc, const char** argv)
         APPLY(145);
     }
     
-    if (fixcheats) { // excluding atlas
+    if (fixcheats) { // cheats put in by the original devs, not glitches
         printf("Removing infinite call bead glitch...\n");
         APPLY(67);
+    }
+    
+    if (fixammo) {
+        printf("Fixing infinite bazooka ammo...\n");
+        APPLY(INFAMMO);
     }
     
     #ifdef NO_RANDO // get rid of unused warnings
@@ -1310,7 +1322,8 @@ int main(int argc, const char** argv)
     if (keepdog)        seedcheck |= 0x00200000;
     // 0x00400000 and 0x00800000 = difficulty
     if (chaos)          seedcheck |= 0x01000000;
-    if (pupdunk)        seedcheck |= 0x02000000; // 26bits in use -> 6 b32 chars
+    if (pupdunk)        seedcheck |= 0x02000000;
+    if (fixammo)        seedcheck |= 0x04000000; // 27bits in use -> 6 b32 chars
     seedcheck |= ((uint32_t)difficulty<<22);
     printf("\nCheck: %c%c%c%c%c%c (Please compare before racing)\n",
            b32(seedcheck>>25), b32(seedcheck>>20), b32(seedcheck>>15),
