@@ -1,3 +1,6 @@
+v033:
+  Changed Atlas Medallion shop to sell you up to 99
+
 v032:
   Complete east prison softlock fix
   Fix potential doggomizer softlock in palace grounds

@@ -1,0 +1,7 @@
+@0x95e749+1
+57 14 29 07 ba 00 29 04 63 00 // spawn for less than 99 (instead of less than 3)
+
+@0x95e8a1
+18 ef 01 07 ba 00 29 02 32 17 29 02 64 9a // WRITE $2447 = $2312*50 + 100 (Price = Medallions*50 + 100)
+04 14 00    // SKIP 20 (20 free bytes)
+00          // END

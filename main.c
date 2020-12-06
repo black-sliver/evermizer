@@ -1129,6 +1129,8 @@ int main(int argc, const char** argv)
     // v032: fix bazooka weirdness
     APPLY(BAZOOKA_TWO_U);  APPLY(BAZOOKA_TWO_U2);
     APPLY(BAZOOKA_TWO_U3); APPLY(BAZOOKA_TWO_U4);
+    // v033: allow to buy up to 99 atlas medallions
+    APPLY(ATLAS_MEDALLIONS); APPLY(ATLAS_MEDALLIONS2);
     
     if (fixsequence) {
         printf("Applying desolarify patch-set...\n");
