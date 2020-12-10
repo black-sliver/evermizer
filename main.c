@@ -115,6 +115,8 @@ const static struct option options[] = {
     { '4', false, "All accessible", NULL },
 #endif
     { '5', false, "Fix infinite ammo", NULL },
+    { '8', false, "Double Money", NULL },
+    { '9', false, "Double Exp", NULL },
 #ifndef NO_RANDO
     { 'a', true,  "Alchemizer", NULL },
     { 'i', true,  "Ingredienizer", NULL },
@@ -135,7 +137,7 @@ enum option_indices {
 #ifndef NO_RANDO
     glitchless_idx, accessible_idx,
 #endif
-    fixammo_idx,
+    fixammo_idx, doublemoney_idx, doubleexp_idx,
 #ifndef NO_RANDO
     alchemizer_idx, ingredienizer_idx,
     bossdropamizer_idx, gourdomizer_idx, sniffamizer_idx, doggomizer_idx,
@@ -153,6 +155,8 @@ enum option_indices {
 #define glitchless O(glitchless_idx)
 #define accessible O(accessible_idx)
 #define fixammo O(fixammo_idx)
+#define doublemoney O(doublemoney_idx)
+#define doubleexp O(doubleexp_idx)
 #define alchemizer O(alchemizer_idx)
 #define ingredienizer O(ingredienizer_idx)
 #define bossdropamizer O(bossdropamizer_idx)
@@ -445,7 +449,7 @@ int main(int argc, const char** argv)
     }
     
     // show command line settings in batch mode
-    char settings[20];
+    char settings[ARRAY_SIZE(options)+3];
     //if (argc>2) strncpy(settings, argv[2], sizeof(settings)); else memcpy(settings, "rn", 3);
     SETTINGS2STR(settings);
     
@@ -1161,6 +1165,54 @@ int main(int argc, const char** argv)
         APPLY(INFAMMO);
     }
     
+    uint8_t money_num = doublemoney ? 2 : 1;
+    uint8_t money_den = 1;
+    uint8_t exp_num = doubleexp ? 2 : 1;
+    uint8_t exp_den = 1;
+    if ((money_num != money_den) || (exp_num != exp_den)) {
+        printf("Patching enemy data...\n");
+        for (uint32_t p=CHARACTER_DATA_START; p<CHARACTER_DATA_END; p+=CHARACTER_DATA_SIZE) {
+            uint32_t money = read16(buf, rom_off+p+CHARACTER_DATA_MONEY_OFF);
+            uint32_t exp   = read32(buf, rom_off+p+CHARACTER_DATA_EXP_OFF);
+            money = (money * money_num + money_den/2) / money_den;
+            exp   = (exp   * exp_num   + exp_den/2)   / exp_den;
+            write16(buf, rom_off+p+CHARACTER_DATA_MONEY_OFF, (uint16_t)money);
+            write32(buf, rom_off+p+CHARACTER_DATA_EXP_OFF,   exp);
+        }
+    }
+    if (exp_num != exp_den) {
+        printf("Patching weapon leveling...\n");
+        grow = true;
+        APPLY(WEAPON_EXP); APPLY(WEAPON_EXP2); APPLY(WEAPON_EXP3);
+        // filling in magic numbers:
+        uint8_t normal = (4 * exp_num + exp_den/2) / exp_den;
+        uint8_t slow   = (2 * exp_num + exp_den/2) / exp_den;
+        if (normal<1) normal=1;
+        if (slow<1)   slow=1;
+        write8(buf, rom_off+0x310000 +  6, normal);
+        write8(buf, rom_off+0x310000 + 13, slow-1); // +carry
+        write8(buf, rom_off+0x310013 +  3, slow);
+        
+        printf("Updating alchemy leveling...\n");
+        uint8_t alchemy_exp[9];
+        for (size_t i=0; i<ARRAY_SIZE(alchemy_exp); i++) {
+            uint8_t exp = read8(buf, rom_off+0x045b9c+i);
+            if (i>0 && exp == read8(buf, rom_off+0x045b9c+i-1)) {
+                // same as previous -> floor
+                alchemy_exp[i] = (exp * exp_num) / exp_den;
+            } else if (i<8 && exp == read8(buf, rom_off+0x045b9c+i-1)) {
+                // same as next -> ceil
+                alchemy_exp[i] = (exp * exp_num + exp_den-1) / exp_den;
+            } else {
+                // default: round
+                alchemy_exp[i] = (exp * exp_num + exp_den/2) / exp_den;
+            }
+        }
+        for (size_t i=0; i<ARRAY_SIZE(alchemy_exp); i++) {
+            write8(buf, rom_off+0x045b9c+i, alchemy_exp[i]);
+        }
+    }
+    
     #ifdef NO_RANDO // get rid of unused warnings
     UNUSED(74);
     UNUSED(77);
@@ -1323,7 +1375,9 @@ int main(int argc, const char** argv)
     // 0x00400000 and 0x00800000 = difficulty
     if (chaos)          seedcheck |= 0x01000000;
     if (pupdunk)        seedcheck |= 0x02000000;
-    if (fixammo)        seedcheck |= 0x04000000; // 27bits in use -> 6 b32 chars
+    if (fixammo)        seedcheck |= 0x04000000;
+    if (doublemoney)    seedcheck |= 0x08000000;
+    if (doubleexp)      seedcheck |= 0x10000000; // 29bits in use -> 6 b32 chars
     seedcheck |= ((uint32_t)difficulty<<22);
     printf("\nCheck: %c%c%c%c%c%c (Please compare before racing)\n",
            b32(seedcheck>>25), b32(seedcheck>>20), b32(seedcheck>>15),

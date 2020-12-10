@@ -2,6 +2,8 @@ v033:
   Changed Atlas Medallion shop to sell you up to 99
   Include assassin17's leveling fix
   Include assassin17's infinite bazooka ammo fix
+  Option for double money
+  Option for double exp (enemy, weapon and alchemy)
 
 v032:
   Complete east prison softlock fix

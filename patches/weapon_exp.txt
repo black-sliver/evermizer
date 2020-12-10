@@ -1,0 +1,25 @@
+// patch weapon experiance to take arbitrary numbers
+
+@0xf10000
+// new boy leveling, magic numbers at 0x310000 + 6, 0x310000 + 13dec
+c9 00 02    // CMP #$0200
+b0 07       // BCS LVL23
+69 08 00    // ADC #$0008
+5c 59 97 8f // JMP back to #$8f9759
+69 03 00    // ADC #$0003 ; +carry
+5c 59 97 8f // JMP back to #$8f9759
+// new dog leveling, magic number at 0x31013 + 3
+//@0xf10013
+85 12       // STA $12
+69 04 00    // ADC #$0004
+5c cc 97 8f // JMP back to #$8f97cc
+
+@0x8f9750
+// instead of original weapon exp calculation
+5c 00 00 f1    // JMP long
+ea ea ea ea ea // NOP NOP NOP NOP NOP
+
+@0x8f97c8
+// instead of original dog attack exp calculation (sta $12, inc, inc)
+5c 13 00 f1 // JMP long to new code
+@
