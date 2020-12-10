@@ -115,6 +115,7 @@ const static struct option options[] = {
     { '4', false, "All accessible", NULL },
 #endif
     { '5', false, "Fix infinite ammo", NULL },
+    { '6', false, "Fix atlas glitch", NULL },
     { '8', false, "Double Money", NULL },
     { '9', false, "Double Exp", NULL },
 #ifndef NO_RANDO
@@ -137,7 +138,7 @@ enum option_indices {
 #ifndef NO_RANDO
     glitchless_idx, accessible_idx,
 #endif
-    fixammo_idx, doublemoney_idx, doubleexp_idx,
+    fixammo_idx, fixatlas_idx, doublemoney_idx, doubleexp_idx,
 #ifndef NO_RANDO
     alchemizer_idx, ingredienizer_idx,
     bossdropamizer_idx, gourdomizer_idx, sniffamizer_idx, doggomizer_idx,
@@ -155,6 +156,7 @@ enum option_indices {
 #define glitchless O(glitchless_idx)
 #define accessible O(accessible_idx)
 #define fixammo O(fixammo_idx)
+#define fixatlas O(fixatlas_idx)
 #define doublemoney O(doublemoney_idx)
 #define doubleexp O(doubleexp_idx)
 #define alchemizer O(alchemizer_idx)
@@ -1167,6 +1169,11 @@ int main(int argc, const char** argv)
         APPLY(INFAMMO);
     }
     
+    if (fixatlas) {
+        printf("Fixing atlas glitch...\n");
+        APPLY(STADIE_U);
+    }
+    
     uint8_t money_num = doublemoney ? 2 : 1;
     uint8_t money_den = 1;
     uint8_t exp_num = doubleexp ? 2 : 1;
@@ -1379,7 +1386,8 @@ int main(int argc, const char** argv)
     if (pupdunk)        seedcheck |= 0x02000000;
     if (fixammo)        seedcheck |= 0x04000000;
     if (doublemoney)    seedcheck |= 0x08000000;
-    if (doubleexp)      seedcheck |= 0x10000000; // 29bits in use -> 6 b32 chars
+    if (doubleexp)      seedcheck |= 0x10000000;
+    if (fixatlas)       seedcheck |= 0x20000000; // 30bits in use -> 6 b32 chars
     seedcheck |= ((uint32_t)difficulty<<22);
     printf("\nCheck: %c%c%c%c%c%c (Please compare before racing)\n",
            b32(seedcheck>>25), b32(seedcheck>>20), b32(seedcheck>>15),

@@ -1,0 +1,8 @@
+StaDie-U.ips headered
+--
+Copyright assassin17 - http://assassin17.brinkster.net/
+
+NOTE:
+While the .ips files are provided as part of the project's source/distribution,
+the means to create them are not. See the link above for details on the patches.
+

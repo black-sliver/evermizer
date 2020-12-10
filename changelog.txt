@@ -5,6 +5,7 @@ v033:
   Option for double money
   Option for double exp (enemy, weapon and alchemy)
   Include assassin17's stat save fix
+  Option to disable atlas glitch (assassin17's stat die fix)
 
 v032:
   Complete east prison softlock fix
