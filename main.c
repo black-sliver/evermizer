@@ -1144,6 +1144,8 @@ int main(int argc, const char** argv)
     APPLY(ATLAS_MEDALLIONS); APPLY(ATLAS_MEDALLIONS2);
     // v033: fix levelup mechanic (multiple levels off one enemy)
     APPLY(LEVEL_U); APPLY(LEVEL_U2); APPLY(LEVEL_U3);
+    // v033: fix save+restore of wrong stats
+    APPLY(STASAV_U); APPLY(STASAV_U2);
     
     if (fixsequence) {
         printf("Applying desolarify patch-set...\n");

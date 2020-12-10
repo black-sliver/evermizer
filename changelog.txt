@@ -4,6 +4,7 @@ v033:
   Include assassin17's infinite bazooka ammo fix
   Option for double money
   Option for double exp (enemy, weapon and alchemy)
+  Include assassin17's stat save fix
 
 v032:
   Complete east prison softlock fix
