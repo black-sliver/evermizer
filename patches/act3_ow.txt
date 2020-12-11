@@ -13,3 +13,8 @@
 // (NOTE: cleaner fix would be to always spawn guard after banquet?)
 @0x9ac37e+2
 12
+@
+// fix spawn point when loading banquet save after clearing prison
+@0x9ac3a1+2
+12
+@

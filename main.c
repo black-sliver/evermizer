@@ -1057,7 +1057,7 @@ int main(int argc, const char** argv)
         APPLY(FE_VILLAGE_WW16); APPLY(FE_VILLAGE_WW17); APPLY(FE_VILLAGE_WW18);
         APPLY(FE_VILLAGE_WW19);
         APPLY(MARKET_REWORK);
-        APPLY(ACT3_OW);  APPLY(ACT3_OW2); APPLY(ACT3_OW3);
+        APPLY(ACT3_OW);  APPLY(ACT3_OW2); APPLY(ACT3_OW3); APPLY(ACT3_OW4);
         APPLY(MUD_PEPPER_LIMIT);
         APPLY(TEMP); APPLY(TEMP2); // TODO: resolve underlying issue
         // v026: levitate last rock entering magmar fight to avoid softlock
