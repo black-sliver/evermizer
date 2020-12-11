@@ -1,19 +1,18 @@
 HOWTO:
 0. ROM has to be NTSC/US and can be a 3MB .SFC file with or without 512B header
-1. Make a backup of your rom (just to be safe)
-2. Unpack the exe, compile main.c or visit the in-browser version
-3. Drag and Drop your rom onto the .exe or in-browser field
-4a Should ask you for settings and spit out success or error in a dos window,
-   create a file starting with "Evermizer" or "SoE-OpenWorld" in the source
-   file's directory and print out the complete filename
-4b Should present you checkboxes in your browser and offer the patched ROM as
-   "download" or show messages in an alert box.
-5. Checksum is wrong, but neither sd2snes nor (most) emulators seem to care
-6. You can skip the intro by pressing start (even without a prior save)
-7. You have to kill Thraxx or loot gourds/chests to get a weapon that can cut
-   grass (or use cheat codes) to get access to the Windwalker.
-8. If you have questions/need help continue reading below, check the guide at
-   https://github.com/black-sliver/evermizer/blob/master/guide.md
+1. Visit the in-browser version, unpack the exe or compile main.c
+2. Drag and drop your rom into the in-browser field or onto the .exe
+3a In-browser version should present you checkboxes in your browser and offer
+   the patched ROM as "download" or show messages in an alert box.
+3b Exe should ask you for settings and spit out success or error in a "dos"
+   window, create a file starting with "Evermizer" in source ROM's directory
+   and print out the complete filename.
+4. Checksum is wrong, but neither sd2snes nor (most) emulators seem to care
+5. You can skip the intro by pressing start (even without a prior save)
+6. You have to loot gourds/chests or kill Thraxx to get a weapon that can cut
+   grass to get access to the Windwalker.
+7. If you have questions or need help, continue reading below, check the guide
+   at https://github.com/black-sliver/evermizer/blob/master/guide.md
    or join the discord.
 
 CHANGES SO FAR:
@@ -57,8 +56,19 @@ CHANGES SO FAR:
     Disable double gauge: don't take away rocket parts until you have them all
   Fix cheats:
     Remove infinite call bead glitch
+  Glitchless beatable:
+    Never require glitches to beat the game, even if glitches are not disabled
   All accessible:
     Make sure all checks/areas/bosses can be reached
+  Fix infinite ammo:
+    Fixes the bug that Particle Bomb and Cryo-Blast do not drain
+  Fix atlas glitch:
+    Fixes stat underflow when dying with active stat boosts
+  Double Money:
+    Enemies give twice as much money
+  Double Exp:
+    Enemies give twice as much experience points
+    Weapons and formulas level twice as fast
   Open world: Unlock windwalker in every fire pit (slashing weapon required)
     Grant access to inner volcano
     Grant access to east swamp
@@ -96,6 +106,7 @@ CHANGES SO FAR:
     Fix texts disappearing when you fall down in Ruins NW room
     Removed option to save at Madronius' Brother
     Fix softlock when leaving tiny's lair
+    Saving with Atlas, Defend or Speed does not ruin your stats
   Fix missables:
     Directly reward Queen's Key to inventory
     Make Revealer and Escape still obtainable when Horace is gone
@@ -103,6 +114,7 @@ CHANGES SO FAR:
   Some quality of life improvements are always enabled, most notably:
     Preselect the correct spell in alchemy selection screen
     Bazooka charge/energize and stat display fix
+    Multiple level-ups from one enemy
   Uses tinymt64 for platform-independend RNG. See tinymt64.h for lincense
   Allow for ROM to grow to 4MB if required
   Allow skipping of intro with no prior save file
@@ -111,9 +123,7 @@ CHANGES SO FAR:
 STILL TO BE FIXED:
   (with feature set outlined above)
   Show info to the player if market timer is over but vigor won't spawn yet
-  Act3 has camera location bugs in houses until blindly talked to Lance
-  Lance is still somewhat buggy
-  Stop and Lance are missabe
+  Act3 can have camera location bugs in houses until blindly talked to Lance
   Put rocket behind mungola / change tinker progression?
   Remove some cutscenes?
   Desaturnate 2.0: make sure *NO* hatches can be skipped
