@@ -151,6 +151,7 @@ CREDITS:
   greenambler, metasigma, mirapoix, neagix, nyrambler, queenanne, scarrfish,
   skarsnikus, solarcell007, turbo, zheal
   Thanks to vr-interactive for providing the website's new background image
+  Thanks to sferath for providing the mascot - https://deviantart.com/sferath
   Special thanks to elwismw for existing. #hereforelwis
 
 LICENSE:
