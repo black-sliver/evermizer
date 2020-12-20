@@ -250,6 +250,7 @@ enum progression {
     P_BRONZE_AXE_PLUS,
     P_BRONZE_AXE,
     P_KNIGHT_BASHER,
+    P_KNIGHT_BASHER_PLUS,
     P_BRONZE_SPEAR_PLUS,
     P_ENERGY_CORE,
     P_DE,
@@ -287,29 +288,33 @@ struct progression_provider {
     enum progression progress;
 };
 #define NO_REQ {0,P_NONE}
-#define NOTHING_REQUIRED { NO_REQ,NO_REQ,NO_REQ,NO_REQ,NO_REQ }
+#define NOTHING_REQUIRED { NO_REQ,NO_REQ,NO_REQ,NO_REQ,NO_REQ,NO_REQ }
 #define NO_PVD {0,P_NONE}
-#define NOTHING_PROVIDED { NO_PVD,NO_PVD,NO_PVD,NO_PVD,NO_PVD }
-#define REQ1(p) { {1,p},NO_REQ,NO_REQ,NO_REQ,NO_REQ }
-#define REQ2(p,q) { {1,p},{1,q},NO_REQ,NO_REQ,NO_REQ }
-#define REQ3(p,q,r) { {1,p},{1,q},{1,r},NO_REQ,NO_REQ }
-#define REQ4(p,q,r,s) { {1,p},{1,q},{1,r},{1,s},NO_REQ }
-#define REQ5(p,q,r,s,t) { {1,p},{1,q},{1,r},{1,s},{1,t} }
-#define REQ1N(n,p) { {n,p},NO_REQ,NO_REQ,NO_REQ,NO_REQ }
-#define REQ2N(n,p,m,q) { {n,p},{m,q},NO_REQ,NO_REQ,NO_REQ }
-#define REQ3N(k,p,l,q,n,r) { {k,p},{l,q},{n,r},NO_REQ,NO_REQ }
-#define REQ4N(k,p,l,q,n,r,m,s) { {k,p},{l,q},{n,r},{m,s},NO_REQ }
-#define REQ5N(k,p,l,q,n,r,m,s,o,t) { {k,p},{l,q},{n,r},{m,s},{o,t} }
+#define NOTHING_PROVIDED { NO_PVD,NO_PVD,NO_PVD,NO_PVD,NO_PVD,NO_PVD }
+#define REQ1(p) { {1,p},NO_REQ,NO_REQ,NO_REQ,NO_REQ,NO_REQ }
+#define REQ2(p,q) { {1,p},{1,q},NO_REQ,NO_REQ,NO_REQ,NO_REQ }
+#define REQ3(p,q,r) { {1,p},{1,q},{1,r},NO_REQ,NO_REQ,NO_REQ }
+#define REQ4(p,q,r,s) { {1,p},{1,q},{1,r},{1,s},NO_REQ,NO_REQ }
+#define REQ5(p,q,r,s,t) { {1,p},{1,q},{1,r},{1,s},{1,t},NO_REQ }
+#define REQ6(p,q,r,s,t,u) { {1,p},{1,q},{1,r},{1,s},{1,t},{1,u} }
+#define REQ1N(n,p) { {n,p},NO_REQ,NO_REQ,NO_REQ,NO_REQ,NO_REQ }
+#define REQ2N(n,p,m,q) { {n,p},{m,q},NO_REQ,NO_REQ,NO_REQ,NO_REQ }
+#define REQ3N(j,p,k,q,l,r) { {j,p},{k,q},{l,r},NO_REQ,NO_REQ,NO_REQ }
+#define REQ4N(j,p,k,q,l,r,m,s) { {j,p},{k,q},{l,r},{m,s},NO_REQ,NO_REQ }
+#define REQ5N(j,p,k,q,l,r,m,s,n,t) { {j,p},{k,q},{l,r},{m,s},{n,t},NO_REQ }
+#define REQ6N(j,p,k,q,l,r,m,s,n,t,o,u) { {j,p},{k,q},{l,r},{m,s},{n,t},{o,u} }
 #define PVD1 REQ1
 #define PVD2 REQ2
 #define PVD3 REQ3
 #define PVD4 REQ4
 #define PVD5 REQ5
+#define PVD6 REQ6
 #define PVD1N REQ1N
 #define PVD2N REQ2N
 #define PVD3N REQ3N
 #define PVD4N REQ4N
 #define PVD5N REQ5N
+#define PVD6N REQ6N
 
 enum check_tree_item_type {
     CHECK_NONE,
@@ -325,13 +330,13 @@ typedef struct check_tree_item {
     uint16_t index; // which spell, boss or gourd
     bool missable;
     int8_t difficulty;
-    struct progression_requirement requires[5];
-    struct progression_provider provides[5];
+    struct progression_requirement requires[6];
+    struct progression_provider provides[6];
 } check_tree_item;
 typedef struct drop_tree_item {
     enum check_tree_item_type type; // spell, boss or gourd
     uint16_t index; // which spell, boss or gourd
-    struct progression_provider provides[5];
+    struct progression_provider provides[6];
 } drop_tree_item;
 static const check_tree_item blank_check_tree[] = {
     // Alchemy checks               missable  d. requires                            provided by the check itself

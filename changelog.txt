@@ -1,5 +1,6 @@
 v036:
   Correct logic tree for top-of-volcano gourds
+  Correct logic tree for walls in tiny's lair
 
 v035:
   New icon

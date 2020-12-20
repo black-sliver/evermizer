@@ -143,6 +143,7 @@ requirements = {
     'bronze spear+': 'P_BRONZE_SPEAR_PLUS',
     'aegis': '2*P_DE',
     'knight basher': 'P_KNIGHT_BASHER',
+    'knight basher+': 'P_KNIGHT_BASHER_PLUS',
     'jaguar ring': 'P_JAGUAR_RING',
     'queen\'s key': 'P_QUEENS_KEY',
     'revealer': 'P_REVEALER',
