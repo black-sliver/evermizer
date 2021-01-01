@@ -1,7 +1,6 @@
-// yes, this is a mess, but I really want to make single-c-file work
-// this is the simplest way to get a static EXE and WASM
-// from a common source, also without requiring project/make files
-// see google doc for documentation on the actual patches used below
+// single-c-file is the simplest way to get a static EXE and WASM
+// from a common source, also without requiring project/make files and LTO
+// see google doc for documentation on old (numbered) patches
 // the idea is to "manually" patch the game to a state where we simply swap
 // out some numbers to make it random (without rewriting/relocating everything)
 #define VERSION "v035d"
