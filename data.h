@@ -393,7 +393,7 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_BOSS,TIMBERDRAKE_IDX,   0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
     {0, CHECK_BOSS,VERMINATOR_IDX,    0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
     {0, CHECK_BOSS,MUNGOLA_IDX,       0, 0, REQ1(P_KNIGHT_BASHER),                   PVD1(P_MUNGOLA)},
-    {0, CHECK_BOSS,TINY_IDX,          0, 0, REQ2N(1,P_WEAPON,2,P_DE),                NOTHING_PROVIDED},
+    {0, CHECK_BOSS,TINY_IDX,          0, 0, REQ3N(1,P_WEAPON,2,P_DE,1,P_LEVITATE),   NOTHING_PROVIDED},
     // Required checks that are not randomized (yet)
     {0, CHECK_RULE,P_JAGUAR_RING,     0, 0, NOTHING_REQUIRED,           PVD1(P_JAGUAR_RING)},
     {0, CHECK_RULE,P_QUEENS_KEY,      0, 0, REQ1(P_WEAPON),             PVD1(P_QUEENS_KEY)},

@@ -1,6 +1,7 @@
 v036:
   Correct logic tree for top-of-volcano gourds
   Correct logic tree for walls in tiny's lair
+  Fix logic tree for Tiny (could generate unbeatable seeds)
 
 v035:
   New icon
