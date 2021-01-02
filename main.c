@@ -1061,6 +1061,8 @@ int main(int argc, const char** argv)
         APPLY(TEMP); APPLY(TEMP2); // TODO: resolve underlying issue
         // v026: levitate last rock entering magmar fight to avoid softlock
         APPLY(VOLCANO);
+        // v036: fix tinker setting a (now useless) bit that breaks other firepits
+        APPLY(TINKER_FIX);
     }
     if (keepdog) {
         printf("Applying patches to keep the dog...\n");

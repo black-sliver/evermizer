@@ -1,0 +1,5 @@
+// TODO: move tinker fixes from patches.h here
+@0x998c9b
+// remove 1 useless flag written at tinker to avoid softlock when leaving act3 through the well
+04 01 00 00
+@
