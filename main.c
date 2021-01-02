@@ -413,15 +413,16 @@ int main(int argc, const char** argv)
     }
     fseek(fsrc, 0L, SEEK_END);
     size_t sz = ftell(fsrc);
-    if (sz != 3145728 && sz != 3145728+512) {
+    if (sz != 3145728 && sz != 3145728+512 && sz != 3670016 && sz != 3670016+512) {
         fclose(fsrc);
-        die("ROM has to be 3MB SFC with or without header!\n");
+        die("ROM has to be 3MB or 3.5MB SFC with or without header!\n");
     }
     fseek(fsrc, 0L, SEEK_SET);
     
-    const size_t rom_off = (sz == 3145728+512) ? 512 : 0;
+    const size_t rom_off = (sz == 3145728+512 || sz == 3670016+512) ? 512 : 0;
     bool grow = false; // will be set by patches if gowing the rom is required
-    #define GROW_BY (1024*1024) // 1MB to a round 4MB
+    #define GROW_BY (4*1024*1024-sz+rom_off) // 0.5 or 1MB to a round 4MB
+    assert(GROW_BY == 1024*1024 || GROW_BY == 512*1024);
     
     uint8_t* buf = (uint8_t*)malloc(sz+GROW_BY); // allow to grow by 1MB
     memset(buf+sz, 0, GROW_BY); // or 0xff?
@@ -430,9 +431,21 @@ int main(int argc, const char** argv)
     
     // check ROM header
     const char cart_header[] = "SECRET OF EVERMORE   \x31\x02\x0c\x03\x01\x33\x00";
+    const char soe2p_header[]= "SoE 2-Player FuSoYa  \x31\x02\x0c\x03\x01\x33\x00";
     const size_t cart_header_loc = 0xFFC0;
-    if (memcmp((char*)buf + rom_off + cart_header_loc, cart_header, sizeof(cart_header)-1) != 0)
+    bool is_2p = false;
+    if (memcmp((char*)buf + rom_off + cart_header_loc, cart_header, sizeof(cart_header)-1) == 0)
     {
+        // ok
+    }
+    else if (memcmp((char*)buf + rom_off + cart_header_loc, soe2p_header, sizeof(soe2p_header)-1) == 0)
+    {
+        // SoE 2P
+        is_2p = true;
+    }
+    else
+    {
+        // unknown/unsupported rom
         size_t i = rom_off+cart_header_loc + 0x15;
         fprintf(stderr, "Wrong Header: %.21s %02x %02x %02x %02x %02x %02x %02x\n"
                         "Expected:     SECRET OF EVERMORE    31 02 0c 03 01 33 00\n",
@@ -1405,13 +1418,13 @@ int main(int argc, const char** argv)
         if (!shortsettings[0]) shortsettings[0]='r';
     }
 #ifdef NO_RANDO
-    char dsttitle[strlen("SoE-OpenWorld_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1]; // SoE-OpenWorld_vXXX_e0123
+    char dsttitle[strlen("SoE-OpenWorld_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1]; // SoE-OpenWorld_vXXX_e0123
 #else
-    char dsttitle[strlen("Evermizer_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1+16+1]; // Evermizer_vXXX_e0123caibgsdm_XXXXXXXXXXXXXXXX
-    assert(snprintf(dsttitle, sizeof(dsttitle), "Evermizer_%s_%s_%" PRIx64, VERSION, shortsettings, seed)<sizeof(dsttitle));
+    char dsttitle[strlen("Evermizer_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1+16+1]; // Evermizer_vXXX_e0123caibgsdm_XXXXXXXXXXXXXXXX
+    assert(snprintf(dsttitle, sizeof(dsttitle), "Evermizer_%s%s_%s_%" PRIx64, is_2p?"2P_":"", VERSION, shortsettings, seed)<sizeof(dsttitle));
     if (!randomized)
 #endif
-        assert(snprintf(dsttitle, sizeof(dsttitle), "SoE-OpenWorld_%s_%s", VERSION, shortsettings)<sizeof(dsttitle));
+        assert(snprintf(dsttitle, sizeof(dsttitle), "SoE-OpenWorld_%s%s_%s", is_2p?"2P_":"", VERSION, shortsettings)<sizeof(dsttitle));
     char* pSlash = strrchr(src, DIRSEP);
     if (!pSlash && DIRSEP!='/') pSlash = strrchr(src, '/'); // wine support
     const char* ext = strrchr(src, '.');

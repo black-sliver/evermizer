@@ -4,6 +4,7 @@ v036:
   Fix logic tree for Tiny (could generate unbeatable seeds)
   Fix Tinker breaking other fire pits (when leaving though the well)
   Add descriptions to options
+  Accept 2P patched input file
 
 v035:
   New icon
