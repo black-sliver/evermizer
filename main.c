@@ -3,7 +3,7 @@
 // see google doc for documentation on old (numbered) patches
 // the idea is to "manually" patch the game to a state where we simply swap
 // out some numbers to make it random (without rewriting/relocating everything)
-#define VERSION "v036"
+#define VERSION "v036d"
 
 #include <stdio.h>
 #include <stdlib.h>
