@@ -100,33 +100,33 @@ char b32(unsigned v) { return B32[v&0x1f]; }
 const char DIFFICULTY_CHAR[] = {'e','n','h'};
 const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard"};
 #define DEFAULT_difficulty 1
-struct option { char key; bool def; const char* text; const char* info; };
+struct option { char key; bool def; const char* text; const char* info; const char* description; };
 const static struct option options[] = {
 #ifndef NO_RANDO
-    { 'c', false, "Chaos", NULL },
+    { 'c', false, "Chaos", NULL,               "Change randomizations from 'shuffle' to 'random'" },
 #endif
-    { 0,   true,  "Open World", NULL },
-    { 'k', true,  "Keep dog", NULL },
-    { '1', true,  "Fix sequence", NULL },
-    { '2', true,  "Fix cheats", NULL },
+    { 0,   true,  "Open World", NULL,          "Make windwalker available in every firepit" },
+    { 'k', true,  "Keep dog", NULL,            "Keep dog in some places to avoid softlocks" },
+    { '1', true,  "Fix sequence", NULL,        "Fix some sequence breaks" },
+    { '2', true,  "Fix cheats", NULL,          "Fix vanilla cheats" },
 #ifndef NO_RANDO
-    { '3', true,  "Glitchless beatable", NULL },
-    { '4', false, "All accessible", NULL },
+    { '3', true,  "Glitchless beatable", NULL, "Never require glitches to finish" },
+    { '4', false, "All accessible", NULL,      "Make sure all key items are obtainable" },
 #endif
-    { '5', false, "Fix infinite ammo", NULL },
-    { '6', false, "Fix atlas glitch", NULL },
-    { '8', false, "Double Money", NULL },
-    { '9', false, "Double Exp", NULL },
+    { '5', false, "Fix infinite ammo", NULL,   "Fix bug that would have bazooka ammo not drain" },
+    { '6', false, "Fix atlas glitch", NULL,    "Fix status effects cancelling with pixie dust" },
+    { '8', false, "Double Money", NULL,        "Double money from enemies" },
+    { '9', false, "Double Exp", NULL,          "Double exp from enemies, weapons and alchemy" },
 #ifndef NO_RANDO
-    { 'a', true,  "Alchemizer", NULL },
-    { 'i', true,  "Ingredienizer", NULL },
-    { 'b', true,  "Boss dropamizer", NULL },
-    { 'g', true,  "Gourdomizer", NULL },
-    { 's', true,  "Sniffamizer", NULL },
-    { 'd', false, "Doggomizer", "Act1-3" },
-    { 'p', false, "Pupdunk mode", "Act0 dog" },
-    { 'm', false, "Musicmizer", "Demo" },
-    { 'l', false, "Spoiler Log", NULL },
+    { 'a', true,  "Alchemizer", NULL,          "Shuffle learned alchemy formulas" },
+    { 'i', true,  "Ingredienizer", NULL,       "Randomize ingredients required for formulas" },
+    { 'b', true,  "Boss dropamizer", NULL,     "Shuffle boss drops" },
+    { 'g', true,  "Gourdomizer", NULL,         "Shuffle gourd drops" },
+    { 's', true,  "Sniffamizer", NULL,         "Randomize ingredient drops" },
+    { 'd', false, "Doggomizer", "Act1-3",      "Random dog per act (non-chaos) or room (chaos)" },
+    { 'p', false, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere!" },
+    { 'm', false, "Musicmizer", "Demo",        "Random music for some rooms" },
+    { 'l', false, "Spoiler Log", NULL,         "Generate a spoiler log file" },
 #endif
 };
 enum option_indices {
@@ -253,6 +253,7 @@ static void print_settings()
         if (! opt->key) continue;
         printf("  %c: %s %s%s%s%s\n", opt->key, opt->def?"No":"  ",opt->text,
                   opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"");
+        if (opt->description) printf("        %s\n", opt->description);
     }
     printf("\n");
 }
@@ -273,9 +274,9 @@ static void print_settings_json()
         const struct option* opt = options+i;
         if (! opt->key) continue;
         if (i != 0) printf(",\n");
-        printf("  [ \"%c\", \"%s%s%s%s\", %s ]", opt->key, opt->text,
+        printf("  [ \"%c\", \"%s%s%s%s\", %s, \"%s\" ]", opt->key, opt->text,
                   opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"",
-                  opt->def?"true":"false");
+                  opt->def?"true":"false", opt->description?opt->description:"");
     }
     printf("\n ]\n}\n\n");
 }
