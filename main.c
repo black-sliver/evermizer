@@ -107,8 +107,8 @@ const static struct option options[] = {
 #endif
     { 0,   true,  "Open World", NULL,          "Make windwalker available in every firepit" },
     { 'k', true,  "Keep dog", NULL,            "Keep dog in some places to avoid softlocks" },
-    { '1', true,  "Fix sequence", NULL,        "Fix some sequence breaks" },
-    { '2', true,  "Fix cheats", NULL,          "Fix vanilla cheats" },
+    { '1', true,  "Fix sequence", NULL,        "Fix some sequence breaks: Volcano rock, final boss hatch" },
+    { '2', true,  "Fix cheats", NULL,          "Fix vanilla cheats: Infinite call beads" },
 #ifndef NO_RANDO
     { '3', true,  "Glitchless beatable", NULL, "Never require glitches to finish" },
     { '4', false, "All accessible", NULL,      "Make sure all key items are obtainable" },
