@@ -1,0 +1,350 @@
+#set // directive to create a patch set as APPLY_ALL_HARD_BALL()
+
+// change alchemy script pointers (switch) to Hard Ball for all offensive spells
+@0x8ea777+0
+74 88 // Acid Rain -> Hard Ball
+
+@0x8ea777+8
+74 88 // Corrosion -> Hard Ball
+
+@0x8ea777+10
+74 88 // Crush -> Hard Ball
+
+@0x8ea777+16
+74 88 // Double Drain -> Hard Ball
+
+@0x8ea777+18
+74 88 // Drain -> Hard Ball
+
+@0x8ea777+24
+74 88 // Explosion -> Hard Ball
+
+@0x8ea777+28
+74 88 // Fire Power -> Hard Ball
+
+@0x8ea777+38
+74 88 // Lance -> Hard Ball
+
+@0x8ea777+44
+74 88 // Lightning Storm -> Hard Ball
+
+@0x8ea777+48
+74 88 // Nitro -> Hard Ball
+
+@0x8ea777+60
+74 88 // Slow Burn -> Hard Ball
+
+@0x8ea777+64
+74 88 // Sting -> Hard Ball
+
+@0x8ea777+26
+74 88 // Fireball -> Hard Ball
+
+@0x8ea777+30
+74 88 // Flash -> Hard Ball
+
+@
+
+// change alchemy text pointers (lvl display, selection) to Hard Ball
+@0xc45d09+0
+78 68 // Acid Rain -> Hard Ball
+
+@0xc45d09+8
+78 68 // Corrosion -> Hard Ball
+
+@0xc45d09+10
+78 68 // Crush -> Hard Ball
+
+@0xc45d09+16
+78 68 // Double Drain -> Hard Ball
+
+@0xc45d09+18
+78 68 // Drain -> Hard Ball
+
+@0xc45d09+24
+78 68 // Explosion -> Hard Ball
+
+@0xc45d09+28
+78 68 // Fire Power -> Hard Ball
+
+@0xc45d09+38
+78 68 // Lance -> Hard Ball
+
+@0xc45d09+44
+78 68 // Lightning Storm -> Hard Ball
+
+@0xc45d09+48
+78 68 // Nitro -> Hard Ball
+
+@0xc45d09+60
+78 68 // Slow Burn -> Hard Ball
+
+@0xc45d09+64
+78 68 // Sting -> Hard Ball
+
+@0xc45d09+26
+78 68 // Fireball -> Hard Ball
+
+@0xc45d09+30
+78 68 // Flash -> Hard Ball
+
+@
+
+// change ring menu item text pointers (item+0) to Hard Ball
+// sadly, these are not in order of spells. see lsringmenu
+// text for HB is 0x6878 (as above)
+@0x8e829c+0
+78 68 // Acid Rain -> Hard Ball
+
+@0x8e8324+0
+78 68 // Corrosion -> Hard Ball
+
+@0x8e82dc+0
+78 68 // Crush -> Hard Ball
+
+@0x8e82ec+0
+78 68 // Double Drain -> Hard Ball
+
+@0x8e82e4+0
+78 68 // Drain -> Hard Ball
+
+@0x8e831c+0
+78 68 // Explosion -> Hard Ball
+
+@0x8e830c+0
+78 68 // Fire Power -> Hard Ball
+
+@0x8e8334+0
+78 68 // Lance -> Hard Ball
+
+@0x8e8314+0
+78 68 // Lightning Storm -> Hard Ball
+
+@0x8e8344+0
+78 68 // Nitro -> Hard Ball
+
+@0x8e833c+0
+78 68 // Slow Burn -> Hard Ball
+
+@0x8e82d4+0
+78 68 // Sting -> Hard Ball
+
+@0x8e82f4+0
+78 68 // Fireball -> Hard Ball
+
+@0x8e828c+0
+78 68 // Flash -> Hard Ball
+
+@
+
+// change alchemy icon animations to Hard Ball
+// each icon has an animation script. pointer to that taken from lsringmenu
+// see stream-doc 2020-12-30 or future document on that
+@0xc80164+5
+e4 3f 11 // Acid Rain Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc80164+10
+eb 3f 11 // Acid Rain Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc801a0+5
+e4 3f 11 // Corrosion Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc801a0+10
+eb 3f 11 // Corrosion Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc801af+5
+e4 3f 11 // Crush Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc801af+10
+eb 3f 11 // Crush Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc801dc+5
+e4 3f 11 // Double Drain Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc801dc+10
+eb 3f 11 // Double Drain Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc801eb+5
+e4 3f 11 // Drain Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc801eb+10
+eb 3f 11 // Drain Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc80218+5
+e4 3f 11 // Explosion Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc80218+10
+eb 3f 11 // Explosion Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc80227+5
+e4 3f 11 // Fire Power Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc80227+10
+eb 3f 11 // Fire Power Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc80281+5
+e4 3f 11 // Lance Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc80281+10
+eb 3f 11 // Lance Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc802ae+5
+e4 3f 11 // Lightning Storm Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc802ae+10
+eb 3f 11 // Lightning Storm Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc802cc+5
+e4 3f 11 // Nitro Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc802cc+10
+eb 3f 11 // Nitro Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc80326+5
+e4 3f 11 // Slow Burn Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc80326+10
+eb 3f 11 // Slow Burn Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc80344+5
+e4 3f 11 // Sting Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc80344+10
+eb 3f 11 // Sting Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc80236+5
+e4 3f 11 // Fireball Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc80236+10
+eb 3f 11 // Fireball Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@0xc80245+5
+e4 3f 11 // Flash Frame1 + Timer -> Hard Ball Frame1 + Timer
+@0xc80245+10
+eb 3f 11 // Flash Frame2 + Timer -> Hard Ball Frame2 + Timer
+
+@
+
+// change alchemy palettes (lvl display, selection) to Hard Ball (02 00)
+@0xc45e25+0
+02 00 // Acid Rain -> Hard Ball
+
+@0xc45e25+8
+02 00 // Corrosion -> Hard Ball
+
+@0xc45e25+10
+02 00 // Crush -> Hard Ball
+
+@0xc45e25+16
+02 00 // Double Drain -> Hard Ball
+
+@0xc45e25+18
+02 00 // Drain -> Hard Ball
+
+@0xc45e25+24
+02 00 // Explosion -> Hard Ball
+
+@0xc45e25+28
+02 00 // Fire Power -> Hard Ball
+
+@0xc45e25+38
+02 00 // Lance -> Hard Ball
+
+@0xc45e25+44
+02 00 // Lightning Storm -> Hard Ball
+
+@0xc45e25+48
+02 00 // Nitro -> Hard Ball
+
+@0xc45e25+60
+02 00 // Slow Burn -> Hard Ball
+
+@0xc45e25+64
+02 00 // Sting -> Hard Ball
+
+@0xc45e25+26
+02 00 // Fireball -> Hard Ball
+
+@0xc45e25+30
+02 00 // Flash -> Hard Ball
+
+@
+
+// change ring menu palettes and flags to Hard Ball (2b c3)
+// (see ring menu item text pointers above)
+@0x8e829c+4
+2b c3 // Acid Rain -> Hard Ball
+
+@0x8e8324+4
+2b c3 // Corrosion -> Hard Ball
+
+@0x8e82dc+4
+2b c3 // Crush -> Hard Ball
+
+@0x8e82ec+4
+2b c3 // Double Drain -> Hard Ball
+
+@0x8e82e4+4
+2b c3 // Drain -> Hard Ball
+
+@0x8e831c+4
+2b c3 // Explosion -> Hard Ball
+
+@0x8e830c+4
+2b c3 // Fire Power -> Hard Ball
+
+@0x8e8334+4
+2b c3 // Lance -> Hard Ball
+
+@0x8e8314+4
+2b c3 // Lightning Storm -> Hard Ball
+
+@0x8e8344+4
+2b c3 // Nitro -> Hard Ball
+
+@0x8e833c+4
+2b c3 // Slow Burn -> Hard Ball
+
+@0x8e82d4+4
+2b c3 // Sting -> Hard Ball
+
+@0x8e82f4+4
+2b c3 // Fireball -> Hard Ball
+
+@0x8e828c+4
+2b c3 // Flash -> Hard Ball
+
+@
+
+// change descriptions (selection) to Hard Ball
+@0xc45d51+0
+9a 6a // Acid Rain -> Hard Ball
+
+@0xc45d51+8
+9a 6a // Corrosion -> Hard Ball
+
+@0xc45d51+10
+9a 6a // Crush -> Hard Ball
+
+@0xc45d51+16
+9a 6a // Double Drain -> Hard Ball
+
+@0xc45d51+18
+9a 6a // Drain -> Hard Ball
+
+@0xc45d51+24
+9a 6a // Explosion -> Hard Ball
+
+@0xc45d51+28
+9a 6a // Fire Power -> Hard Ball
+
+@0xc45d51+38
+9a 6a // Lance -> Hard Ball
+
+@0xc45d51+44
+9a 6a // Lightning Storm -> Hard Ball
+
+@0xc45d51+48
+9a 6a // Nitro -> Hard Ball
+
+@0xc45d51+60
+9a 6a // Slow Burn -> Hard Ball
+
+@0xc45d51+64
+9a 6a // Sting -> Hard Ball
+
+@0xc45d51+26
+9a 6a // Fireball -> Hard Ball
+
+@0xc45d51+30
+9a 6a // Flash -> Hard Ball
+
+@
+

@@ -1,0 +1,21 @@
+#set // directive to create patch set as APPLY_TURD_BALL()
+
+// Rename Hard Ball to Turd Ball
+@0xc46878
+// this is $c40000, ($c45d09, #$22)
+"Tu"
+@
+// Change Hard Ball description
+@0xc46a9a
+// this is $c40000, ($c45d51, #$22)
+"Oh, crap!\0"
+@
+// Change icon palette's greens to browns
+@0xd0c339
+//f9 5a 33 42 8e 2d e9 18 44 08 // too red
+19 5b 53 42 ae 2d 09 19 64 04 // final
+@
+// Change spell palette to browns
+@0xd0bf8d
+b6 4e 53 42 ae 2d 09 19 64 04 b6 4e b6 4e 53 42 ae 2d 09 19 64 04 b6 4e 53 42 e8 14 22 04
+@

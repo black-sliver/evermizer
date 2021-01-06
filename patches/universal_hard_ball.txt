@@ -1,0 +1,16 @@
+#set // directive to create patch set as APPLY_UNIVERSAL_HARD_BALL()
+
+// This changes hard ball script to work for any alchemy slot
+@0x8e8878
+// when starting the alchemy script, X has the current alchemy offset
+// replace LDX const by PUSH X, move stuff, PULL X before RTS, changed branch, PULL X before RTS
+da 22 38 ce 91 c9 00 00 d0 03 fa 18 60                   // PHX, JSL, CMP, BNE, PLX, CLC, RTS
+a9 10 20 8d ad 05 22 77 97 91 c0 00 00 f0 13             // LDA, STA, JSL, CPY, BEQ
+5a 98 18 69 2e 00 8d 71 0b ac af 05 22 cc 88 8c 7a 90 06 // PHY, TYA, CLC, ADC, STA, LDY, JSL, PLY, BCC (+1)
+fa 38                                                    // PLX, SEC, (LDA, RTS)
+@
+
+@0x8e88b2
+// replace LDX const by PULL X, NOP, NOP
+fa ea ea
+@

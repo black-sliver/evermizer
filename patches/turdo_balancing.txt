@@ -1,0 +1,101 @@
+#set // directive to create patch set as APPLY_TURDO_BALANCING()
+
+// lower magic defense of certain enemies to allow defeating them with alchemy
+
+@0x8edf57
+26 // Carltron's Robot: 60 -> 38
+
+@0x8edec3
+26 // Dark Roaster: 57 -> 38
+
+@0x8ede2f
+26 // Death Spider: 57 -> 38
+
+@0x8edde5
+26 // Metal Raptor: 51 -> 38
+
+@0x8edcbd
+26 // Mechaduster: 57 -> 38
+
+@0x8ecad1
+26 // Mechaduster: 57 -> 38
+
+@0x8edb4b
+26 // Floating Fan: 48 -> 38
+
+@0x8ecd21
+26 // FootKnight: 51 -> 38
+
+@0x8ed411
+26 // Wood Mite: 48 -> 38
+
+@0x8ece49
+26 // Vigor: 51 -> 38
+
+@0x8ed29f
+26 // Mini-Taur: 48 -> 38
+
+@0x8ed3c7
+26 // Sand Spider: 48 -> 38
+
+@0x8ed177
+26 // Rogue: 48 -> 38
+
+@0x8ec631
+26 // Stone Cobra: 51 -> 38
+
+@0x8ec67b
+26 // Stone Cobra: 51 -> 38
+
+@0x8ecfbb
+26 // Magmar: 41 -> 38
+
+@
+
+// reduce weapon damage to force use of alchemy, + always enable "ammo fix"
+// Bone Crusher: 10
+
+@0xc438e6+36
+0a // sword 2 -> 10
+
+@0xc438e6+72
+0a // sword 3 -> 10
+
+@0xc438e6+108
+0a // sword 4 -> 10
+
+@0xc438e6+144
+0a // axe 1 -> 10
+
+@0xc438e6+180
+0a // axe 2 -> 10
+
+@0xc438e6+216
+0a // axe 3 -> 10
+
+@0xc438e6+252
+0a // axe 4 -> 10
+
+@0xc438e6+288
+0a // spear 1 -> 10
+
+@0xc438e6+324
+0a // spear 2 -> 10
+
+@0xc438e6+360
+0a // spear 3 -> 10
+
+@0xc438e6+396
+0a // spear 4 50 -> 10
+
+@0xc438e6+432
+64 00 // Thunder Ball: 200 -> 100
+
+@0xc438e6+468
+c8 00 // Particle Bomb: 350 -> 200
+
+@0xc438e6+504
+2c 01 // Cryo-Blast: 800 -> 300
+
+@
+

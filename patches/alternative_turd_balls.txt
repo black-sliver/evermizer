@@ -1,0 +1,46 @@
+#set // directive to create a patch set as APPLY_ALTERNATIVE_TURD_BALLS
+
+// NOTE: this has to be applied after "ALL_HARD_BALL"
+
+// change description of Fireball and Fire Power to strong and medium hints
+
+@0xc46a3b
+"That's some good sh..!\0"
+
+@0xc46a57
+"Uh, that smells!\0"
+
+@
+
+// change medium spells to use description of Fire Power (0x6a57)
+// and strong spells to use description of Fireball (0x6a3b)
+
+@0xc45d51+10
+57 6a // Crush -> Medium
+
+@0xc45d51+16
+57 6a // Double Drain -> Medium
+
+@0xc45d51+24
+3b 6a // Explosion -> Strong
+
+@0xc45d51+28
+3b 6a // Fire Power -> Strong
+
+@0xc45d51+38
+57 6a // Lance -> Medium
+
+@0xc45d51+44
+3b 6a // Lightning Storm -> Strong
+
+@0xc45d51+48
+3b 6a // Nitro -> Strong
+
+@0xc45d51+64
+57 6a // Sting -> Medium
+
+@0xc45d51+26
+57 6a // Fireball -> Medium
+
+@
+

@@ -1,4 +1,5 @@
 v037:
+  Added Turdo Mode
 
 v036:
   Correct logic tree for top-of-volcano gourds
