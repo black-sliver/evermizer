@@ -1,5 +1,6 @@
 v037:
   Added Turdo Mode
+  Option for short boss rush
 
 v036:
   Correct logic tree for top-of-volcano gourds

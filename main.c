@@ -127,6 +127,7 @@ const static struct option options[] = {
     { 'p', false, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere!" },
     { 'm', false, "Musicmizer", "Demo",        "Random music for some rooms" },
 #endif
+    { 'f', false, "Short boss rush", NULL,     "Start boss rush at Magmar, cut HP in half" },
     { 't', false, "Turdo Mode", NULL,          "Yes." },
 #ifndef NO_RANDO
     { 'l', false, "Spoiler Log", NULL,         "Generate a spoiler log file" },
@@ -146,7 +147,7 @@ enum option_indices {
     bossdropamizer_idx, gourdomizer_idx, sniffamizer_idx, doggomizer_idx,
     pupdunk_idx, /*enemizer_idx,*/ musicmizer_idx,
 #endif
-    turdomode_idx,
+    shortbossrush_idx, turdomode_idx,
 #ifndef NO_RANDO
     spoilerlog_idx,
 #endif
@@ -174,6 +175,7 @@ enum option_indices {
 #define pupdunk O(pupdunk_idx)
 #define enemizer O(enemizer_idx)
 #define musicmizer O(musicmizer_idx)
+#define shortbossrush O(shortbossrush_idx)
 #define turdomode O(turdomode_idx)
 #define spoilerlog O(spoilerlog_idx)
 
@@ -1391,7 +1393,11 @@ int main(int argc, const char** argv)
         APPLY(ACT0_DOG2);
     }
 #endif
-
+    
+    if (shortbossrush) {
+        printf("Shortening boss rush...\n");
+        APPLY_SHORT_BOSS_RUSH();
+    }
     if (turdomode) {
         printf("Applying turd...\n");
         APPLY_UNIVERSAL_HARD_BALL(); // patch Hard Ball to work with any spell number
@@ -1424,7 +1430,8 @@ int main(int argc, const char** argv)
     if (doublemoney)    seedcheck |= 0x08000000;
     if (doubleexp)      seedcheck |= 0x10000000;
     if (fixatlas)       seedcheck |= 0x20000000;
-    if (turdomode)      seedcheck |= 0x40000000;  // 31 bits in use -> 7 b32 chars
+    if (turdomode)      seedcheck |= 0x40000000;
+    if (shortbossrush)  seedcheck |= 0x80000000; // 32 bits in use -> 7 b32 chars
     seedcheck |= ((uint32_t)difficulty<<22);
     printf("\nCheck: %c%c%c%c%c%c (Please compare before racing)\n",
            b32(seedcheck>>25), b32(seedcheck>>20), b32(seedcheck>>15),

@@ -1,0 +1,27 @@
+#set // directive to create patch set as APPLY_SHORT_BOSS_RUSH()
+// Skip boss rush to Metal Magmar
+@0x9bb9f7+1
+ca ab 04 // CALL 0x9babca instead of 0x9bb928
+@
+
+// Enable both characters instead of running the bomb spawning script
+@0x9bba1b
+c1 00 // ENABLE BOTH, END instead of ENABLE BOY, CALL
+@
+
+// Disable fan/speaker trigger
+@0x9baca0
+00 // END
+@0x9baccd
+00 // END
+@
+
+// Cut Carltron's Robot's HP in half
+@0x8edf49
+3a98 // 30k -> 15k
+@
+
+// Cut Metal Magmar's HP in half
+@0x8edeff
+30d4 // 25k -> 12.5k
+@
