@@ -66,7 +66,7 @@ if __name__ == '__main__':
                         data,comment = line.rstrip().split('//',1)
                     else:
                         data,comment = line.strip(),''
-                    if ':' in data:
+                    if ':' in data: # label
                         comment = data+' '+comment
                         data = ''
                     else:
@@ -79,7 +79,17 @@ if __name__ == '__main__':
                         fout.write(b'%s%s%s\n' % (spaces[in_patch], data.encode('ascii'), comment.encode('ascii')))
                     elif data:
                         if comment!='': comment=' //'+comment
-                        b = data.split(' ')
+                        b = []
+                        for a in data.split(' '):
+                            if len(a) == 2: # byte
+                                b.append(a)
+                            elif len(a) == 4: # word
+                                b += [a[2:], a[:2]]
+                            elif len(a) == 6: # long addr
+                                b += [a[4:], a[2:4], a[:2]]
+                            elif len(a) == 8: # dword
+                                b += [a[6:], a[4:6], a[2:4], a[:2]]
+                            else: raise Exception('Invalid data')
                         fout.write(b'%s"\\x%s"%s\n' % (spaces[in_patch], '\\x'.join(b).encode('ascii'), comment.encode('ascii')))
                   except Exception as e:
                     print('In %s:%d' % (os.path.basename(argv[i]), line_no))
