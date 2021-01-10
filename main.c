@@ -286,9 +286,9 @@ static void print_settings_json()
         if (! opt->key) continue;
         if (!first_opt) printf(",\n");
         first_opt = false;
-        printf("  [ \"%c\", \"%s%s%s%s\", %s, \"%s\", [", opt->key, opt->text,
+        printf("  [ \"%c\", \"%s%s%s%s\", %d, \"%s\", [", opt->key, opt->text,
                   opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"",
-                  opt->def?"true":"false", opt->description?opt->description:"");
+                  opt->def, opt->description?opt->description:"");
         for (size_t j=0; opt->state_names && opt->state_names[j]; j++) {
             if (j != 0) printf(", ");
             printf("\"%s\"", opt->state_names[j]);
