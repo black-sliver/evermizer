@@ -605,6 +605,8 @@ int main(int argc, const char** argv)
     srand64(seed);
     bool randomized = alchemizer || ingredienizer || bossdropamizer ||
                       gourdomizer || sniffamizer || doggomizer || callbeadamizer /*||enemizer*/;
+    bool randomized_difficulty = alchemizer || ingredienizer || bossdropamizer ||
+                      gourdomizer;
     #else
     printf("SoE OpenWorld " VERSION "\n");
     #endif
@@ -705,10 +707,11 @@ int main(int argc, const char** argv)
         printf("Rolling");
     fflush(stdout);
     do {
-        if (rollcount>9998) {
+        // FIXME: limit generation instead of rerolling too often
+        if (rollcount>49998) {
             free(buf);
             fclose(fsrc);
-            die("\nCould not satifsy logic in 10k tries. Giving up.\n");
+            die("\nCould not satifsy logic in 50k tries. Giving up.\n");
         }
         if (rollcount>0) printf(".");
         if ((rollcount+strlen("Rolling"))%79 == 0) printf("\n"); else fflush(stdout); // 79 chars per line
@@ -1081,9 +1084,11 @@ int main(int argc, const char** argv)
         #undef REROLL
         if (reroll) continue;
         int logicscore = (treedepth-5)*3 + cyberlogicscore;
-        if (randomized && difficulty==2 && logicscore<10) continue;
-        else if (randomized && difficulty==0 && logicscore>10) continue;
-        else if (randomized && difficulty==1 && (logicscore>15 || logicscore<5)) continue; // TODO: review seeds
+        if (randomized_difficulty) {
+            if (difficulty==2 && logicscore<10) continue;
+            else if (difficulty==0 && logicscore>10) continue;
+            else if (difficulty==1 && (logicscore>15 || logicscore<5)) continue; // TODO: review seeds
+        }
         int spellmodifier=0;
         for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
             if (alchemy_is_good(i) && alchemy_is_cheap(&ingredients[i]))
@@ -1095,9 +1100,12 @@ int main(int argc, const char** argv)
         if (spellmodifier == 0) cybergameplayscore += 10;
         else cybergameplayscore += spellmodifier;
         int gameplayscore = cybergameplayscore;
-        if (randomized && difficulty>1 && difficulty!=3 && gameplayscore<-9) continue;
-        if (randomized && difficulty<1 && gameplayscore>-2) continue;
-        if (randomized && difficulty==1 && (gameplayscore<-15 || gameplayscore>1)) continue; // TODO: review seeds
+        if (randomized_difficulty) {
+            // FIXME: vanilla gameplay score gives -25 for some reason
+            if (difficulty>1 && difficulty!=3 && gameplayscore<-9) continue;
+            if (difficulty<1 && gameplayscore>-2) continue;
+            if (difficulty==1 && (gameplayscore<-15 || gameplayscore>1)) continue; // TODO: review seeds
+        }
         break;
     } while (true);
     if (randomized) printf("\n");
