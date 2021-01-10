@@ -5,6 +5,7 @@ v037:
   Add Random difficulty
   Change chaos from global to per-setting
   Add options for custom money% and custom exp%
+  Add callbeadamizer
 
 v036:
   Correct logic tree for top-of-volcano gourds

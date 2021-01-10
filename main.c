@@ -141,8 +141,8 @@ enum option_indices {
     fixammo_idx, fixatlas_idx,
 #ifndef NO_RANDO
     alchemizer_idx, ingredienizer_idx,
-    bossdropamizer_idx, gourdomizer_idx, sniffamizer_idx, doggomizer_idx,
-    pupdunk_idx, /*enemizer_idx,*/ musicmizer_idx,
+    bossdropamizer_idx, gourdomizer_idx, sniffamizer_idx, callbeadamizer_idx,
+    doggomizer_idx, pupdunk_idx, /*enemizer_idx,*/ musicmizer_idx,
 #endif
     shortbossrush_idx, turdomode_idx,
 #ifndef NO_RANDO
@@ -165,6 +165,7 @@ enum option_indices {
 #define bossdropamizer O(bossdropamizer_idx)
 #define gourdomizer O(gourdomizer_idx)
 #define sniffamizer O(sniffamizer_idx)
+#define callbeadamizer O(callbeadamizer_idx)
 #define doggomizer O(doggomizer_idx)
 #define pupdunk O(pupdunk_idx)
 #define enemizer O(enemizer_idx)
@@ -685,6 +686,13 @@ int main(int argc, const char** argv)
     for (size_t i=0; i<ARRAY_SIZE(doggo_map); i++) doggo_map[i] = doggo_vals[i];
     uint8_t doggo_changes[ARRAY_SIZE(doggos)]; // preset to vanilla
     for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) doggo_changes[i] = doggos[i].val;
+    uint8_t callbead_menus[] = {0,2,4,6};
+    uint16_t callbead_spells[] = {
+        0x00f8, 0x00fa, 0x00fc, 0x00fe, // fire eyes
+        0x0100, 0x0102, 0x0104,         // horace (without regenerate and aura)
+        0x010a, 0x010c, 0x010e, 0x0110, // camellia
+        0x0112, 0x0114, 0x0116          // sidney
+    };
     
     int treedepth=0;
     int cyberlogicscore=0;
@@ -875,6 +883,12 @@ int main(int argc, const char** argv)
         } else if (sniffamizer) {
             for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
                 sniff_drops[i] = rand_u16(0x0200, 0x0200+ARRAY_SIZE(ingredient_names)-1);
+            }
+        }
+        if (callbeadamizer) {
+            shuffle_u8(callbead_menus, ARRAY_SIZE(callbead_menus));
+            if (callbeadamizer==CHAOS) {
+                shuffle_u16(callbead_spells, ARRAY_SIZE(callbead_spells));
             }
         }
         
@@ -1439,6 +1453,17 @@ int main(int argc, const char** argv)
         for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
             buf[rom_off + sniffs[i].addr + 0] = (uint8_t)(sniff_drops[i]&0xff);
             buf[rom_off + sniffs[i].addr + 1] = (uint8_t)(sniff_drops[i]>>8);
+        }
+    }
+    if (callbeadamizer) {
+        printf("Applying callbeadamizer...\n");
+        for (size_t i=0; i<ARRAY_SIZE(callbead_menus); i++) {
+            write8(buf, rom_off+callbead_menu_action_addrs[i], callbead_menus[i]);
+        }
+        if (callbeadamizer==CHAOS) {
+            for (size_t i=0; i<ARRAY_SIZE(callbead_spells); i++) {
+                write16(buf, rom_off+callbead_spell_item_addrs[i], callbead_spells[i]);
+            }
         }
     }
     if (doggomizer || pupdunk) {

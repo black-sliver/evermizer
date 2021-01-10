@@ -566,3 +566,16 @@ static uint8_t alchemy_lookup(uint8_t* alchemy, uint8_t idx) {
 #define CHARACTER_DATA_END   (CHARACTER_DATA_START + CHARACTER_DATA_COUNT*CHARACTER_DATA_SIZE)
 #define CHARACTER_DATA_EXP_OFF   0x23
 #define CHARACTER_DATA_MONEY_OFF 0x27
+
+const size_t callbead_menu_action_addrs[] = {
+    // points to the action ids of the main ring
+    0x0e85b4+6, 0x0e85bc+6, 0x0e85c4+6, 0x0e85cc+6
+};
+const size_t callbead_spell_item_addrs[] = {
+    // points to the item ids that are loaded per ring
+    0x0e9ceb+1, 0x0e9cf1+1, 0x0e9cf7+1, 0x0e9cfd+1, // fire eyes
+    0x0e9d16+1, 0x0e9d1c+1, 0x0e9d22+1,             // horace (without regenerate and aura)
+    0x0e9d64+1, 0x0e9d6a+1, 0x0e9d70+1, 0x0e9d76+1, // camellia
+    0x0e9d95+1, 0x0e9d9b+1, 0x0e9d8f+1,             // sidney
+};
+
