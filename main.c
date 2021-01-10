@@ -99,49 +99,46 @@ char b32(unsigned v) { return B32[v&0x1f]; }
 // Misc consts
 const char DIFFICULTY_CHAR[] = {'e','n','h','x'};
 const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard","Random"};
+const char* OFF_ON[] = { "Off", "On", NULL };
+const char* OFF_ON_CHAOS[] = { "Off", "On", "Chaos", NULL };
+#define CHAOS 2
+
 #define DEFAULT_difficulty 1
-struct option { char key; bool def; const char* text; const char* info; const char* description; };
+struct option { char key; uint8_t def; const char* text; const char* info; const char* description; const char** state_names; };
 const static struct option options[] = {
+    { 0,   1, "Open World", NULL,          "Make windwalker available in every firepit", OFF_ON },
+    { 'k', 1, "Keep dog", NULL,            "Keep dog in some places to avoid softlocks", OFF_ON },
+    { '1', 1, "Fix sequence", NULL,        "Fix some sequence breaks: Volcano rock, final boss hatch", OFF_ON },
+    { '2', 1, "Fix cheats", NULL,          "Fix vanilla cheats: Infinite call beads", OFF_ON },
 #ifndef NO_RANDO
-    { 'c', false, "Chaos", NULL,               "Change randomizations from 'shuffle' to 'random'" },
+    { '3', 1, "Glitchless beatable", NULL, "Never require glitches to finish", OFF_ON },
+    { '4', 0, "All accessible", NULL,      "Make sure all key items are obtainable", OFF_ON },
 #endif
-    { 0,   true,  "Open World", NULL,          "Make windwalker available in every firepit" },
-    { 'k', true,  "Keep dog", NULL,            "Keep dog in some places to avoid softlocks" },
-    { '1', true,  "Fix sequence", NULL,        "Fix some sequence breaks: Volcano rock, final boss hatch" },
-    { '2', true,  "Fix cheats", NULL,          "Fix vanilla cheats: Infinite call beads" },
+    { '5', 0, "Fix infinite ammo", NULL,   "Fix bug that would have bazooka ammo not drain", OFF_ON },
+    { '6', 0, "Fix atlas glitch", NULL,    "Fix status effects cancelling with pixie dust", OFF_ON },
 #ifndef NO_RANDO
-    { '3', true,  "Glitchless beatable", NULL, "Never require glitches to finish" },
-    { '4', false, "All accessible", NULL,      "Make sure all key items are obtainable" },
+    { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas", OFF_ON },
+    { 'i', 1, "Ingredienizer", NULL,       "Randomize ingredients required for formulas", OFF_ON_CHAOS },
+    { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops", OFF_ON },
+    { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops", OFF_ON },
+    { 's', 1, "Sniffamizer", NULL,         "Randomize ingredient drops", OFF_ON_CHAOS },
+    { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead menus (non-chaos), shuffle spells (chaos)", OFF_ON_CHAOS },
+    { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act (non-chaos) or room (chaos)", OFF_ON_CHAOS },
+    { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere!", OFF_ON },
+    { 'm', 0, "Musicmizer", "Demo",        "Random music for some rooms", OFF_ON },
 #endif
-    { '5', false, "Fix infinite ammo", NULL,   "Fix bug that would have bazooka ammo not drain" },
-    { '6', false, "Fix atlas glitch", NULL,    "Fix status effects cancelling with pixie dust" },
-    { '8', false, "Double Money", NULL,        "Double money from enemies" },
-    { '9', false, "Double Exp", NULL,          "Double exp from enemies, weapons and alchemy" },
+    { 'f', 0, "Short boss rush", NULL,     "Start boss rush at Magmar, cut HP in half", OFF_ON },
+    { 't', 0, "Turdo Mode", NULL,          "Yes.", OFF_ON },
 #ifndef NO_RANDO
-    { 'a', true,  "Alchemizer", NULL,          "Shuffle learned alchemy formulas" },
-    { 'i', true,  "Ingredienizer", NULL,       "Randomize ingredients required for formulas" },
-    { 'b', true,  "Boss dropamizer", NULL,     "Shuffle boss drops" },
-    { 'g', true,  "Gourdomizer", NULL,         "Shuffle gourd drops" },
-    { 's', true,  "Sniffamizer", NULL,         "Randomize ingredient drops" },
-    { 'd', false, "Doggomizer", "Act1-3",      "Random dog per act (non-chaos) or room (chaos)" },
-    { 'p', false, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere!" },
-    { 'm', false, "Musicmizer", "Demo",        "Random music for some rooms" },
-#endif
-    { 'f', false, "Short boss rush", NULL,     "Start boss rush at Magmar, cut HP in half" },
-    { 't', false, "Turdo Mode", NULL,          "Yes." },
-#ifndef NO_RANDO
-    { 'l', false, "Spoiler Log", NULL,         "Generate a spoiler log file" },
+    { 'l', 0, "Spoiler Log", NULL,         "Generate a spoiler log file", OFF_ON },
 #endif
 };
 enum option_indices {
-#ifndef NO_RANDO
-    chaos_idx,
-#endif
     openworld_idx, keepdog_idx, fixsequence_idx, fixcheats_idx,
 #ifndef NO_RANDO
     glitchless_idx, accessible_idx,
 #endif
-    fixammo_idx, fixatlas_idx, doublemoney_idx, doubleexp_idx,
+    fixammo_idx, fixatlas_idx,
 #ifndef NO_RANDO
     alchemizer_idx, ingredienizer_idx,
     bossdropamizer_idx, gourdomizer_idx, sniffamizer_idx, doggomizer_idx,
@@ -155,7 +152,6 @@ enum option_indices {
 #define D(IDX) options[ IDX ].def
 #define O(IDX) option_values[ IDX ]
 #define C(IDX) ( O(IDX) != D(IDX) )
-#define chaos O(chaos_idx)
 #define openworld O(openworld_idx)
 #define keepdog O(keepdog_idx)
 #define fixsequence O(fixsequence_idx)
@@ -164,8 +160,6 @@ enum option_indices {
 #define accessible O(accessible_idx)
 #define fixammo O(fixammo_idx)
 #define fixatlas O(fixatlas_idx)
-#define doublemoney O(doublemoney_idx)
-#define doubleexp O(doubleexp_idx)
 #define alchemizer O(alchemizer_idx)
 #define ingredienizer O(ingredienizer_idx)
 #define bossdropamizer O(bossdropamizer_idx)
@@ -200,7 +194,7 @@ enum option_indices {
         assert(ARRAY_SIZE(s)>ARRAY_SIZE(options)+2);\
         *t++ = 'r'; *t++ = DIFFICULTY_CHAR[difficulty];\
         for (size_t i=0; i<ARRAY_SIZE(options); i++)\
-            if (C(i) && options[i].key) *t++ = options[i].key;\
+            if (C(i) && options[i].key) *t++ = ( (O(i)==CHAOS) ? toupper(options[i].key) : tolower(options[i].key) );\
         *t++ = 0;\
     } while (false)
 #else
@@ -210,14 +204,14 @@ enum option_indices {
         assert(ARRAY_SIZE(s)>ARRAY_SIZE(options)+2);\
         *t++ = 'r';\
         for (size_t i=0; i<ARRAY_SIZE(options); i++)\
-            if (C(i) && options[i].key) *t++ = options[i].key;\
+            if (C(i) && options[i].key) *t++ = ( (O(i)==CHAOS) ? toupper(options[i].key) : tolower(options[i].key) );\
         *t++ = 0;\
     } while (false)
 #endif
 #ifdef NO_UI
-#define FLAGS "[-o <dst file.sfc>|-d <dst directory>] "
+#define FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--money <money%%>] [--exp <exp%%>] "
 #else
-#define FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] "
+#define FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--money <money%%>] [--exp <exp%%>] "
 #endif
 #ifdef NO_RANDO
 #define APPNAME "SoE-OpenWorld"
@@ -261,9 +255,12 @@ static void print_settings()
     for (size_t i=0; i<ARRAY_SIZE(options); i++) {
         const struct option* opt = options+i;
         if (! opt->key) continue;
-        printf("  %c: %s %s%s%s%s\n", opt->key, opt->def?"No":"  ",opt->text,
+        printf("  %c: %s%s%s%s%s\n", tolower(opt->key), opt->def?"No ":"",opt->text,
                   opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"");
-        if (opt->description) printf("        %s\n", opt->description);
+        if (opt->state_names && opt->state_names[2])
+            printf("  %c: %s %s\n", toupper(opt->key), opt->state_names[2], opt->text);
+        if (opt->description)
+            printf("        %s\n", opt->description);
     }
     printf("\n");
 }
@@ -280,15 +277,26 @@ static void print_settings_json()
     printf("\n ],\n");
 #endif
     printf(" \"Options\": [\n");
+    bool first_opt = true;
     for (size_t i=0; i<ARRAY_SIZE(options); i++) {
         const struct option* opt = options+i;
         if (! opt->key) continue;
-        if (i != 0) printf(",\n");
-        printf("  [ \"%c\", \"%s%s%s%s\", %s, \"%s\" ]", opt->key, opt->text,
+        if (!first_opt) printf(",\n");
+        first_opt = false;
+        printf("  [ \"%c\", \"%s%s%s%s\", %s, \"%s\", [", opt->key, opt->text,
                   opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"",
                   opt->def?"true":"false", opt->description?opt->description:"");
+        for (size_t j=0; opt->state_names && opt->state_names[j]; j++) {
+            if (j != 0) printf(", ");
+            printf("\"%s\"", opt->state_names[j]);
+        }
+        printf("] ]");
     }
-    printf("\n ]\n}\n\n");
+    printf("\n ],\n");
+    printf(" \"Args\": [\n");
+    printf("  [ \"exp\", \"Exp%%\", \"int\", \"100\", \"Character, alchemy and weapon experience modifier\" ],\n");
+    printf("  [ \"money\", \"Money%%\", \"int\", \"100\", \"Enemy money modifier\" ]\n");
+    printf(" ]\n}\n\n");
 }
 int main(int argc, const char** argv)
 {
@@ -309,7 +317,8 @@ int main(int argc, const char** argv)
     #else // only in rando
     uint8_t difficulty;
     #endif
-    bool option_values[ARRAY_SIZE(options)];
+    uint8_t option_values[ARRAY_SIZE(options)];
+    memset(option_values, 0, sizeof(option_values));
     
     // default settings
     #if !defined NO_RANDO && !defined NO_UI // only rando has interactive mode (yet)
@@ -321,6 +330,12 @@ int main(int argc, const char** argv)
     const char* ofn=NULL;
     const char* dstdir=NULL;
     bool modeforced=false;
+    
+    // defaults
+    uint8_t money_num = 1;
+    uint8_t money_den = 1;
+    uint8_t exp_num = 1;
+    uint8_t exp_den = 1;
     
     // parse command line arguments
     while (argc>1) {
@@ -364,6 +379,32 @@ int main(int argc, const char** argv)
         } else if (strcmp(argv[1], "--verify") == 0) {
             argv++; argc--;
             verify=true;
+        } else if (strcmp(argv[1], "--money") == 0) {
+            int money = atoi(argv[2]);
+            if (money>2500) money=2500; // limit to 25x
+            if (money<1) {
+                /* ignore */
+            } else if (money<=255) {
+                money_num = (uint8_t)money;
+                money_den = 100;
+            } else {
+                money_num = (uint8_t)((money+5)/10);
+                money_den = 10;
+            }
+            argv+=2; argc-=2;
+        } else if (strcmp(argv[1], "--exp") == 0) {
+            int exp = atoi(argv[2]);
+            if (exp>2500) exp=2500; // limit to 25x
+            if (exp<1) {
+                /* ignore */
+            } else if (exp<=255) {
+                exp_num = (uint8_t)exp;
+                exp_den = 100;
+            } else {
+                exp_num = (uint8_t)((exp+5)/10);
+                exp_den = 10;
+            }
+            argv+=2; argc-=2;
         } else {
             break;
         }
@@ -390,14 +431,25 @@ int main(int argc, const char** argv)
     // parse settings command line argument
     if (argc>=3) {
         for (const char* s=argv[2]; *s; s++) {
-            char c = tolower(*s);
+            char c = *s;
         #ifndef NO_RANDO
             for (size_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++) {
                 if (c == DIFFICULTY_CHAR[i]) { difficulty = i; c = 0; }
             }
         #endif
             for (size_t i=0; i<ARRAY_SIZE(options); i++) {
-                if (options[i].key && c == options[i].key) { option_values[i] = !option_values[i]; c=0; break; }
+                if (options[i].key && c == tolower(options[i].key)) {
+                    option_values[i] = options[i].def ? 0 : 1;
+                    c=0; break;
+                }
+                if (options[i].key && c == toupper(options[i].key)) {
+                    if (options[i].state_names && options[i].state_names[2]) {
+                        option_values[i] = 2;
+                    } else {
+                        option_values[i] = options[i].def ? 0 : 1;
+                    }
+                    c=0; break;
+                }
             }
             if (c == 'r') DEFAULT_SETTINGS();
             else if (c != 0) {
@@ -476,7 +528,6 @@ int main(int argc, const char** argv)
     
     // show command line settings in batch mode
     char settings[ARRAY_SIZE(options)+3];
-    //if (argc>2) strncpy(settings, argv[2], sizeof(settings)); else memcpy(settings, "rn", 3);
     SETTINGS2STR(settings);
     
     #ifndef NO_RANDO
@@ -517,7 +568,7 @@ int main(int argc, const char** argv)
             for (size_t i=0; i<ARRAY_SIZE(options); i++) {
                 const struct option* opt = options+i;
                 char col1[32]; snprintf(col1, sizeof(col1), "%s:", opt->text);
-                printf("%-20s %s    %c%c%s%s%s%s\n", col1, O(i)?"on ":"off",
+                printf("%-20s %-5s  %c%c%s%s%s%s\n", col1, opt->state_names[O(i)],
                         opt->key?'(':' ', opt->key?toupper(opt->key):' ', opt->key?" to toggle)":"",
                         opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"");
             }
@@ -533,8 +584,13 @@ int main(int argc, const char** argv)
             c = tolower(c);
             for (size_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++)
                 if (c == DIFFICULTY_CHAR[i]) difficulty = i;
-            for (size_t i=0; i<ARRAY_SIZE(options); i++)
-                if (c == options[i].key) option_values[i] = !option_values[i];
+            for (size_t i=0; i<ARRAY_SIZE(options); i++) {
+                if (c == options[i].key) {
+                    option_values[i]++;
+                    if (!options[i].state_names[option_values[i]])
+                        option_values[i]=0;
+                }
+            }
             if (c == 'r') DEFAULT_SETTINGS();
             if (turdomode) fixammo=1;
         }
@@ -673,7 +729,7 @@ int main(int argc, const char** argv)
             uint8_t cheap_spell_location = (difficulty==0) ? ((rand64()%2) ? HARD_BALL_IDX : FLASH_IDX) : 0xff;
             
             int cur_total_cost = 0;
-            if (chaos) {
+            if (ingredienizer==CHAOS) {
                 for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
                     uint8_t type1;
                     uint8_t type2;
@@ -799,7 +855,7 @@ int main(int argc, const char** argv)
             for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
                 doggo_changes[i] = doggo_vals[0]; // act0 dog only
             }
-        } else if (doggomizer && !chaos) {
+        } else if (doggomizer && doggomizer!=CHAOS) {
             shuffle_u8(doggo_map+1, ARRAY_SIZE(doggo_map)-2); // keep act0 and act4 dog
             for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
                 for (size_t j=0; j<ARRAY_SIZE(doggo_map); j++) {
@@ -814,7 +870,7 @@ int main(int argc, const char** argv)
                 doggo_changes[i] = doggo_vals[rand_u8(0, ARRAY_SIZE(doggo_vals)-2)]; // act0-3 dogs only
             }
         }
-        if (sniffamizer && !chaos) {
+        if (sniffamizer && sniffamizer!=CHAOS) {
             shuffle_u16(sniff_drops, ARRAY_SIZE(sniff_drops));
         } else if (sniffamizer) {
             for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
@@ -1203,10 +1259,6 @@ int main(int argc, const char** argv)
         APPLY(STADIE_U);
     }
     
-    uint8_t money_num = doublemoney ? 2 : 1;
-    uint8_t money_den = 1;
-    uint8_t exp_num = doubleexp ? 2 : 1;
-    uint8_t exp_den = 1;
     if ((money_num != money_den) || (exp_num != exp_den)) {
         printf("Patching enemy data...\n");
         for (uint32_t p=CHARACTER_DATA_START; p<CHARACTER_DATA_END; p+=CHARACTER_DATA_SIZE) {
@@ -1214,6 +1266,7 @@ int main(int argc, const char** argv)
             uint32_t exp   = read32(buf, rom_off+p+CHARACTER_DATA_EXP_OFF);
             money = (money * money_num + money_den/2) / money_den;
             exp   = (exp   * exp_num   + exp_den/2)   / exp_den;
+            if (money>0xffff) money=0xffff;
             write16(buf, rom_off+p+CHARACTER_DATA_MONEY_OFF, (uint16_t)money);
             write32(buf, rom_off+p+CHARACTER_DATA_EXP_OFF,   exp);
         }
@@ -1223,28 +1276,33 @@ int main(int argc, const char** argv)
         grow = true;
         APPLY(WEAPON_EXP); APPLY(WEAPON_EXP2); APPLY(WEAPON_EXP3);
         // filling in magic numbers:
-        uint8_t normal = (4 * exp_num + exp_den/2) / exp_den;
-        uint8_t slow   = (2 * exp_num + exp_den/2) / exp_den;
+        uint16_t normal = (4 * exp_num + exp_den/2) / exp_den;
+        uint16_t slow   = (2 * exp_num + exp_den/2) / exp_den;
+        if (normal>255) normal=255;
         if (normal<1) normal=1;
+        if (slow>255) slow=255;
         if (slow<1)   slow=1;
-        write8(buf, rom_off+0x310000 +  6, normal);
-        write8(buf, rom_off+0x310000 + 13, slow-1); // +carry
-        write8(buf, rom_off+0x310013 +  3, slow);
+        write8(buf, rom_off+0x310000 +  6, (uint8_t)normal);
+        write8(buf, rom_off+0x310000 + 13, (uint8_t)slow-1); // +carry
+        write8(buf, rom_off+0x310013 +  3, (uint8_t)slow);
         
         printf("Updating alchemy leveling...\n");
         uint8_t alchemy_exp[9];
         for (size_t i=0; i<ARRAY_SIZE(alchemy_exp); i++) {
-            uint8_t exp = read8(buf, rom_off+0x045b9c+i);
+            uint16_t exp = read8(buf, rom_off+0x045b9c+i);
             if (i>0 && exp == read8(buf, rom_off+0x045b9c+i-1)) {
                 // same as previous -> floor
-                alchemy_exp[i] = (exp * exp_num) / exp_den;
+                exp = (exp * exp_num) / exp_den;
             } else if (i<8 && exp == read8(buf, rom_off+0x045b9c+i-1)) {
                 // same as next -> ceil
-                alchemy_exp[i] = (exp * exp_num + exp_den-1) / exp_den;
+                exp = (exp * exp_num + exp_den-1) / exp_den;
             } else {
                 // default: round
-                alchemy_exp[i] = (exp * exp_num + exp_den/2) / exp_den;
+                exp = (exp * exp_num + exp_den/2) / exp_den;
             }
+            if (exp>255) exp=255;
+            if (exp<1) exp=1;
+            alchemy_exp[i] = (uint8_t)exp;
         }
         for (size_t i=0; i<ARRAY_SIZE(alchemy_exp); i++) {
             write8(buf, rom_off+0x045b9c+i, alchemy_exp[i]);
@@ -1411,6 +1469,10 @@ int main(int argc, const char** argv)
     
 #ifndef NO_RANDO
     // if check value differs, the generated ROMs are different.
+    bool chaos = false; // FIXME: use individual state int instead
+    for (size_t i=0; i<ARRAY_SIZE(options); i++)
+        if (O(i)==CHAOS) chaos = true;
+    
     uint32_t seedcheck = (uint16_t)(rand64()&0x3ff); // 10bits=2 b32 chars
     if (openworld)      seedcheck |= 0x00000400;
     if (fixsequence)    seedcheck |= 0x00000800;
@@ -1429,8 +1491,8 @@ int main(int argc, const char** argv)
     if (chaos)          seedcheck |= 0x01000000;
     if (pupdunk)        seedcheck |= 0x02000000;
     if (fixammo)        seedcheck |= 0x04000000;
-    if (doublemoney)    seedcheck |= 0x08000000;
-    if (doubleexp)      seedcheck |= 0x10000000;
+    if (money_den!=money_num) seedcheck |= 0x08000000;
+    if (exp_den!=exp_num)     seedcheck |= 0x10000000;
     if (fixatlas)       seedcheck |= 0x20000000;
     if (turdomode)      seedcheck |= 0x40000000;
     if (shortbossrush)  seedcheck |= 0x80000000; // 32 bits in use -> 7 b32 chars

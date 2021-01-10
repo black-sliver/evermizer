@@ -1,6 +1,8 @@
 v037:
   Added Turdo Mode
   Option for short boss rush
+  Change chaos from global to per-setting
+  Add options for custom money% and custom exp%
 
 v036:
   Correct logic tree for top-of-volcano gourds
