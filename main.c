@@ -604,7 +604,7 @@ int main(int argc, const char** argv)
     printf("Seed: %" PRIx64 "\n", seed);
     srand64(seed);
     bool randomized = alchemizer || ingredienizer || bossdropamizer ||
-                      gourdomizer || sniffamizer || doggomizer /*||enemizer*/;
+                      gourdomizer || sniffamizer || doggomizer || callbeadamizer /*||enemizer*/;
     #else
     printf("SoE OpenWorld " VERSION "\n");
     #endif
