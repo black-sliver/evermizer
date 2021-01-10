@@ -1,0 +1,7 @@
+#set // APPLY_CUT_CUTSCENES
+
+// remove first tinker cutscene (state 0 -> state 1)
+@0x998d60
+14 fe 00 b1 // write 1 to 2356 (tinker state)
+04 13 00    // jump to 0x998d7a (fade-in)
+@

@@ -116,6 +116,7 @@ const static struct option options[] = {
 #endif
     { '5', 0, "Fix infinite ammo", NULL,   "Fix bug that would have bazooka ammo not drain", OFF_ON },
     { '6', 0, "Fix atlas glitch", NULL,    "Fix status effects cancelling with pixie dust", OFF_ON },
+    { '9', 0, "Shorter dialogs", "Few",    "Shorten some dialogs/cutscenes. Ongoing effort.", OFF_ON },
 #ifndef NO_RANDO
     { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas", OFF_ON },
     { 'i', 1, "Ingredienizer", NULL,       "Randomize ingredients required for formulas", OFF_ON_CHAOS },
@@ -138,7 +139,7 @@ enum option_indices {
 #ifndef NO_RANDO
     glitchless_idx, accessible_idx,
 #endif
-    fixammo_idx, fixatlas_idx,
+    fixammo_idx, fixatlas_idx, shortdialogs_idx,
 #ifndef NO_RANDO
     alchemizer_idx, ingredienizer_idx,
     bossdropamizer_idx, gourdomizer_idx, sniffamizer_idx, callbeadamizer_idx,
@@ -160,6 +161,7 @@ enum option_indices {
 #define accessible O(accessible_idx)
 #define fixammo O(fixammo_idx)
 #define fixatlas O(fixatlas_idx)
+#define shortdialogs O(shortdialogs_idx)
 #define alchemizer O(alchemizer_idx)
 #define ingredienizer O(ingredienizer_idx)
 #define bossdropamizer O(bossdropamizer_idx)
@@ -1482,6 +1484,10 @@ int main(int argc, const char** argv)
     if (shortbossrush) {
         printf("Shortening boss rush...\n");
         APPLY_SHORT_BOSS_RUSH();
+    }
+    if (shortdialogs) {
+        printf("Cutting cutscenes...\n");
+        APPLY_CUT_CUTSCENES();
     }
     if (turdomode) {
         printf("Applying turd...\n");

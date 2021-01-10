@@ -6,6 +6,8 @@ v037:
   Change chaos from global to per-setting
   Add options for custom money% and custom exp%
   Add callbeadamizer
+  Add option to shorten/cut dialogs/cutscenes
+  Optionally remove first tinker cutscene
 
 v036:
   Correct logic tree for top-of-volcano gourds
