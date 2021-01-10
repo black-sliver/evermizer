@@ -97,8 +97,8 @@ char b32(unsigned v) { return B32[v&0x1f]; }
 
 
 // Misc consts
-const char DIFFICULTY_CHAR[] = {'e','n','h'};
-const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard"};
+const char DIFFICULTY_CHAR[] = {'e','n','h','x'};
+const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard","Random"};
 #define DEFAULT_difficulty 1
 struct option { char key; bool def; const char* text; const char* info; const char* description; };
 const static struct option options[] = {
@@ -665,10 +665,11 @@ int main(int argc, const char** argv)
             }
         }
         if (ingredienizer) {
+            uint8_t spell_cost_mod = (difficulty == 3) ? rand_u8(0,2) : difficulty;
             const uint8_t min_single_cost = 1;
             const uint8_t max_single_cost = 3;
-            const uint8_t max_spell_cost = MIN(4+difficulty, 2*max_single_cost);
-            int est_total_cost = 92-6 + difficulty*6; // 92/34 for vanilla
+            const uint8_t max_spell_cost = MIN(4+spell_cost_mod, 2*max_single_cost);
+            int est_total_cost = 92-6 + spell_cost_mod*6; // 92/34 for vanilla
             uint8_t cheap_spell_location = (difficulty==0) ? ((rand64()%2) ? HARD_BALL_IDX : FLASH_IDX) : 0xff;
             
             int cur_total_cost = 0;
@@ -1010,7 +1011,7 @@ int main(int argc, const char** argv)
         int logicscore = (treedepth-5)*3 + cyberlogicscore;
         if (randomized && difficulty==2 && logicscore<10) continue;
         else if (randomized && difficulty==0 && logicscore>10) continue;
-        else if (randomized && difficulty==1 && (logicscore>16 || logicscore<4)) continue;
+        else if (randomized && difficulty==1 && (logicscore>15 || logicscore<5)) continue; // TODO: review seeds
         int spellmodifier=0;
         for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
             if (alchemy_is_good(i) && alchemy_is_cheap(&ingredients[i]))
@@ -1022,8 +1023,9 @@ int main(int argc, const char** argv)
         if (spellmodifier == 0) cybergameplayscore += 10;
         else cybergameplayscore += spellmodifier;
         int gameplayscore = cybergameplayscore;
-        if (randomized && difficulty>1 && gameplayscore<-9) continue;
+        if (randomized && difficulty>1 && difficulty!=3 && gameplayscore<-9) continue;
         if (randomized && difficulty<1 && gameplayscore>-2) continue;
+        if (randomized && difficulty==1 && (gameplayscore<-15 || gameplayscore>1)) continue; // TODO: review seeds
         break;
     } while (true);
     if (randomized) printf("\n");
