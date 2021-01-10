@@ -31,7 +31,8 @@ SED:=$(shell which sed)
 endif
 
 EMCC?=emcc
-EMFLAGS?=-D NO_ASSERT -s WASM=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=0 -s ASSERTIONS=0 -Os #--closure 1
+EMFLAGS?=-D NO_ASSERT -s ENVIRONMENT=web -s WASM=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=0 -s ASSERTIONS=0 -s TOTAL_STACK=1048576 -s INITIAL_MEMORY=6291456 -Os --closure 0
+# NOTE: em's --closure 1 may fail/remove too much or clash with other code, we call closure compiler manually for that reason
 
 PATCH_FILES := $(wildcard patches/*.txt) # this is replaced by pre-built gen.h in release to reduce build dependencies
 IPS_INFO_FILES := $(wildcard ips/*.txt) # this is replaced by pre-built gen.h in release to reduce build dependencies
