@@ -46,6 +46,7 @@ CHANGES SO FAR:
     If gourdomizer is on as well, you can go back through Big Bug after Thraxx
   Gourdomizer: shuffle gourd/pot/chest drops, no gourds are missable
   Sniffamizer: non-chaos shuffles, chaos randomizes dog-sniff ingredients
+  Callbeadmizer: non-chaos swaps call bead rings, chaos shuffles spells
   Doggomizer: swap (non-chaos) or randomize (chaos) dogs
     Act1-3 only because toaster evasion sound hardlocks for some music tracks
   Pupdunk: Act0 doggo everywhere!
@@ -64,11 +65,16 @@ CHANGES SO FAR:
     Fixes the bug that Particle Bomb and Cryo-Blast do not drain
   Fix atlas glitch:
     Fixes stat underflow when dying with active stat boosts
-  Double Money:
-    Enemies give twice as much money
-  Double Exp:
-    Enemies give twice as much experience points
-    Weapons and formulas level twice as fast
+  Money%:
+    1 to 2500, Enemies give that % of money
+  Exp%:
+    1 to 2500, Enemies, weapons and formulas give that % experience points
+  Shorter dialogs:
+    Cut some dialogs and cutscenes. This is work in progress.
+  Short boss rush:
+    Start boss rush at Metal Magmar. Cut enemy HP in half.
+  Tudo Mode:
+    Replaces all offensive spells, weakens weapons, reduces enemies' Magic Def.
   Open world: Unlock windwalker in every fire pit (slashing weapon required)
     Grant access to inner volcano
     Grant access to east swamp
