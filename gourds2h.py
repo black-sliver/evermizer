@@ -221,14 +221,22 @@ if __name__ == '__main__':
         data = csv.reader(src.split('\n'))
         next(data) # skip header
         rownr=1
+        checknr=0
         flagvals = []
         locations = []
         drops = []
         for row in data:
             rownr+=1
             # since the csv has more data than required, we try to verify stuff
-            if row[17].lower() == r'unreachable':
+            if r'unreachable' in row[17].lower():
                 continue
+            try:
+                csv_checknr = int(row[0])
+                assert(csv_checknr == checknr)
+                checknr += 1
+            except Exception as ex:
+                print('Bad check number in row %d: "%s"' % (rownr,row[0]))
+                raise ex
             if not tryint(row[6]) in prizes:
                 print('Bad item id in row %d: "%s"' % (rownr, row[6]))
             elif not prizes[tryint(row[6])].lower() in row[7].lower():
