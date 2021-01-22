@@ -40,7 +40,7 @@ SOURCE_FILES = main.c
 INCLUDE_FILES = rng.h util.h data.h sniff.h gourds.h doggo.h patches.h gen.h tinymt64.h
 
 
-.PHONY: clean clean-temps all native win32 wasm test release
+.PHONY: clean clean-temps all native win32 wasm test-code release
 
 ifeq ($(OS),Windows_NT)
 native: win32
@@ -108,12 +108,12 @@ ifneq (,$(wildcard gourds.csv)) # only if not pre-built
 	rm -rf gourds.h
 endif
 
-test: all
+test-code: all
 ifneq ($(strip $(CPPCHECK)),)
 	$(CPPCHECK) --force --enable=all --suppress=missingIncludeSystem --suppress=duplicateExpression -q main.c
 endif
-	./test.sh # this tests code, not your binary. only required for release
+	./test-code.sh # this tests code, not your binary. only required for release
 
-release: test
+release: test-code
 	./release.sh # this creates the zip, not required to run it
 

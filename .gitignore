@@ -20,4 +20,4 @@ rls
 *.zip
 #local/private scripts
 release.sh
-test.sh
+test-code.sh
