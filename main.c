@@ -711,7 +711,7 @@ int main(int argc, const char** argv)
         if (rollcount>49998) {
             free(buf);
             fclose(fsrc);
-            die("\nCould not satifsy logic in 50k tries. Giving up.\n");
+            die("\nCould not satisfy logic in 50k tries. Giving up.\n");
         }
         if (rollcount>0) printf(".");
         if ((rollcount+strlen("Rolling"))%79 == 0) printf("\n"); else fflush(stdout); // 79 chars per line
