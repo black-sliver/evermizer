@@ -1,4 +1,5 @@
 v038:
+  Really remove unreachable pipe maze gourd from gourdomizer - numbering changed
 
 v037:
   Added Turdo Mode
