@@ -979,7 +979,7 @@ int main(int argc, const char** argv)
         #define REROLL() { reroll = true; break; }
         for (int milestone=0; milestone<2; milestone++)
         {
-            enum progression goal = milestone==0 ? P_ROCKET : P_ENERGY_CORE;
+            enum progression goal = milestone==0 ? P_ROCKET : P_FINAL_BOSS;
             bool allow_rockskip=!fixsequence && !glitchless;
             bool allow_saturnskip=!fixsequence && !glitchless;
             check_tree_item checks[ARRAY_SIZE(blank_check_tree)];
@@ -1064,7 +1064,7 @@ int main(int argc, const char** argv)
                     }
                 }
             }
-            if (allow_saturnskip && goal==P_ENERGY_CORE) { /* goal optional */ }
+            if (allow_saturnskip && goal==P_FINAL_BOSS) { /* goal optional */ }
             else if (progress[goal]<1) REROLL();
             // make sure atlas is reachable if it should be
             if (difficulty==milestone && progress[P_ATLAS]<1) REROLL();
@@ -1081,7 +1081,7 @@ int main(int argc, const char** argv)
         }
         #undef REROLL
         if (reroll) continue;
-        int logicscore = (treedepth-5)*3 + cyberlogicscore;
+        int logicscore = (treedepth-6)*3 + cyberlogicscore;
         if (randomized_difficulty) {
             if (difficulty==2 && logicscore<10) continue;
             else if (difficulty==0 && logicscore>10) continue;

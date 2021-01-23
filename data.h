@@ -253,6 +253,7 @@ enum progression {
     P_KNIGHT_BASHER_PLUS,
     P_BRONZE_SPEAR_PLUS,
     P_ENERGY_CORE,
+    P_FINAL_BOSS,
     P_DE,
     P_GAUGE,
     P_WHEEL,
@@ -402,6 +403,7 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_RULE,P_ORACLE_BONE,     0, 0, REQ1(P_WEAPON),             PVD1(P_ORACLE_BONE)},
     {0, CHECK_RULE,P_ROCKET,          0, 0, REQ3N(1,P_GAUGE,1,P_WHEEL,2,P_DE), PVD2N(1,P_ROCKET,-2,P_DE)},
     {0, CHECK_RULE,P_ENERGY_CORE,     0, 0, REQ1(P_ROCKET),             PVD1(P_ENERGY_CORE)},
+    {0, CHECK_RULE,P_FINAL_BOSS,      0, 0, REQ1(P_ENERGY_CORE),        PVD1(P_FINAL_BOSS)},
     {0, CHECK_RULE,P_VOLCANO_ENTERED, 0, 0, REQ2(P_WEAPON,P_LEVITATE),  PVD1(P_VOLCANO_ENTERED)},
     {0, CHECK_RULE,P_ROCK_SKIP,       0, 0, REQ2(P_WEAPON,P_ROCK_SKIP), PVD1(P_VOLCANO_ENTERED)},
     // Gourd checks included from generated gourds.h

@@ -2,6 +2,7 @@ v038:
   Really remove unreachable pipe maze gourd from gourdomizer - numbering changed
   Fix additional "alchemy missable" checks
   Mark Pyramid as accessible if Aegis is defeated
+  Change final goal for logic from energy core to boss rush to include Energize
 
 v037:
   Added Turdo Mode
