@@ -1,7 +1,17 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
-from sys import argv
+from __future__ import print_function
+from sys import argv, version_info
 import os.path
+
+py2 = version_info[0]==2
+if py2:
+    def F(s):
+        return s.replace('%b', '%s')
+else:
+    def F(s):
+        return s
+
 
 def print_usage(code=1):
     print('Usage: [-a] everscript2h.py <output.h> <input1.txt> [<input2.txt> ....]')
@@ -54,12 +64,12 @@ if __name__ == '__main__':
                         else:
                             addr = int(line[1:].strip(),0)
                         if addr>=0xc00000: # hirom, fast, "raw"
-                            fout.write(b'DEF(%b, 0x%06x - 0xC00000,\n' % (patchname.encode('ascii'), addr))
+                            fout.write(F(b'DEF(%b, 0x%06x - 0xC00000,\n') % (patchname.encode('ascii'), addr))
                         elif addr>=0x800000: # hirom, fast, "script"
-                            fout.write(b'DEF(%b, 0x%06x - 0x800000,\n' % (patchname.encode('ascii'), addr))
+                            fout.write(F(b'DEF(%b, 0x%06x - 0x800000,\n') % (patchname.encode('ascii'), addr))
                         else: # assume absolute address
-                            fout.write(b'DEF(%b, 0x%06x,\n' % (patchname.encode('ascii'), addr))
-                        if in_set: set_items.append(b'%b' % (patchname.encode('ascii'),))
+                            fout.write(F(b'DEF(%b, 0x%06x,\n') % (patchname.encode('ascii'), addr))
+                        if in_set: set_items.append(F(b'%b') % (patchname.encode('ascii'),))
                         in_patch = True
                         continue
                     if '//' in line:
@@ -100,10 +110,10 @@ if __name__ == '__main__':
                 
                 if in_set and set_name != '':
                     # add define to apply all previous since #set directive
-                    fout.write(b'#define APPLY_%b() do {' % (set_name.encode('ascii'),))
+                    fout.write(F(b'#define APPLY_%b() do {') % (set_name.encode('ascii'),))
                     i = 0
                     for i in range(len(set_items)):
                         fout.write( b'\\\n    ' if i%4==0 else b' ' )
-                        fout.write(b'APPLY(%b);' % (set_items[i],))
+                        fout.write(F(b'APPLY(%b);') % (set_items[i],))
                     fout.write(b'} while(false)\n')
 

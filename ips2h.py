@@ -1,7 +1,9 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
-from sys import argv
+from sys import argv, version_info
 import os.path
+
+py2 = version_info[0]==2
 
 def print_usage(code=1):
     print('Usage: ips2h.py [-a] <output.h> <input1.txt|ips> [<input2.txt|ips> ....]')
@@ -12,6 +14,7 @@ def print_usage(code=1):
 
 def data2str(data, linelen=16, linesep=b'\n'):
     if len(data)<1: return '""';
+    if py2: data = [ ord(b) for b in data ]
     return linesep.join (
         b'"\\x' + b'\\x'.join( ( b'%02x' % (b,) for b in data[i:i+linelen] ) ) + b'"'
         for i in range(0, len(data), linelen)
@@ -27,6 +30,7 @@ def ips2h(src, name, n, offset=0):
             assert len(block_hdr)>=3
             if block_hdr[:3] == b'EOF': break # this is one drawback of IPS
             assert len(block_hdr)==5
+            if py2: block_hdr = [ ord(b) for b in block_hdr ]
             block_off = (block_hdr[0]<<16) + (block_hdr[1]<<8) + block_hdr[2] + offset
             block_len = (block_hdr[3]<<8) + block_hdr[4]
             if block_len==0:
