@@ -86,44 +86,44 @@ const static size_t stop_locations[] = {
     0x19da2d +1, LOC_END };
 const static size_t superheal_locations[] = {
     0x1abb91 +2, 0x1abc18 +1, LOC_END };
-struct alchemy_data {const char* name; uint16_t id; bool missable; const size_t* locations; const size_t preselects[2];};
+struct alchemy_data {const char* name; uint16_t id; const size_t* locations; const size_t preselects[2];};
 // NOTE: ingredient data is at 0x4601F + id*4 with ingredient ID1, 2, amount 1, 2
 const static struct alchemy_data alchemy_locations[] = {
-    {"Acid Rain",       0x00, false, acidrain_locations,       {0xb08000 +4 -0x800000,LOC_END}},
-    {"Atlas",           0x01, false, atlas_locations,          {0xb08006 +4 -0x800000,LOC_END}},
-    {"Barrier",         0x02, false, barrier_locations,        {0xb0800c +4 -0x800000,LOC_END}},
-    {"Call Up",         0x03, false, callup_locations,         {0xb08012 +4 -0x800000,LOC_END}},
-    {"Corrosion",       0x04, false, corrosion_locations,      {0xb08018 +4 -0x800000,LOC_END}},
-    {"Crush",           0x05, false, crush_locations,          {0xb0801e +4 -0x800000,LOC_END}},
-    {"Cure",            0x06, false, cure_locations,           {0xb08024 +4 -0x800000,LOC_END}},
-    {"Defend",          0x07, false, defend_locations,         {0xb0802a +4 -0x800000,LOC_END}},
-    {"Double Drain",    0x08, false, doubledrain_locations,    {0xb08030 +4 -0x800000,LOC_END}},
-    {"Drain",           0x09, false, drain_locations,          {0xb08036 +4 -0x800000,LOC_END}},
-    {"Energize",        0x0a, false, energize_locations,       {0xb0803c +4 -0x800000,LOC_END}},
-    {"Escape",          0x0b, false, escape_locations,         {0xb08042 +4 -0x800000,LOC_END}},
-    {"Explosion",       0x0c, false, explosion_locations,      {0xb08048 +4 -0x800000,LOC_END}},
-    {"Fireball",        0x0d, false, fireball_locations,       {0xb0804e +4 -0x800000,LOC_END}},
-    {"Fire Power",      0x0e, false, firepower_locations,      {0xb08054 +4 -0x800000,LOC_END}},
-    {"Flash",           0x0f, false, flash_locations,          {0xb0805a +4 -0x800000,LOC_END}},
-    {"Force Field",     0x10, false, forcefield_locations,     {0x99da1e +4 -0x800000,LOC_END}},
-    {"Hard Ball",       0x11, false, hardball_locations,       {0x94a3ef +4 -0x800000,LOC_END}},
-    {"Heal",            0x12, false, heal_locations,           {0x93dbec +4 -0x800000,0x93dc8d +4 -0x800000}},
-    {"Lance",           0x13, false, lance_locations,          {0x98d354 +4 -0x800000,LOC_END}},
+    {"Acid Rain",       0x00, acidrain_locations,       {0xb08000 +4 -0x800000,LOC_END}},
+    {"Atlas",           0x01, atlas_locations,          {0xb08006 +4 -0x800000,LOC_END}},
+    {"Barrier",         0x02, barrier_locations,        {0xb0800c +4 -0x800000,LOC_END}},
+    {"Call Up",         0x03, callup_locations,         {0xb08012 +4 -0x800000,LOC_END}},
+    {"Corrosion",       0x04, corrosion_locations,      {0xb08018 +4 -0x800000,LOC_END}},
+    {"Crush",           0x05, crush_locations,          {0xb0801e +4 -0x800000,LOC_END}},
+    {"Cure",            0x06, cure_locations,           {0xb08024 +4 -0x800000,LOC_END}},
+    {"Defend",          0x07, defend_locations,         {0xb0802a +4 -0x800000,LOC_END}},
+    {"Double Drain",    0x08, doubledrain_locations,    {0xb08030 +4 -0x800000,LOC_END}},
+    {"Drain",           0x09, drain_locations,          {0xb08036 +4 -0x800000,LOC_END}},
+    {"Energize",        0x0a, energize_locations,       {0xb0803c +4 -0x800000,LOC_END}},
+    {"Escape",          0x0b, escape_locations,         {0xb08042 +4 -0x800000,LOC_END}},
+    {"Explosion",       0x0c, explosion_locations,      {0xb08048 +4 -0x800000,LOC_END}},
+    {"Fireball",        0x0d, fireball_locations,       {0xb0804e +4 -0x800000,LOC_END}},
+    {"Fire Power",      0x0e, firepower_locations,      {0xb08054 +4 -0x800000,LOC_END}},
+    {"Flash",           0x0f, flash_locations,          {0xb0805a +4 -0x800000,LOC_END}},
+    {"Force Field",     0x10, forcefield_locations,     {0x99da1e +4 -0x800000,LOC_END}},
+    {"Hard Ball",       0x11, hardball_locations,       {0x94a3ef +4 -0x800000,LOC_END}},
+    {"Heal",            0x12, heal_locations,           {0x93dbec +4 -0x800000,0x93dc8d +4 -0x800000}},
+    {"Lance",           0x13, lance_locations,          {0x98d354 +4 -0x800000,LOC_END}},
     // no laser
-    {"Levitate",        0x15, false, levitate_locations,       {0x94809d +4 -0x800000,LOC_END}},
-    {"Lightning Storm", 0x16, false, lightningstorm_locations, {0x9996f4 +4 -0x800000,LOC_END}},
-    {"Miracle Cure",    0x17, false, miraclecure_locations,    {0x94e71b +4 -0x800000,LOC_END}},
-    {"Nitro",           0x18, false, nitro_locations,          {0x9987f5 +4 -0x800000,LOC_END}},
-    {"One Up",          0x19, false, oneup_locations,          {0x99b75f +4 -0x800000,LOC_END}},
-    {"Reflect",         0x1a, false, reflect_locations,        {0x9be034 +4 -0x800000,LOC_END}},
-    {"Regrowth",        0x1b, false, regrowth_locations,       {0x98de29 +4 -0x800000,LOC_END}},
-    {"Revealer",        0x1c, false, revealer_locations,       {0x96db4b +4 -0x800000,LOC_END}},
-    {"Revive",          0x1d, false, revive_locations,         {0x95b242 +4 -0x800000,LOC_END}},
-    {"Slow Burn",       0x1e, false, slowburn_locations,       {0x998847 +4 -0x800000,LOC_END}},
-    {"Speed",           0x1f, false, speed_locations,          {0x949cc5 +4 -0x800000,LOC_END}},
-    {"Sting",           0x20, false, sting_locations,          {0xb08060 +8 -0x800000,LOC_END}},
-    {"Stop",            0x21, false, stop_locations,           {0xb0806a +4 -0x800000,LOC_END}},
-    {"Super Heal",      0x22, false, superheal_locations,      {0x9abc1c +4 -0x800000,LOC_END}}
+    {"Levitate",        0x15, levitate_locations,       {0x94809d +4 -0x800000,LOC_END}},
+    {"Lightning Storm", 0x16, lightningstorm_locations, {0x9996f4 +4 -0x800000,LOC_END}},
+    {"Miracle Cure",    0x17, miraclecure_locations,    {0x94e71b +4 -0x800000,LOC_END}},
+    {"Nitro",           0x18, nitro_locations,          {0x9987f5 +4 -0x800000,LOC_END}},
+    {"One Up",          0x19, oneup_locations,          {0x99b75f +4 -0x800000,LOC_END}},
+    {"Reflect",         0x1a, reflect_locations,        {0x9be034 +4 -0x800000,LOC_END}},
+    {"Regrowth",        0x1b, regrowth_locations,       {0x98de29 +4 -0x800000,LOC_END}},
+    {"Revealer",        0x1c, revealer_locations,       {0x96db4b +4 -0x800000,LOC_END}},
+    {"Revive",          0x1d, revive_locations,         {0x95b242 +4 -0x800000,LOC_END}},
+    {"Slow Burn",       0x1e, slowburn_locations,       {0x998847 +4 -0x800000,LOC_END}},
+    {"Speed",           0x1f, speed_locations,          {0x949cc5 +4 -0x800000,LOC_END}},
+    {"Sting",           0x20, sting_locations,          {0xb08060 +8 -0x800000,LOC_END}},
+    {"Stop",            0x21, stop_locations,           {0xb0806a +4 -0x800000,LOC_END}},
+    {"Super Heal",      0x22, superheal_locations,      {0x9abc1c +4 -0x800000,LOC_END}}
 };
 enum alchemy_indices { // has to match alchemy_locations
     ACID_RAIN_IDX, ATLAS_IDX, BARRIER_IDX, CALL_UP_IDX,
@@ -147,12 +147,12 @@ enum ingredient_numbers { // has to match ingame-numbers
     LIMESTONE, IRON, GUNPOWDER, GREASE, FEATHER, ETHANOL, DRY_ICE,
     CRYSTAL, CLAY, BRIMSTONE, BONE, ATLAS_AMULET, ASH, ACORN
 };
-const char* ingredient_names[] = { // has to match ingame-numbers
+const char* ingredient_names[] = { // has to match ingame-numbers/order
     "Wax", "Water", "Vinegar", "Root", "Oil", "Mushroom", "Mud Pepper", "Meteorite",
     "Limestone", "Iron", "Gunpowder", "Grease", "Feather", "Ethanol", "Dry Ice",
     "Crystal", "Clay", "Brimstone", "Bone", "Atlas Amulet", "Ash", "Acorn"
 };
-#define INGREDIENT_TYPES { /* taken from ROM, incl. Laser */\
+#define INGREDIENT_TYPES { /* vanilla formula ingredients, incl. Laser */\
     0x14,0x01, 0x14,0x13, 0x08,0x12, 0x07,0x0e, 0x05,0x01,\
     0x08,0x00, 0x03,0x04, 0x10,0x14, 0x0d,0x02, 0x0d,0x03,\
     0x0f,0x09, 0x00,0x02, 0x0d,0x14, 0x11,0x14, 0x0c,0x11,\
@@ -539,9 +539,6 @@ static bool can_buy_ingredient_pre_thraxx(uint8_t i) {
 static bool can_buy_pre_thraxx(const struct formula* f) {
     return (can_buy_ingredient_pre_thraxx(f->type1) &&
             can_buy_ingredient_pre_thraxx(f->type2));
-}
-static bool alchemy_missable(uint8_t idx) {
-    return (idx==LANCE_SPELL_IDX || idx==STOP_IDX || idx==FIRE_POWER_IDX/*for now*/);
 }
 static bool boss_drop_is_a_weapon(uint8_t idx) {
     return (idx==GLADIATOR_SWORD_IDX || idx==CRUSADER_SWORD_IDX ||
