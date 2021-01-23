@@ -1,3 +1,5 @@
+-include Makeconfig
+
 # native compiler
 CC?=gcc
 # any python (2 or 3)
@@ -115,7 +117,10 @@ test-code: all
 ifneq ($(strip $(CPPCHECK)),)
 	$(CPPCHECK) --force --enable=all --suppress=missingIncludeSystem --suppress=duplicateExpression -q main.c
 endif
-	./test-code.sh # this tests code, not your binary. only required for release
+ifeq ($(strip $(ROM)),)
+	$(error ROM is not set. Set it in Makeconfig, environment or make variable)
+endif
+	./test-code.sh "$(ROM)" # this tests code, not your binary. only required for release
 
 release: test-code
 	./release.sh # this creates the zip, not required to run it

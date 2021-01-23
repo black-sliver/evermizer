@@ -2,6 +2,9 @@
 [Tt]humbs.db
 *.DS_Store
 
+#local config
+Makeconfig
+
 #build output
 evermizer
 ow-patch
