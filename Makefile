@@ -113,6 +113,12 @@ ifneq (,$(wildcard gourds.csv)) # only if not pre-built
 	rm -rf gourds.h
 endif
 
+test: $(EXE)
+ifeq ($(strip $(ROM)),)
+	$(error ROM is not set. Set it in Makeconfig, environment or make variable)
+endif
+	$(PYTHON) test.py "./$(EXE)" "$(ROM)"
+
 test-code: all
 ifneq ($(strip $(CPPCHECK)),)
 	$(CPPCHECK) --force --enable=all --suppress=missingIncludeSystem --suppress=duplicateExpression -q main.c
@@ -122,6 +128,6 @@ ifeq ($(strip $(ROM)),)
 endif
 	./test-code.sh "$(ROM)" # this tests code, not your binary. only required for release
 
-release: test-code
+release: test test-code
 	./release.sh # this creates the zip, not required to run it
 
