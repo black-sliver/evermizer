@@ -165,22 +165,23 @@ class PopenTest(object):
 
 class EvermizerTest(PopenTest):
     def __init__(self, exe, args, checks, limit=1000):
-        self.popen_success = 0
+        self.popen_count = 0
         self.popen_failed = 0
         cmdline = [exe] + args
         super(EvermizerTest,self).__init__(SeedGenerator(cmdline, limit),
                 self.proc_done, checks, self.proc_cleanup)
         
     def proc_done(self, r, o):
+        self.popen_count += 1
         if r != 0:
             self.popen_failed += 1
             return False
-        self.popen_success += 1
     
     def proc_cleanup(self, r, o):
         pass
 
 class DropTest(EvermizerTest):
+    '''Test if all checks get all drops for given settings and difficulty'''
     def __init__(self, exe, rom, wdir, difficulty, settings='', limit=10000):
         self.difficulty = difficulty
         self.settings = settings+'l'
@@ -351,6 +352,27 @@ class DropTest(EvermizerTest):
                     
         return res
 
+class ExecTest(object):
+    '''Test if execution succeeds for given settings'''
+    def __init__(self, exe, rom, wdir, args=[], difficulty='', settings='', seed=None):
+        self.popen_count = 0
+        self.popen_failed = 0
+        self.checks = []
+        self.cmd = [exe, '-b', '-d', wdir, '--dry-run',] + args + [
+                    rom, difficulty + settings]
+        if seed is not None: self.cmd.append(seed)
+    def run(self):
+        proc = Popen(self.cmd, stdout=DEVNULL, stderr=DEVNULL)
+        self.popen_count = 1
+        try:
+            res = proc.wait(10000)
+        except:
+            self.popen_failed = 1
+            return False
+        if res != 0:
+            self.popen_failed = 1
+            return False
+        return True
 
 def print_usage(exe):
     print('Usage: %s [--verbose|--silent] [--more] <path/to/evermizer.exe> <path/to/soe.sfc>' % (exe,))
@@ -388,7 +410,8 @@ if __name__ == '__main__':
     with TemporaryDirectory() as wdir:
         tests = [ [ 'Drops '+difficulty+settings, DropTest(exe,rom,wdir,difficulty,settings ) ]
                     for difficulty in difficulties for settings in variations ]
-        
+        tests+= [ [ 'Exec Money%', ExecTest(exe,rom,wdir,['--money','200'],'e','','1') ],
+                  [ 'Exec Exep%', ExecTest(exe,rom,wdir,['--exp','200'],'e','','1') ] ]
         for i, [ name, test ] in enumerate(tests):
             teststart = time.time()
             passed = test.run()
@@ -404,10 +427,8 @@ if __name__ == '__main__':
                             check(report=True)
             
             if verbose:
-                popen_success = test.popen_success
-                popen_failed = test.popen_failed
                 print ('    %d/%d seeds failed in %.1fs' % (
-                        popen_failed, popen_failed+popen_success,
+                        test.popen_failed, test.popen_count,
                         testend-teststart,))
     
     if done>0 and failed==0 and not silent:
