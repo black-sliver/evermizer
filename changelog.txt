@@ -1,6 +1,7 @@
 v038:
   Really remove unreachable pipe maze gourd from gourdomizer - numbering changed
   Fix additional "alchemy missable" checks
+  Mark Pyramid as accessible if Aegis is defeated
 
 v037:
   Added Turdo Mode
