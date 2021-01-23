@@ -3,6 +3,7 @@ v038:
   Fix additional "alchemy missable" checks
   Mark Pyramid as accessible if Aegis is defeated
   Change final goal for logic from energy core to boss rush to include Energize
+  Fix Volcano Viper requirements for Rock Skip
 
 v037:
   Added Turdo Mode

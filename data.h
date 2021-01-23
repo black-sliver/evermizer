@@ -383,7 +383,7 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_BOSS,MAMMOTH_VIPER_IDX, 0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
     {0, CHECK_BOSS,CAVE_RAPTORS_IDX,  0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
     {0, CHECK_BOSS,SALABOG_IDX,       0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
-    {0, CHECK_BOSS,VOLCANO_VIPER_IDX, 0, 0, REQ2(P_WEAPON,P_LEVITATE),               NOTHING_PROVIDED},
+    {0, CHECK_BOSS,VOLCANO_VIPER_IDX, 0, 0, REQ1(P_VOLCANO_ENTERED),                 NOTHING_PROVIDED},
     {0, CHECK_BOSS,MAGMAR_IDX,        0, 0, REQ1(P_VOLCANO_ENTERED),                 PVD1(P_VOLCANO_EXPLODED)},
     {0, CHECK_BOSS,VIGOR_IDX,         0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
     {0, CHECK_BOSS,MONK_IDX,          0, 0, REQ3(P_WEAPON,P_REVEALER,P_JAGUAR_RING), NOTHING_PROVIDED},
