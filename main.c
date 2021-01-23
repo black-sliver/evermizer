@@ -212,9 +212,9 @@ enum option_indices {
     } while (false)
 #endif
 #ifdef NO_UI
-#define FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--money <money%%>] [--exp <exp%%>] "
+#define FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
 #else
-#define FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--money <money%%>] [--exp <exp%%>] "
+#define FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
 #endif
 #ifdef NO_RANDO
 #define APPNAME "SoE-OpenWorld"
@@ -328,6 +328,7 @@ int main(int argc, const char** argv)
     bool interactive = true; // show settings ui
     #endif
     bool verify = false; // verify ROM and exit
+    bool dry = false; // dry run: don't write ROM
     DEFAULT_SETTINGS();
     
     const char* ofn=NULL;
@@ -382,6 +383,9 @@ int main(int argc, const char** argv)
         } else if (strcmp(argv[1], "--verify") == 0) {
             argv++; argc--;
             verify=true;
+        } else if (strcmp(argv[1], "--dry-run") == 0) {
+            argv++; argc--;
+            dry=true;
         } else if (strcmp(argv[1], "--money") == 0) {
             int money = atoi(argv[2]);
             if (money>2500) money=2500; // limit to 25x
@@ -1577,14 +1581,17 @@ int main(int argc, const char** argv)
     
     const char* dst = (ofn && *ofn) ? ofn : dstbuf;
     
-    FILE* fdst = fopen(dst,"wb");
-    if (!fdst) { fclose(fsrc); free(buf); die("Could not open output file!\n"); }
-    if (grow) sz+=GROW_BY;
-    // TODO: recalculate checksum
-    len = fwrite(buf, 1, sz, fdst);
-    fclose(fdst); fdst=NULL;
-    if (len<sz) { fclose(fsrc); free(buf); die("Could not write output file!\n"); }
-    printf("Rom saved as %s!\n", dst);
+    // write ROM
+    if (!dry) {
+        FILE* fdst = fopen(dst,"wb");
+        if (!fdst) { fclose(fsrc); free(buf); die("Could not open output file!\n"); }
+        if (grow) sz+=GROW_BY;
+        // TODO: recalculate checksum
+        len = fwrite(buf, 1, sz, fdst);
+        fclose(fdst); fdst=NULL;
+        if (len<sz) { fclose(fsrc); free(buf); die("Could not write output file!\n"); }
+        printf("Rom saved as %s!\n", dst);
+    }
     
     // write spoiler log
 #ifndef NO_RANDO
