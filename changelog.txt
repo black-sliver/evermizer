@@ -4,6 +4,7 @@ v038:
   Mark Pyramid as accessible if Aegis is defeated
   Change final goal for logic from energy core to boss rush to include Energize
   Fix Volcano Viper requirements for Rock Skip
+  Allow input and show exp% and money% in DOS UI
 
 v037:
   Added Turdo Mode

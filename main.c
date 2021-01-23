@@ -335,11 +335,10 @@ int main(int argc, const char** argv)
     const char* dstdir=NULL;
     bool modeforced=false;
     
-    // defaults
-    uint8_t money_num = 1;
-    uint8_t money_den = 1;
-    uint8_t exp_num = 1;
-    uint8_t exp_den = 1;
+    uint8_t money_num = 0;
+    uint8_t money_den = 0;
+    uint8_t exp_num = 0;
+    uint8_t exp_den = 0;
     
     // parse command line arguments
     while (argc>1) {
@@ -389,28 +388,12 @@ int main(int argc, const char** argv)
         } else if (strcmp(argv[1], "--money") == 0) {
             int money = atoi(argv[2]);
             if (money>2500) money=2500; // limit to 25x
-            if (money<1) {
-                /* ignore */
-            } else if (money<=255) {
-                money_num = (uint8_t)money;
-                money_den = 100;
-            } else {
-                money_num = (uint8_t)((money+5)/10);
-                money_den = 10;
-            }
+            if (money>0) percent_to_u8_fraction(money, &money_num, &money_den);
             argv+=2; argc-=2;
         } else if (strcmp(argv[1], "--exp") == 0) {
             int exp = atoi(argv[2]);
             if (exp>2500) exp=2500; // limit to 25x
-            if (exp<1) {
-                /* ignore */
-            } else if (exp<=255) {
-                exp_num = (uint8_t)exp;
-                exp_den = 100;
-            } else {
-                exp_num = (uint8_t)((exp+5)/10);
-                exp_den = 10;
-            }
+            if (exp>0) percent_to_u8_fraction(exp, &exp_num, &exp_den);
             argv+=2; argc-=2;
         } else {
             break;
@@ -560,10 +543,31 @@ int main(int argc, const char** argv)
             if (! fgets(seedbuf, sizeof(seedbuf), stdin)) die("\nAborting...\n");
             if (isxdigit(seedbuf[0])) seed = strtoull(seedbuf, NULL, 16);
         }
+        if (!exp_den) {
+            char expbuf[6];
+            printf("Exp%%: ");
+            if (!money_den) printf("  "); // align
+            fflush(stdout);
+            if (! fgets(expbuf, sizeof(expbuf), stdin)) die("\nAborting...\n");
+            int exp = atoi(expbuf);
+            if (exp>2500) exp=2500;
+            if (exp>0) percent_to_u8_fraction(exp, &exp_num, &exp_den);
+        }
+        if (!money_den) {
+            char moneybuf[6];
+            printf("Money%%: ");
+            fflush(stdout);
+            if (! fgets(moneybuf, sizeof(moneybuf), stdin)) die("\nAborting...\n");
+            int money = atoi(moneybuf);
+            if (money>2500) money=2500; // limit to 25x
+            if (money>0) percent_to_u8_fraction(money, &money_num, &money_den);
+        }
         while (true) {
             clrscr();
             printf(APPNAME " " VERSION "\n");
-            printf("Seed: %" PRIx64 "\n", seed);
+            printf("Seed: %" PRIx64 "  Exp:%4d%%  Money:%4d%%\n", seed,
+                u8_fraction_to_percent(exp_num,exp_den),
+                u8_fraction_to_percent(money_num,money_den));
             SETTINGS2STR(settings);
             printf("Settings: %-18s(Press R to reset)\n", settings);
             printf("\n");
@@ -1290,8 +1294,8 @@ int main(int argc, const char** argv)
         for (uint32_t p=CHARACTER_DATA_START; p<CHARACTER_DATA_END; p+=CHARACTER_DATA_SIZE) {
             uint32_t money = read16(buf, rom_off+p+CHARACTER_DATA_MONEY_OFF);
             uint32_t exp   = read32(buf, rom_off+p+CHARACTER_DATA_EXP_OFF);
-            money = (money * money_num + money_den/2) / money_den;
-            exp   = (exp   * exp_num   + exp_den/2)   / exp_den;
+            if (money_num != money_den) money = (money * money_num + money_den/2) / money_den;
+            if (exp_num   != exp_den)   exp   = (exp   * exp_num   + exp_den/2)   / exp_den;
             if (money>0xffff) money=0xffff;
             write16(buf, rom_off+p+CHARACTER_DATA_MONEY_OFF, (uint16_t)money);
             write32(buf, rom_off+p+CHARACTER_DATA_EXP_OFF,   exp);

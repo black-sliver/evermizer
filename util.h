@@ -82,4 +82,24 @@ static void write32(void* buf, size_t pos, uint32_t val) {
     data[3] = val&0xff;
 }
 
+static bool percent_to_u8_fraction(int percent, uint8_t* num, uint8_t* den)
+{
+    if (percent<0) return false;
+    if (percent<=255) {
+        *num = (uint8_t)percent;
+        *den = 100;
+    } else if (percent<=2550) {
+        *num = (uint8_t)((percent+5)/10);
+        *den = 10;
+    } else {
+        return false;
+    }
+    return true;
+}
+int u8_fraction_to_percent(uint8_t num, uint8_t den)
+{
+    if (num == den || den == 0) return 100;
+    return (int)num * 100 / den;
+}
+
 #endif // UTIL_H_INCLUDED
