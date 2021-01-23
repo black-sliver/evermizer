@@ -225,9 +225,6 @@ DEF(73, 0x98b08b - 0x800000, "\x04\x03\x00");
 // Remove horace DE stealing cutscene by changing script start to end
 // ONLY PATCH IF BOSS RANDO IS ON, see also XX (make horace unskippable, TODO)
 DEF(74, 0x9282c4 - 0x800000, "\xad\x42\x02");
-// Immortalize
-DEF(75, 0x847357 - 0x800000, "\x6c\x69");
-DEF(76, 0x91fdee - 0x800000, "\x6c\x69");
 // Add Text "Received Nothing!"; Could always be applied, but only required for boss drop rando
 DEF(77, 0xc00000 - 0xc00000, "\xF9\x00\x28\x2E\x02\x82\xD2\x13\x1E\x0F");
 #ifndef NO_RANDO // required boss drop randomization script changes
@@ -326,47 +323,6 @@ DEF(105, 0x97a157 - 0x800000, // Mad Monk drop (see also patch 78)
 // Ignore "no prior save file" flag during intro
 DEF(106, 0x92e4ab + 4 - 0x800000, "\x00");
 #ifndef NO_RANDO
-// Alchemy preselection relocation target
-DEF(107, 0xb08000 - 0x800000,
-    "\x18\xED\x01\x82\x00" "\x00" // Acid Rain Preselect @ $b08000
-    "\x18\xED\x01\x82\x02" "\x00" // Atlas Preselect @ $b08006
-    "\x18\xED\x01\x82\x04" "\x00" // Barrier Preselect @ $b0800c
-    "\x18\xED\x01\x82\x06" "\x00" // Call Up Preselect @ $b08012
-    "\x18\xED\x01\x82\x08" "\x00" // Corrosion Preselect @ $b08018
-    "\x18\xED\x01\x82\x0a" "\x00" // Crush Preselect @ $b0801e
-    "\x18\xED\x01\x82\x0c" "\x00" // Cure Preselect @ $b08024
-    "\x18\xED\x01\x82\x0e" "\x00" // Defend Preselect @ $b0802a
-    "\x18\xED\x01\x82\x10" "\x00" // Double Drain Preselect @ $b08030
-    "\x18\xED\x01\x82\x12" "\x00" // Drain Preselect @ $b08036
-    "\x18\xED\x01\x82\x14" "\x00" // Energize Preselect @ $b0803c
-    "\x18\xED\x01\x82\x16" "\x00" // Escape Preselect @ $b08042
-    "\x18\xED\x01\x82\x18" "\x00" // Explosion Preselect @ $b08048
-    "\x18\xED\x01\x82\x1a" "\x00" // Fireball Preselect @ $b0804e
-    "\x18\xED\x01\x82\x1c" "\x00" // Fire Power Preselect @ $b08054
-    "\x18\xED\x01\x82\x1e" "\x00" // Flash Preselect @ $b0805a
-    "\x51\x38\x13" "\x55"         // Sting Preselect (missing in vanilla)
-    "\x18\xED\x01\x82\x40" "\x00" // + also text @ $b08060
-    "\x18\xED\x01\x82\x42" "\x00" // Stop Preselect (unused) @ $b0806a
-); // next free byte at b08070
-// Alchemy preselection relocation jumps
-DEF(108, 0x93aee2 - 0x800000, "\x29\x00\x00\x0f"); // Acid Rain
-DEF(109, 0x95e85d - 0x800000, "\x29\x06\x00\x0f"); // Atlas
-DEF(110, 0x95d3db - 0x800000, "\x29\x0c\x00\x0f"); // Barrier
-DEF(111, 0x9bcecc - 0x800000, "\x29\x12\x00\x0f"); // Call Up
-DEF(112, 0x98b305 - 0x800000, "\x29\x18\x00\x0f"); // Corrosion
-DEF(113, 0x95ba7a - 0x800000, "\x29\x1e\x00\x0f"); // Crush
-DEF(114, 0x968441 - 0x800000, "\x29\x24\x00\x0f"); // Cure
-DEF(115, 0x94e75a - 0x800000, "\x29\x24\x00\x0f"); // Cure
-DEF(116, 0x94e50f - 0x800000, "\x29\x2a\x00\x0f"); // Defend
-DEF(117, 0x94a69e - 0x800000, "\x29\x30\x00\x0f"); // Double Drain
-DEF(118, 0x94a6e4 - 0x800000, "\x29\x36\x00\x0f"); // Drain
-DEF(119, 0x9bcf44 - 0x800000, "\x29\x3c\x00\x0f"); // Energize
-DEF(120, 0x96db8a - 0x800000, "\x29\x42\x00\x0f"); // Escape
-DEF(121, 0x9987d3 - 0x800000, "\x29\x48\x00\x0f"); // Explosion
-DEF(122, 0x97a101 - 0x800000, "\x29\x4e\x00\x0f"); // Fireball
-DEF(123, 0x97ea2e - 0x800000, "\x29\x54\x00\x0f"); // Fire Power
-DEF(124, 0x94da4c - 0x800000, "\x29\x5a\x00\x0f"); // Flash
-DEF(125, 0x96e15b - 0x800000, "\x29\x60\x00\x0f"); // Sting
 // Disable collapsing bridges in pyramids
 // by changing map data triggers' scripts to a df2 (a blank one)
 DEF(126, 0x9ed77f + 4 - 0x800000, "\xf2\x0d"); // disable d98

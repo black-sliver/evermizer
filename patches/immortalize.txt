@@ -1,0 +1,10 @@
+#set
+
+// ported from patches.h 75, 76 - ventuz
+// Immortalize
+@0x847357
+6c 69
+
+@0x91fdee
+6c69
+

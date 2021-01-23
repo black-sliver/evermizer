@@ -1152,7 +1152,7 @@ int main(int argc, const char** argv)
         APPLY(OGLIN_CAVE);  APPLY(OGLIN_CAVE2); APPLY(OGLIN_CAVE3);
         APPLY(OGLIN_CAVE4); APPLY(OGLIN_CAVE5); APPLY(OGLIN_CAVE6);
         // v009:
-        APPLY(72); /*73,74: see below*/  APPLY(75); APPLY(76);
+        APPLY(72); /*73,74: see below*/  APPLY_IMMORTALIZE();
         // v015:
         APPLY(139); APPLY(140); /* supersedes 32 */
         // v017:
@@ -1343,10 +1343,7 @@ int main(int argc, const char** argv)
         printf("Applying alchemizer...\n");
         // Alchemy preselection relocation
         grow = true;
-        APPLY(107);
-        APPLY(108); APPLY(109); APPLY(110); APPLY(111); APPLY(112); APPLY(113);
-        APPLY(114); APPLY(115); APPLY(116); APPLY(117); APPLY(118); APPLY(119);
-        APPLY(120); APPLY(121); APPLY(122); APPLY(123); APPLY(124); APPLY(125);
+        APPLY_ALCHEMY_RANDO_PRESELECT();
         // Write randomized values
         for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
             // write value from i to locateions of alchemy[i]

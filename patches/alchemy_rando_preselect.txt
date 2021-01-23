@@ -1,0 +1,123 @@
+#set
+
+// ported from patches.h 107-125 - ventuz
+
+#ifndef NO_RANDO
+
+// Alchemy preselection relocation targets (patche 107)
+@0xb08000
+18 ED 01 82 00 // Acid Rain Preselect @ $b08000
+00 
+
+18 ED 01 82 02 // Atlas Preselect @ $b08006
+00
+
+18 ED 01 82 04 // Barrier Preselect @ $b0800c
+00
+
+18 ED 01 82 06 // Call Up Preselect @ $b08012
+00
+
+18 ED 01 82 08 // Corrosion Preselect @ $b08018
+00
+
+18 ED 01 82 0a // Crush Preselect @ $b0801e
+00
+
+18 ED 01 82 0c // Cure Preselect @ $b08024
+00
+
+18 ED 01 82 0e // Defend Preselect @ $b0802a
+00
+
+18 ED 01 82 10 // Double Drain Preselect @ $b08030
+00
+
+18 ED 01 82 12 // Drain Preselect @ $b08036
+00
+
+18 ED 01 82 14 // Energize Preselect @ $b0803c
+00
+
+18 ED 01 82 16 // Escape Preselect @ $b08042
+00
+
+18 ED 01 82 18 // Explosion Preselect @ $b08048
+00
+
+18 ED 01 82 1a // Fireball Preselect @ $b0804e
+00
+
+18 ED 01 82 1c // Fire Power Preselect @ $b08054
+00
+
+18 ED 01 82 1e // Flash Preselect @ $b0805a
+00
+
+51 38 13 // Sting Preselect (missing in vanilla)
+55
+
+18 ED 01 82 40 // + also text @ $b08060
+00
+
+18 ED 01 82 42 // Stop Preselect (unused) @ $b0806a, next free byte at b08070
+00
+@
+
+// Alchemy preselection relocation jumps (from patches 108-125)
+@0x93aee2
+29 00 00 0f // Acid Rain
+
+@0x95e85d
+29 06 00 0f // Atlas
+
+@0x95d3db
+29 0c 00 0f // Barrier
+
+@0x9bcecc
+29 12 00 0f // Call Up
+
+@0x98b305
+29 18 00 0f // Corrosion
+
+@0x95ba7a
+29 1e 00 0f // Crush
+
+@0x968441
+29 24 00 0f // Cure
+
+@0x94e75a
+29 24 00 0f // Cure
+
+@0x94e50f
+29 2a 00 0f // Defend
+
+@0x94a69e
+29 30 00 0f // Double Drain
+
+@0x94a6e4
+29 36 00 0f // Drain
+
+@0x9bcf44
+29 3c 00 0f // Energize
+
+@0x96db8a
+29 42 00 0f // Escape
+
+@0x9987d3
+29 48 00 0f // Explosion
+
+@0x97a101
+29 4e 00 0f // Fireball
+
+@0x97ea2e
+29 54 00 0f // Fire Power
+
+@0x94da4c
+29 5a 00 0f // Flash
+
+@0x96e15b
+29 60 00 0f // Sting
+@
+
+#endif
