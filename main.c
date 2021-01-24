@@ -314,7 +314,7 @@ int main(int argc, const char** argv)
     // verify at least one agument is given
     if (argc<2 || !argv[1] || !argv[1][0]) {
         print_usage(appname);
-        die(NULL);
+        exit(1);
     }
     
     #ifdef NO_RANDO // open world + fixes only
@@ -356,7 +356,7 @@ int main(int argc, const char** argv)
     #if defined NO_UI || defined NO_RANDO  // NO_RANDO has no UI (yet)
             fprintf(stderr, "Requested interactive mode, but not compiled in!\n");
             print_usage(appname);
-            die(NULL);
+            exit(1);
     #endif
             argv++; argc--;
         } else if (strcmp(argv[1], "-o") == 0) {
@@ -417,7 +417,7 @@ int main(int argc, const char** argv)
     if (argc<2 || !argv[1] || !argv[1][0] || argc>4) {
     #endif
         print_usage(appname);
-        die(NULL);
+        exit(1);
     }
     
     // parse settings command line argument
