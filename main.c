@@ -78,7 +78,7 @@ void die(const char* msg)
     exit(1);
 }
 const char B32[] = "abcdefghijklmnopqrstuvwxyz234567=";
-char b32(unsigned v) { return B32[v&0x1f]; }
+char b32(uint64_t v) { return B32[v&0x1f]; }
 #define APPLY_PATCH(buf, patch, loc) memcpy(buf+loc, patch, sizeof(patch)-1)
 
 #include "rng.h"
@@ -116,6 +116,7 @@ const static struct option options[] = {
 #endif
     { '5', 0, "Fix infinite ammo", NULL,   "Fix bug that would have bazooka ammo not drain", OFF_ON },
     { '6', 0, "Fix atlas glitch", NULL,    "Fix status effects cancelling with pixie dust", OFF_ON },
+    { '7', 0, "Fix wings glitch", NULL,    "Fix wings granting invincibility if they \"did not work\"", OFF_ON },
     { '9', 0, "Shorter dialogs", "Few",    "Shorten some dialogs/cutscenes. Ongoing effort.", OFF_ON },
 #ifndef NO_RANDO
     { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas", OFF_ON },
@@ -139,7 +140,7 @@ enum option_indices {
 #ifndef NO_RANDO
     glitchless_idx, accessible_idx,
 #endif
-    fixammo_idx, fixatlas_idx, shortdialogs_idx,
+    fixammo_idx, fixatlas_idx, fixwings_idx, shortdialogs_idx,
 #ifndef NO_RANDO
     alchemizer_idx, ingredienizer_idx,
     bossdropamizer_idx, gourdomizer_idx, sniffamizer_idx, callbeadamizer_idx,
@@ -161,6 +162,7 @@ enum option_indices {
 #define accessible O(accessible_idx)
 #define fixammo O(fixammo_idx)
 #define fixatlas O(fixatlas_idx)
+#define fixwings O(fixwings_idx)
 #define shortdialogs O(shortdialogs_idx)
 #define alchemizer O(alchemizer_idx)
 #define ingredienizer O(ingredienizer_idx)
@@ -1000,7 +1002,6 @@ int main(int argc, const char** argv)
             cyberlogicscore = 0;
             cybergameplayscore = 0;
             while (!complete) {
-                bool wingsfix = false;
                 int ammopenalty=0;
                 int wingspenalty=0;
                 if (progress[goal]<1) treedepth++;
@@ -1028,7 +1029,7 @@ int main(int argc, const char** argv)
                             drop_progress(drop, nextprogress);
                         if (drop && checks[i].difficulty<0) {
                             cybergameplayscore -= 2*drop_provides(drop, P_CALLBEAD);
-                            if (!wingsfix && drop_provides(drop, P_WINGS)) {
+                            if (!fixwings && drop_provides(drop, P_WINGS)) {
                                 cybergameplayscore += wingspenalty-2;
                                 wingspenalty = 2;
                             }
@@ -1289,6 +1290,11 @@ int main(int argc, const char** argv)
         APPLY(STADIE_U);
     }
     
+    if (fixwings) {
+        printf("Fixing wings glitch...\n");
+        APPLY(WINGS_FIX_U);
+    }
+    
     if ((money_num != money_den) || (exp_num != exp_den)) {
         printf("Patching enemy data...\n");
         for (uint32_t p=CHARACTER_DATA_START; p<CHARACTER_DATA_END; p+=CHARACTER_DATA_SIZE) {
@@ -1515,31 +1521,34 @@ int main(int argc, const char** argv)
     for (size_t i=0; i<ARRAY_SIZE(options); i++)
         if (O(i)==CHAOS) chaos = true;
     
-    uint32_t seedcheck = (uint16_t)(rand64()&0x3ff); // 10bits=2 b32 chars
-    if (openworld)      seedcheck |= 0x00000400;
-    if (fixsequence)    seedcheck |= 0x00000800;
-    if (fixcheats)      seedcheck |= 0x00001000; // excluding atlas
-    if (glitchless)     seedcheck |= 0x00002000;
-    if (bossdropamizer) seedcheck |= 0x00004000;
-    if (alchemizer)     seedcheck |= 0x00008000;
-    if (ingredienizer)  seedcheck |= 0x00010000;
-    if (gourdomizer)    seedcheck |= 0x00020000;
-    if (sniffamizer)    seedcheck |= 0x00040000;
-    if (doggomizer)     seedcheck |= 0x00080000;
+    uint64_t seedcheck = (uint16_t)(rand64()&0x3ff); // 10bits=2 b32 chars
+    if (openworld)      seedcheck |= 0x000000400;
+    if (fixsequence)    seedcheck |= 0x000000800;
+    if (fixcheats)      seedcheck |= 0x000001000; // excluding atlas
+    if (glitchless)     seedcheck |= 0x000002000;
+    if (bossdropamizer) seedcheck |= 0x000004000;
+    if (alchemizer)     seedcheck |= 0x000008000;
+    if (ingredienizer)  seedcheck |= 0x000010000;
+    if (gourdomizer)    seedcheck |= 0x000020000;
+    if (sniffamizer)    seedcheck |= 0x000040000;
+    if (doggomizer)     seedcheck |= 0x000080000;
     //if (enemizer)     seedcheck |= ??;
-    if (accessible)     seedcheck |= 0x00100000;
-    if (keepdog)        seedcheck |= 0x00200000;
+    if (accessible)     seedcheck |= 0x000100000;
+    if (keepdog)        seedcheck |= 0x000200000;
     // 0x00400000 and 0x00800000 = difficulty
-    if (chaos)          seedcheck |= 0x01000000;
-    if (pupdunk)        seedcheck |= 0x02000000;
-    if (fixammo)        seedcheck |= 0x04000000;
-    if (money_den!=money_num) seedcheck |= 0x08000000;
-    if (exp_den!=exp_num)     seedcheck |= 0x10000000;
-    if (fixatlas)       seedcheck |= 0x20000000;
-    if (turdomode)      seedcheck |= 0x40000000;
-    if (shortbossrush)  seedcheck |= 0x80000000; // 32 bits in use -> 7 b32 chars
-    seedcheck |= ((uint32_t)difficulty<<22);
-    printf("\nCheck: %c%c%c%c%c%c (Please compare before racing)\n",
+    if (chaos)          seedcheck |= 0x001000000;
+    if (pupdunk)        seedcheck |= 0x002000000;
+    if (fixammo)        seedcheck |= 0x004000000;
+    if (money_den!=money_num) seedcheck |= 0x008000000;
+    if (exp_den!=exp_num)     seedcheck |= 0x010000000;
+    if (fixatlas)       seedcheck |= 0x020000000;
+    if (turdomode)      seedcheck |= 0x040000000;
+    if (shortbossrush)  seedcheck |= 0x080000000;
+    if (fixwings)       seedcheck |= 0x100000000;
+    // 33 bits in use -> 7 b32 chars
+    seedcheck |= ((uint64_t)difficulty<<22);
+    printf("\nCheck: %c%c%c%c%c%c%c (Please compare before racing)\n",
+           b32(seedcheck>>30),
            b32(seedcheck>>25), b32(seedcheck>>20), b32(seedcheck>>15),
            b32(seedcheck>>10), b32(seedcheck>>5),  b32(seedcheck>>0));
     #endif

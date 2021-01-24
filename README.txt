@@ -65,6 +65,8 @@ CHANGES SO FAR:
     Fixes the bug that Particle Bomb and Cryo-Blast do not drain
   Fix atlas glitch:
     Fixes stat underflow when dying with active stat boosts
+  Fix wings glitch:
+    Fixes wings granting invincibility if they "did not work"
   Money%:
     1 to 2500, Enemies give that % of money
   Exp%:
@@ -154,8 +156,8 @@ CREDITS:
   Thanks to all people pushing or commenting on the project, providing ideas or
     artwork, testing it, pointing out bugs and looking into SNES/SoE stuff
   ayame li, colin, cyb3r, darkmoon2321, dot, esmo88, flarezenyu, fronk,
-  greenambler, metasigma, mirapoix, neagix, nyrambler, queenanne, scarrfish,
-  skarsnikus, solarcell007, turbo, ventuz, zheal
+  greenambler, metasigma, mirapoix, masterknightdh, neagix, nyrambler,
+  queenanne, scarrfish, skarsnikus, solarcell007, turbo, ventuz, zheal
   Thanks to vr-interactive for providing the website's new background image
   Thanks to sferath for providing the mascot - https://deviantart.com/sferath
   Special thanks to elwismw for existing. #hereforelwis

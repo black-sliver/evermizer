@@ -5,6 +5,7 @@ v038:
   Change final goal for logic from energy core to boss rush to include Energize
   Fix Volcano Viper requirements for Rock Skip
   Allow input and show exp% and money% in DOS UI
+  Add option to fix wings glitch
 
 v037:
   Added Turdo Mode
