@@ -122,7 +122,7 @@ clean: clean-temps
 	rm -rf evermizer evermizer.exe evermizer64.exe ow-patch ow-patch.exe ow-patch64.exe evermizer.html evermizer.js evermizer.wasm
 
 clean-temps:
-	rm -rf main.res
+	rm -rf main.res main64.res
 ifneq ($(strip $(PATCH_FILES) $(IPS_INFO_FILES)),) # only if not pre-built
 	rm -rf gen.h
 endif
