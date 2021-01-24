@@ -12,7 +12,7 @@ CFLAGS?=-Wall -Werror -DWITH_ASSERT -D_FORTIFY_SOURCE=2 -pie -fPIE -ffunction-se
 endif
 
 ifeq ($(OS),Windows_NT)
-# native
+# native, whatever architecture you are on
 WIN32CC?=$(CC)
 WIN32CFLAGS?=$(CFLAGS)
 WIN32WINDRES?=windres
@@ -22,10 +22,13 @@ CPPCHECK:=$(shell where cppcheck)
 CLOSURECOMPILER:=$(shell where closure-compiler)
 SED:=$(shell where sed)
 else
-# cross compile
+# cross compile, we build both 32bit and 64bit
 WIN32CC?=i686-w64-mingw32-gcc
 WIN32CFLAGS?=-Wall -Werror -DWITH_ASSERT -D_FORTIFY_SOURCE=2 -pie -fPIE -static -static-libgcc -ffunction-sections -fdata-sections -Wl,--gc-sections -s -flto=4 -Os
 WIN32WINDRES?=i686-w64-mingw32-windres
+WIN64CC?=x86_64-w64-mingw32-gcc
+WIN64CFLAGS?=$(WIN32CFLAGS)
+WIN64WINDRES?=x86_64-w64-mingw32-windres
 # tools
 MV?=mv
 CPPCHECK:=$(shell which cppcheck)
@@ -54,8 +57,9 @@ EXE = evermizer.exe
 else
 native: evermizer ow-patch
 win32: evermizer.exe ow-patch.exe
+win64: evermizer64.exe ow-patch64.exe
 wasm: evermizer.js
-all: native win32 wasm
+all: native win32 win64 wasm
 EXE = evermizer
 endif
 
@@ -76,6 +80,9 @@ endif
 main.res: icon.ico
 	echo "id ICON $(^)" | $(WIN32WINDRES) -O coff -o $@
 
+main64.res: icon.ico
+	echo "id ICON $(^)" | $(WIN64WINDRES) -O coff -o $@
+
 evermizer: $(SOURCE_FILES) $(INCLUDE_FILES)
 	$(CC) -o $@ $(SOURCE_FILES) $(CFLAGS)
 
@@ -87,6 +94,12 @@ evermizer.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main.res
 
 ow-patch.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main.res
 	$(WIN32CC) -DNO_RANDO -o $@ $(SOURCE_FILES) $(WIN32CFLAGS) main.res
+
+evermizer64.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main64.res
+	$(WIN64CC) -o $@ $(SOURCE_FILES) $(WIN64CFLAGS) main64.res
+
+ow-patch64.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main64.res
+	$(WIN64CC) -DNO_RANDO -o $@ $(SOURCE_FILES) $(WIN64CFLAGS) main64.res
 
 evermizer.js: $(SOURCE_FILES) $(INCLUDE_FILES)
 	$(EMCC) -DNO_UI -o $@ $(SOURCE_FILES) $(EMFLAGS)
@@ -106,7 +119,7 @@ ifneq ($(strip $(CLOSURECOMPILER)),) # skip if not installed, also see EMFLAGS
 endif
 
 clean: clean-temps
-	rm -rf evermizer evermizer.exe ow-patch ow-patch.exe evermizer.html evermizer.js evermizer.wasm
+	rm -rf evermizer evermizer.exe evermizer64.exe ow-patch ow-patch.exe ow-patch64.exe evermizer.html evermizer.js evermizer.wasm
 
 clean-temps:
 	rm -rf main.res
