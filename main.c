@@ -116,7 +116,7 @@ const static struct option options[] = {
 #endif
     { '5', 0, "Fix infinite ammo", NULL,   "Fix bug that would have bazooka ammo not drain", OFF_ON },
     { '6', 0, "Fix atlas glitch", NULL,    "Fix status effects cancelling with pixie dust", OFF_ON },
-    { '7', 0, "Fix wings glitch", NULL,    "Fix wings granting invincibility if they \"did not work\"", OFF_ON },
+    { '7', 0, "Fix wings glitch", NULL,    "Fix wings granting invincibility if they 'did not work'", OFF_ON },
     { '9', 0, "Shorter dialogs", "Few",    "Shorten some dialogs/cutscenes. Ongoing effort.", OFF_ON },
 #ifndef NO_RANDO
     { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas", OFF_ON },
