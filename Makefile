@@ -43,7 +43,7 @@ SOURCE_FILES = main.c
 INCLUDE_FILES = rng.h util.h data.h sniff.h gourds.h doggo.h patches.h gen.h tinymt64.h
 
 
-.PHONY: clean clean-temps all native win32 wasm test-code release
+.PHONY: clean clean-temps all native win32 wasm test test-code release
 
 ifeq ($(OS),Windows_NT)
 native: win32
@@ -66,7 +66,11 @@ gen.h: $(PATCH_FILES) everscript2h.py $(IPS_INFO_FILES) ips2h.py
 endif
 ifneq (,$(wildcard gourds.csv)) # assume we have a pre-built gourds.h if gourds.csv is missing
 gourds.h: gourds.csv gourds2h.py
+ifeq ($(strip $(ROM)),)
+	$(PYTHON) gourds2h.py $@ gourds.csv
+else
 	$(PYTHON) gourds2h.py $@ gourds.csv "$(ROM)"
+endif
 endif
 
 main.res: icon.ico
