@@ -1,7 +1,49 @@
 #set // APPLY_CUT_CUTSCENES
 
+// ** TINKER **
 // remove first tinker cutscene (state 0 -> state 1)
 @0x998d60
 14 fe 00 b1 // write 1 to 2356 (tinker state)
 04 13 00    // jump to 0x998d7a (fade-in)
 @
+
+// ** HORACE CAMP **
+// shorten horace first met dialog
+@0x96d80b
+04 fe 01 00 // SKIP 0x1fe to 0x96da0c
+@0x96d836
+04 d3 01 00 // SKIP 0x1d3 to 0x96da0c
+@
+
+// always show revealer hint textbox at the end
+@0x96da0e
+04 18 00 00 // SKIP 0x18 to 0x96da29
+@
+
+// shorten falling into pit intro text, horace met
+@0x96d71a
+04 25 00 00 // SKIP 0x25 to to 0x96d742
+@
+
+// shorten falling into pit intro text, horace not met
+@0x96d74a
+04 03 00 00 00 00 // SKIP 3 to 0x96d750
+@0x96d75e
+04 43 00 00 // SKIP 0x43 to 0x96d7a4
+@0x96da51
+04 1c 00 00 // SKIP 0x1c to 0x96da70
+@
+
+// shorten horace callbead dialog
+@0x96daa7
+04 00 00 // SKIP 0 to 0x96daaa
+@
+
+// shorten madronius revealer dialog
+@0x96db47
+04 01 00 00 // SKIP 1 to 0x96db4b
+@0x96db9b
+04 00 00 // SKIP 0 to 0x96db9e
+@
+
+// TODO: Inn: modify text 131a
