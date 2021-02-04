@@ -75,7 +75,7 @@ CHANGES SO FAR:
     Cut some dialogs and cutscenes. This is work in progress.
   Short boss rush:
     Start boss rush at Metal Magmar. Cut enemy HP in half.
-  Tudo Mode:
+  Turdo Mode:
     Replaces all offensive spells, weakens weapons, reduces enemies' Magic Def.
   Open world: Unlock windwalker in every fire pit (slashing weapon required)
     Grant access to inner volcano
