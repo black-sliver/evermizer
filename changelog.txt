@@ -1,3 +1,7 @@
+v039:
+  Mark hidden gourds/chests in Tiny's hideout and Outside Ivor as hidden
+  Rename Pyramid basement to Tiny's hideout in spoiler
+
 v038:
   Really remove unreachable pipe maze gourd from gourdomizer - numbering changed
   Fix additional "alchemy missable" checks
