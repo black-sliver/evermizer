@@ -162,8 +162,9 @@ CREDITS:
   Special thanks to elwismw for existing. #hereforelwis
 
 LICENSE:
-  The source tree and generated binaries are distributed under
-  the terms of GPL v3. See LICENSE file.
+  The source tree and generated binaries are distributed under the terms of
+  GPL v3 - see LICENSE file - or alternatively under the terms of
+  LGPL v3 if built into a DLL - see lgpl-3.0.txt.
   The patches found in patches/ directory are in public domain unless
   noted otherwise. See patches/LICENSE file.
   For the patches found in ips/, see the corresponding .txt files.
