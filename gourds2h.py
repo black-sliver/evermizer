@@ -21,6 +21,7 @@ gourd_drop_struct = b"""struct gourd_drop_item {
     const char* name; // name for spoiler log
 };
 """
+
 gourd_data_struct = b"""struct gourd_data_item {
     size_t pos; // script address
     size_t len; // script length
@@ -133,6 +134,7 @@ prizes = {
     0x1f1:'colosseum breast', 0x1f2:'colosseum gloves', 0x1f3:'colosseum helmet',
     0x1f4:'progressive breast', 0x1f5:'progressive gloves', 0x1f6:'progressive helmet',
 }
+
 requirements = {
     'weapon': 'P_WEAPON',
     'magmar': 'P_VOLCANO_EXPLODED',
@@ -163,13 +165,13 @@ requirements = {
     '3x call bead': '3*P_CALLBEAD',
     'wings': 'P_WINGS',
 }
+
 difficulty_modifiers = {
     'dumb':   1,
     'far':    1,
     'hidden': 2,
     'early': -1,
 }
-
 
 def to_provides_or_requires(s, nothing, macro):
     s = s.strip()
@@ -189,21 +191,17 @@ def to_provides_or_requires(s, nothing, macro):
 
 def to_requirements(s):
     return to_provides_or_requires(s, 'NOTHING_REQUIRED', 'REQ')
+
 def to_provides(s):
     return to_provides_or_requires(s, 'NOTHING_PROVIDED', 'PVD')
 
-
-if __name__ == '__main__':
+def main(dst_filename, src_filename, rom_filename=None):
     rom = None
     name = ''
     src = ''
-    
-    if len(argv)<3 or len(argv)>4:
-        print('Usage: gourds2h.py <output.h> <input.csv> [<rom.sfc to verify against>]')
-        exit(1)
 
-    if len(argv)>3:
-        with open(argv[3], 'rb') as f:
+    if rom_filename:
+        with open(rom_filename, 'rb') as f:
             rom = bytearray(f.read())
             if len(rom)>3*1024*1024+512 or len(rom)<3*1024*1024:
                 rom = None
@@ -214,7 +212,7 @@ if __name__ == '__main__':
                 name = rom[0xFFC0:0xFFC0+20].decode('ASCII')
                 print('ROM loaded: %s' % (name,))
 
-    with codecs.open(argv[2], 'r', encoding='utf-8') as fin:
+    with codecs.open(src_filename, 'r', encoding='utf-8') as fin:
         if version_info[0]==2: # sadly py2 CSV is bytes, py3 CSV is unicode
             src = fin.read().encode('ascii', 'replace').replace('\r\n', '\n')
         else:
@@ -288,7 +286,7 @@ if __name__ == '__main__':
         #from pprint import pprint
         #pprint(locations)
         #pprint(drops)
-        with open(os.path.splitext(argv[1])[0]+'.h','wb') as fout:
+        with open(dst_filename, 'wb') as fout:
             fout.write(b'#if defined CHECK_TREE\n')
             for i in range(0, len(locations)):
                 fout.write(b'    {0, CHECK_GOURD,%3d, %d, %2d, %-49s NOTHING_PROVIDED},\n' % (i, 1 if locations[i][6] else 0, locations[i][11], (locations[i][7]+',').encode()))
@@ -320,3 +318,12 @@ if __name__ == '__main__':
             fout.write(b'_Static_assert(ARRAY_SIZE(gourd_data) == ARRAY_SIZE(gourd_drops_data), "Bad gourd data");\n')
             fout.write(b'#endif\n')
 
+if __name__ == '__main__':
+    # TODO: rewrite with argparse
+    if len(argv)<3 or len(argv)>4:
+        print('Usage: gourds2h.py <output.h> <input.csv> [<rom.sfc to verify against>]')
+        exit(1)
+    dst = os.path.splitext(argv[1])[0]+'.h' # FIXME: do we still need the splitext?
+    src = argv[2]
+    rom = argv[3] if len(argv)>3 else None
+    main(dst, src, rom)

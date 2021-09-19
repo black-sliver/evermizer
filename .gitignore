@@ -24,3 +24,6 @@ rls
 #local/private scripts
 release.sh
 test-code.sh
+
+#python cache
+__pycache__

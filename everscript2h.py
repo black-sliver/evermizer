@@ -18,23 +18,17 @@ def print_usage(code=1):
     print('  -a: append to file')
     exit(code)
 
-if __name__ == '__main__':
+def main(dst_filename, append, *src_filenames):
     spaces = { False: b'', True: b'    ' }
-    if len(argv)<3 or (argv[1] == '-a' and len(argv)<4): print_usage()
-    if (argv[1] == '-a'):
-        omode = 'ab'
-        firstinput = 3
-    else:
-        omode = 'wb'
-        firstinput = 2
-    with open(os.path.splitext(argv[firstinput-1])[0]+'.h',omode) as fout:
-        for i in range(firstinput,len(argv)):
+    omode = 'ab' if append else 'wb'
+    with open(dst_filename, omode) as fout:
+        for src in src_filenames:
             n = 1
-            name = os.path.splitext(os.path.basename(argv[i]))[0].upper()
+            name = os.path.splitext(os.path.basename(src))[0].upper()
             in_set = False
             set_name = ''
             set_items = []
-            with open(argv[i]) as fin:
+            with open(src) as fin:
                 in_patch = False
                 line_no = 0
                 for line in fin:
@@ -102,7 +96,7 @@ if __name__ == '__main__':
                             else: raise Exception('Invalid data')
                         fout.write(b'%s"\\x%s"%s\n' % (spaces[in_patch], '\\x'.join(b).encode('ascii'), comment.encode('ascii')))
                   except Exception as e:
-                    print('In %s:%d' % (os.path.basename(argv[i]), line_no))
+                    print('In %s:%d' % (os.path.basename(src), line_no))
                     raise(e)
                     
                 if in_patch:
@@ -117,3 +111,14 @@ if __name__ == '__main__':
                         fout.write(F(b'APPLY(%b);') % (set_items[i],))
                     fout.write(b'} while(false)\n')
 
+if __name__ == '__main__':
+    # TODO: rewrite with argparse
+    if len(argv)<3 or (argv[1] == '-a' and len(argv)<4): print_usage()
+    if (argv[1] == '-a'):
+        append = True
+        first_src = 3
+    else:
+        append = False
+        first_src = 2
+    dst = os.path.splitext(argv[first_src-1])[0]+'.h' # FIXME: splitext still required?
+    main(dst, append, *argv[first_src:])

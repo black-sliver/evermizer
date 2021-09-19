@@ -50,22 +50,16 @@ def ips2h(src, name, n, offset=0):
         assert(len(fips.read(4)) in (3,0)) # we don't allow excess bytes
     return ret
 
-if __name__ == '__main__':
-    if len(argv)<3 or (argv[1] == '-a' and len(argv)<4): print_usage()
-    if (argv[1] == '-a'):
-        omode = 'ab'
-        firstinput = 3
-    else:
-        omode = 'wb'
-        firstinput = 2
-    with open(os.path.splitext(argv[firstinput-1])[0]+'.h',omode) as fout:
-        for i in range(firstinput,len(argv)):
+def main(dst_filename, append, *src_filenames):
+    omode = 'ab' if append else 'wb'
+    with open(dst_filename, omode) as fout:
+        for src in src_filenames:
             n = 1
-            fext = os.path.splitext(os.path.basename(argv[i]))[1]
+            fext = os.path.splitext(os.path.basename(src))[1]
             ext = fext.lower()
-            fname = os.path.splitext(os.path.basename(argv[i]))[0]
+            fname = os.path.splitext(os.path.basename(src))[0]
             name = fname.upper().replace('-','_')
-            fdir = os.path.dirname(argv[i])
+            fdir = os.path.dirname(src)
             if ext == '.ips':
                 fout.write(b'/* %s%s */\n' % (fname.encode('ascii'), fext.encode('ascii')))
                 blocks = ips2h(src, name, n)
@@ -73,7 +67,7 @@ if __name__ == '__main__':
                 n += len(blocks)
                 fout.write(b'\n')
             elif ext == '.txt':
-                with open(argv[i]) as fin:
+                with open(src) as fin:
                     # find copyright notice
                     in_notice = False
                     sources = []
@@ -114,3 +108,14 @@ if __name__ == '__main__':
                     print('Unsupported file type: %s' % (ext,))
                     print_usage()
 
+if __name__ == '__main__':
+    # TODO: rewrite with argparse
+    if len(argv)<3 or (argv[1] == '-a' and len(argv)<4): print_usage()
+    if (argv[1] == '-a'):
+        append = True
+        first_src = 3
+    else:
+        append = False
+        first_src = 2
+    dst = os.path.splitext(argv[first_src-1])[0]+'.h' # FIXME: splitext still required?
+    main(dst, append, *argv[first_src:])
