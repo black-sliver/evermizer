@@ -15,7 +15,7 @@
 
 * Flags for checked alchemy locations (in addition to flags for received spells)
 
-* Pando-like interface to have item placement come from AP
+* Plando-like interface to have item placement come from AP
 
 * **or** Place "remote item X" in each spot and let AP do the rest
 
@@ -32,6 +32,7 @@
 
 * Copy magic number + version + seed settings from ROM to RAM (for RA+Snes9x)
 
+* Add flag "--hide-settings" that gets written to ROM so the tracker does not spoil
 
 ## Steps
 
@@ -47,6 +48,7 @@ see [wiki/Memory-Layout#ram-layout](https://github.com/black-sliver/evermizer/wi
 
 * Alchemy spots: 1bit per spell, so we can map 1:1; this needs to be bit-accessible by scripts
 * Call bead visibility; this will be written by ASM code
+  * FIXME: for chaos the tracker will still have to read mapping from ROM
   * either 4x4 bits: full enum for each slot -> tracker only reads these 2B
     * Unknown
     * FE
@@ -66,6 +68,7 @@ see [wiki/Memory-Layout#ram-layout](https://github.com/black-sliver/evermizer/wi
 * Extended market timer: 1-2 additional bytes for the upper part
 * Energy core fragments (maybe the 1 unused word in trade goods)
 * 16bit integer for "last received item sequence number"
+* Some bytes for multiworld communication
 
 ### SRAM-save, SRAM-load
 
@@ -86,6 +89,15 @@ _Status: TODO_
 * Change dialogs (TBD)
 * Use spell location flags instead of spell flags in alchemists' scripts
 
+### Change item and location definition
+
+_Status: TODO_
+
+* Move boss locations, drops and addresses to bosses.json
+* Add utility bosses2h.py
+* Add utility to merge bosses.json, gourds.csv and alchemy.json for AP
+* Generate code on the fly?
+
 ### Implement receiving of items
 
 _Status: TODO_
@@ -98,6 +110,8 @@ _Status: TODO_
 
 _Status: TODO_
 
+* use `bosses.json` for both the rando and AP
+
 ### AP client
 
 _Status: TODO_
@@ -105,6 +119,8 @@ _Status: TODO_
 ### AP generation interface
 
 _Status: TODO_
+
+* use `bosses.json` for both the rando and AP
 
 ### Change how "unrandom" works
 
