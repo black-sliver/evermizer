@@ -16,7 +16,7 @@ HOWTO:
    or join the discord.
 
 CHANGES SO FAR:
-  This is in an early but working state.
+  This is still far from complete.
   Crude user interface to select seed and settings
     Default output filename includes settings and seed number
     Option to save a spoiler log
@@ -31,6 +31,7 @@ CHANGES SO FAR:
     Make sure Levitate and Revealer is obtainable and usable when required
     Easy will give you one formula with buyable ingredients pre-thraxx
     Newly learned alchemy is now preselected/highlighted for alchemy selection
+    Strong Heart only teaches one formula, the other one is in the market
     (Texts still unchanged)
   Ingredienizer:
     Randomize ingredient requirements
@@ -129,13 +130,10 @@ CHANGES SO FAR:
 
 
 STILL TO BE FIXED:
-  (with feature set outlined above)
   Show info to the player if market timer is over but vigor won't spawn yet
   Act3 can have camera location bugs in houses until blindly talked to Lance
-  Put rocket behind mungola / change tinker progression?
-  Remove some cutscenes?
-  Desaturnate 2.0: make sure *NO* hatches can be skipped
-  Remove unnecessary parts of first WW/open world patch
+  A lot of vanilla crashes/softlocks
+  See discord and github for ideas and feature requests
 
 
 LINUX AND MAC BUILD INSTRUCTIONS:
