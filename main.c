@@ -1568,10 +1568,10 @@ int main(int argc, const char** argv)
     char dsttitle[strlen("SoE-OpenWorld_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1]; // SoE-OpenWorld_vXXX_e0123
 #else
     char dsttitle[strlen("Evermizer_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1+16+1]; // Evermizer_vXXX_e0123caibgsdm_XXXXXXXXXXXXXXXX
-    assert(snprintf(dsttitle, sizeof(dsttitle), "Evermizer_%s%s_%s_%" PRIx64, is_2p?"2P_":"", VERSION, shortsettings, seed)<sizeof(dsttitle));
+    assert(snprintf(dsttitle, sizeof(dsttitle), "Evermizer_%s%s_%s_%" PRIx64, is_2p?"2P_":"", VERSION, shortsettings, seed) < (int)sizeof(dsttitle));
     if (!randomized)
 #endif
-        assert(snprintf(dsttitle, sizeof(dsttitle), "SoE-OpenWorld_%s%s_%s", is_2p?"2P_":"", VERSION, shortsettings)<sizeof(dsttitle));
+        assert(snprintf(dsttitle, sizeof(dsttitle), "SoE-OpenWorld_%s%s_%s", is_2p?"2P_":"", VERSION, shortsettings) < (int)sizeof(dsttitle));
     char* pSlash = strrchr(src, DIRSEP);
     if (!pSlash && DIRSEP!='/') pSlash = strrchr(src, '/'); // wine support
     const char* ext = strrchr(src, '.');
@@ -1665,4 +1665,5 @@ int main(int argc, const char** argv)
 #if (defined(WIN32) || defined(_WIN32)) && !defined(NO_UI)
     if (!batch) pause();
 #endif
+    return 0;
 }

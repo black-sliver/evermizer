@@ -12,7 +12,11 @@
 #define NO_ASSERT
 #pragma message "NOTE: Defaulting to NO_ASSERT"
 #endif
+#ifdef assert
+#pragma message "NOTE: Compiling with NO_ASSERT, but assert is already defined"
+#else
 #define assert(x) do { if(x){} } while(false);
+#endif
 #endif
 
 #ifndef MIN
