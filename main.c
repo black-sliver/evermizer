@@ -686,9 +686,12 @@ int main(int argc, const char** argv)
     // preset to vanilla for logic checking without ingredienizer
     {
         const uint8_t ingredient_types[] = INGREDIENT_TYPES; // includes laser
+        const uint8_t ingredient_amounts[] = INGREDIENT_AMOUNTS; // includes laser
         for (size_t i=0; i<ALCHEMY_COUNT; i++) {
             ingredients[i].type1 = ingredient_types[2*alchemy_locations[i].id+0];
             ingredients[i].type2 = ingredient_types[2*alchemy_locations[i].id+1];
+            ingredients[i].amount1 = ingredient_amounts[2*alchemy_locations[i].id+0];
+            ingredients[i].amount2 = ingredient_amounts[2*alchemy_locations[i].id+1];
         }
     }
     uint8_t boss_drops[] = BOSS_DROPS;

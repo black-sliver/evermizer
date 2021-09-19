@@ -161,6 +161,16 @@ const char* ingredient_names[] = { // has to match ingame-numbers/order
     0x0c,0x03, 0x0b,0x09, 0x15,0x01, 0x14,0x00, 0x03,0x12,\
     0x09,0x11, 0x00,0x01, 0x01,0x02, 0x00,0x0f, 0x0d,0x15\
 };
+#define INGREDIENT_AMOUNTS { /* vanilla formula ingredient count, incl. Laser */\
+    1,3, 1,1, 1,2, 1,1, 1,3,\
+    1,1, 2,1, 1,1, 2,2, 1,2,\
+    1,1, 1,1, 2,1, 1,2, 1,1,\
+    1,2, 1,1, 1,1, 1,1, 1,1,\
+    1,1, 1,1, 1,2, 2,1, 1,2,\
+    1,1, 2,1, 1,2, 2,1, 3,1,\
+    1,1, 1,2, 2,1, 2,1, 2,1\
+};
+
 _Static_assert(WAX==0x00 && ACORN==0x15, "Bad ingredient numbering");
 _Static_assert(ARRAY_SIZE(ingredient_names)==ACORN+1, "Bad ingredient names");
 #ifndef NO_RANDO
