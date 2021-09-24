@@ -26,7 +26,7 @@ CHANGES SO FAR:
     Allow to specify output directory with -d
     Run the program without any file/arguments to see possible arguments
     Run the program in UI mode to see possible settings
-  Alchemzer: randomize where you get which alchemy and
+  Alchemizer: randomize where you get which alchemy and
     Make sure Atlas is obtainable and usable in Easy/+Chaos and Normal/+Chaos
     Make sure Levitate and Revealer is obtainable and usable when required
     Easy will give you one formula with buyable ingredients pre-thraxx
