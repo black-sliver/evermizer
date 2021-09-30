@@ -1572,7 +1572,7 @@ int main(int argc, const char** argv)
     if (!randomized)
 #endif
         assert(snprintf(dsttitle, sizeof(dsttitle), "SoE-OpenWorld_%s%s_%s", is_2p?"2P_":"", VERSION, shortsettings) < (int)sizeof(dsttitle));
-    char* pSlash = strrchr(src, DIRSEP);
+    const char* pSlash = strrchr(src, DIRSEP);
     if (!pSlash && DIRSEP!='/') pSlash = strrchr(src, '/'); // wine support
     const char* ext = strrchr(src, '.');
     if (!ext || ext<pSlash) ext = ".sfc";
