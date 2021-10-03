@@ -1649,7 +1649,7 @@ int main(int argc, const char** argv)
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) {
         size_t j=gourd_drops[i];
-        if (!gourd_drops_data[j].name || !gourd_drops_data[j].name[0]) continue;
+        if (!gourd_drops_data[j].spoiler || !gourd_drops_data[j].name || !gourd_drops_data[j].name[0]) continue;
         fprintf(flog,"(%03d) %-19s  %s" ENDL, (int)i, gourd_data[i].name, gourd_drops_data[j].name);
     }
     fprintf(flog,"------------------------------------------------------------------------" ENDL);

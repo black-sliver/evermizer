@@ -19,6 +19,7 @@ gourd_drop_struct = b"""struct gourd_drop_item {
     const char* data; // script instructions
     uint32_t call_addr; // 24bit value to put into call for this drop
     const char* name; // name for spoiler log
+    bool spoiler; // include in spoiler log
 };
 """
 
@@ -56,7 +57,7 @@ def gen_gourd_drop(addr, d):
     if d[2]>=0: code += [ 0x17 ] + word2bytes(0x2461-0x2258) + word2bytes(d[2]) # add (items) <- this is "add before loot", which is just amount
     if d[3]>=0: code += [ 0x17 ] + word2bytes(0x2461-0x2258) + word2bytes(d[3]) # add (items) <- this is "add after loot", which is probably a bug in vanilla
     code += [ 0x00 ] # end
-    return addr+len(code), b'{0x%06x, %2d, "%s", 0x%06x, "%s"}' % (romaddr(addr), len(code), bin2str(code).encode(), rom2scriptaddr(addr), d[5].encode())
+    return addr+len(code), b'{0x%06x, %2d, "%s", 0x%06x, "%s", %s}' % (romaddr(addr), len(code), bin2str(code).encode(), rom2scriptaddr(addr), d[5].encode(), b'true' if d[6] else b'false')
     
 def gen_gourd_data(g, short=False):
     # [ mapref, v2397, v2399, lootscript, startaddr, endaddr, missable, requires, name, flagval, special ]
@@ -258,7 +259,13 @@ def main(dst_filename, src_filename, rom_filename=None):
                 lootscript = tryint(row[13]) if altloot else 0x3a
                 flagval = str2flag(row[5])
                 locname = row[1]
-                itemname = row[7] if tryint(row[6])<0x200 or tryint(row[6])>0x2ff else '' # skip spoiler log for ingredients
+                itemname = row[7]
+                spoiler = tryint(row[6])<0x200 or tryint(row[6])>0x2ff # skip spoiler log for ingredients
+                if tryint(itemname.split(' ')[0]) < 1: # add count if not included in text
+                    if tryint(row[8]) > 1:
+                        itemname = str(tryint(row[8])) + ' ' + itemname
+                    elif tryint(row[9]) > 0:
+                        itemname = str(tryint(row[9]) + 1) + ' ' + itemname
                 special = row[16].lower() # special instructions for code generation
                 difficulty = 0
                 try: difficulty = difficulty_modifiers[row[20].lower()]
@@ -281,7 +288,7 @@ def main(dst_filename, src_filename, rom_filename=None):
                 else: # ok, add to list
                     flagvals.append(flagval)
                     locations.append([mapref,v2397,v2399,lootscript,startaddr,endaddr,missable,requires,locname,flagval,special,difficulty])
-                    drops.append([tryint(row[6]),tryint(row[8]),tryint(row[9]),tryint(row[10]), provides,itemname])
+                    drops.append([tryint(row[6]),tryint(row[8]),tryint(row[9]),tryint(row[10]), provides, itemname, spoiler])
         print('%d locations and %d drops loaded from %d rows' % (len(locations),len(drops),rownr,))
         #from pprint import pprint
         #pprint(locations)
