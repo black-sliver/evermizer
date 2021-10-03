@@ -11,7 +11,7 @@ See [black-sliver / pyevermizer](https://github.com/black-sliver/pyevermizer) fo
 * Temp. var in "loot item" to decide if an animation should be played (own item),\
   or a simple unframed text should be displayed (received item)
   
-* Routine (on NMI?) to award items through memory writes
+* Routine (on NMI?) to (schedule script to) award items through memory writes
 
 * Client that sends out and receives items from the AP server
 
@@ -44,25 +44,35 @@ _Status: **DONE**_
 
 ### Add missing item names
 
-_Status: TODO_
-
-We want all item names in gourds.csv\
-We then also need a flag "include in spoiler log".
+_Status: **DONE**_
 
 ### AP item placement
 
 _Status: PARTIAL_
 
-* Logic/placement **done**
-* Placement output **not done**
+* Logic/placement: **done**
+* Placement output: **TODO**
 
-### AP generation interface
+### AP interface
 
-_Status: TODO_
+_Status: PARTIAL_
 
-main() will have to
-* take a placement.txt
-* take a byte sequence to identify seed/slot
+AP will have to
+* generate a `placement.txt`: **TODO**
+* generate an ID sequence for seed/slot: **done**
+
+`main()` will have to
+* take a `placement.txt`: **done**
+* take an ID sequence: **done**
+
+### ROM generation
+
+_Status: PARTIAL_
+
+* place ID sequence in ROM: **done**
+* memcpy ID sequence to RAM: **TODO**
+* use `placement.txt` for item placement: **TODO**
+* see other changes below: **TODO**
 
 ### Reserve/assign memory
 
@@ -91,6 +101,9 @@ see [wiki/Memory-Layout#ram-layout](https://github.com/black-sliver/evermizer/wi
 
 _Status: TODO_
 
+We need to change the addresses and sizes when the game loads/saves
+from/to SRAM to accommodate for the additional values above.
+
 ### Convert spells to items
 
 _Status: TODO_
@@ -104,11 +117,12 @@ _Status: TODO_
 
 _Status: TODO_
 
-* Move boss locations, drops and addresses to bosses.json
-* Add utility bosses2h.py
+* Move boss locations, drops and addresses to `bosses.json?
+* Add utilities `bosses2h.py?
+* Same for alchemy?
 * Generate code on the fly (required to mix drops)?
 
-### Implement receiving of remote items
+### Implement receiving of remote items in game
 
 _Status: TODO_
 
