@@ -57,6 +57,10 @@ char getch() {
 #define DIRSEP '/'
 #endif
 
+#if !defined NO_MULTIWORLD && !defined WITH_MULTIWORLD && !defined __EMSCRIPTEN__
+#define WITH_MULTIWORLD
+#endif
+
 #include "util.h"
 
 #ifndef NO_RANDO
@@ -214,9 +218,14 @@ enum option_indices {
     } while (false)
 #endif
 #ifdef NO_UI
-#define FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
+#define _FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
 #else
-#define FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
+#define _FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
+#endif
+#ifdef WITH_MULTIWORLD
+#define FLAGS _FLAGS "[--id <128 hex nibbles>] [--placement <placement.txt>] "
+#else
+#define FLAGS _FLAGS
 #endif
 #ifdef NO_RANDO
 #define APPNAME "SoE-OpenWorld"
@@ -333,14 +342,21 @@ int main(int argc, const char** argv)
     bool dry = false; // dry run: don't write ROM
     DEFAULT_SETTINGS();
     
-    const char* ofn=NULL;
-    const char* dstdir=NULL;
-    bool modeforced=false;
+    const char* ofn = NULL;
+    const char* dstdir = NULL;
+    bool modeforced = false;
     
     uint8_t money_num = 0;
     uint8_t money_den = 0;
     uint8_t exp_num = 0;
     uint8_t exp_den = 0;
+
+    #ifdef WITH_MULTIWORLD
+    uint8_t id_data[64];
+    bool id_data_set = false;
+    const size_t id_loc = 0x3c0040;
+    const char* placement_file = NULL;
+    #endif
     
     // parse command line arguments
     while (argc>1) {
@@ -387,16 +403,28 @@ int main(int argc, const char** argv)
         } else if (strcmp(argv[1], "--dry-run") == 0) {
             argv++; argc--;
             dry=true;
-        } else if (strcmp(argv[1], "--money") == 0) {
+        } else if (strcmp(argv[1], "--money") == 0 && argc > 2) {
             int money = atoi(argv[2]);
             if (money>2500) money=2500; // limit to 25x
             if (money>0) percent_to_u8_fraction(money, &money_num, &money_den);
             argv+=2; argc-=2;
-        } else if (strcmp(argv[1], "--exp") == 0) {
+        } else if (strcmp(argv[1], "--exp") == 0 && argc > 2) {
             int exp = atoi(argv[2]);
             if (exp>2500) exp=2500; // limit to 25x
             if (exp>0) percent_to_u8_fraction(exp, &exp_num, &exp_den);
             argv+=2; argc-=2;
+    #ifdef WITH_MULTIWORLD
+        } else if (strcmp(argv[1], "--id") == 0 && argc > 2) {
+            id_data_set = parse_id(id_data, sizeof(id_data), argv[2]);
+            if (!id_data_set) {
+                fprintf(stderr, "Error in id syntax\n");
+                break;
+            }
+            argv+=2; argc-=2;
+        } else if (strcmp(argv[1], "--placement") == 0 && argc > 2) {
+            placement_file = argv[2];
+            argv+=2; argc-=2;
+    #endif
         } else {
             break;
         }
@@ -511,6 +539,7 @@ int main(int argc, const char** argv)
         fclose(fsrc);
         die(NULL);
     }
+
     if (verify) {
         printf("OK");
         free(buf);
@@ -677,7 +706,13 @@ int main(int argc, const char** argv)
   //DEF(JUKEBOX_HALLS_NE2,    0x97a16d - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // disabled until tested
   //DEF(JUKEBOX_PALACE,       0x95d43f - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // wall sounds in past-vigor cutscene glitch out
     #endif
-    
+
+    #ifdef WITH_MULTIWORLD
+        if (placement_file) {
+            // TODO: use placement file
+        }
+    #endif
+
     #ifndef NO_RANDO
     uint8_t alchemy[ALCHEMY_COUNT];
     _Static_assert(sizeof(alchemy) == 34, "Bad alchemy count");
@@ -1517,6 +1552,14 @@ int main(int argc, const char** argv)
         APPLY_ALTERNATIVE_TURD_BALLS(); // change description of stronger variants
         APPLY_TURDO_BALANCING(); // rebalance game
     }
+
+#ifdef WITH_MULTIWORLD
+    if (id_data_set) {
+        printf("Applying id data...\n");
+        memcpy(buf + rom_off + id_loc, id_data, sizeof(id_data));
+        // TODO: patch in memcpy to WRAM
+    }
+#endif
     
 #ifndef NO_RANDO
     // if check value differs, the generated ROMs are different.
