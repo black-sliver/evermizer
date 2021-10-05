@@ -48,21 +48,21 @@ _Status: **DONE**_
 
 ### AP item placement
 
-_Status: PARTIAL_
+_Status: **DONE**_
 
 * Logic/placement: **done**
-* Placement output: **TODO**
+* Placement output: **done**
 
 ### AP interface
 
-_Status: PARTIAL_
+_Status: MOSTLY DONE_
 
 AP will have to
-* generate a `placement.txt`: **TODO**
+* generate a `placement.txt`: **done**
 * generate an ID sequence for seed/slot: **done**
 
 `main()` will have to
-* take a `placement.txt`: **done**
+* take a `placement.txt`: **done**, but has limitations
 * take an ID sequence: **done**
 
 ### ROM generation
@@ -71,7 +71,7 @@ _Status: PARTIAL_
 
 * place ID sequence in ROM: **done**
 * memcpy ID sequence to RAM: **TODO**
-* use `placement.txt` for item placement: **TODO**
+* use `placement.txt` for item placement: **partial** (has limitations)
 * see other changes below: **TODO**
 
 ### Reserve/assign memory
