@@ -354,7 +354,7 @@ int main(int argc, const char** argv)
     #ifdef WITH_MULTIWORLD
     uint8_t id_data[64];
     bool id_data_set = false;
-    const size_t id_loc = 0x3c0040;
+    const size_t id_loc = 0x3d0040;
     const char* placement_file = NULL;
     #endif
     
@@ -1643,6 +1643,8 @@ int main(int argc, const char** argv)
         printf("Applying id data...\n");
         memcpy(buf + rom_off + id_loc, id_data, sizeof(id_data));
         // TODO: patch in memcpy to WRAM
+        printf("Applying multiworld hook...\n");
+        APPLY_MULTIWORLD();
     }
 #endif
     
