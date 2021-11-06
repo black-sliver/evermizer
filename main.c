@@ -459,7 +459,7 @@ int main(int argc, const char** argv)
             char c = *s;
         #ifndef NO_RANDO
             for (size_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++) {
-                if (c == DIFFICULTY_CHAR[i]) { difficulty = i; c = 0; }
+                if (c == DIFFICULTY_CHAR[i]) { difficulty = (uint8_t)i; c = 0; }
             }
         #endif
             for (size_t i=0; i<ARRAY_SIZE(options); i++) {
@@ -630,7 +630,7 @@ int main(int argc, const char** argv)
             if (c == '\r' || c == '\n') break;
             c = tolower(c);
             for (size_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++)
-                if (c == DIFFICULTY_CHAR[i]) difficulty = i;
+                if (c == DIFFICULTY_CHAR[i]) difficulty = (uint8_t)i;
             for (size_t i=0; i<ARRAY_SIZE(options); i++) {
                 if (c == options[i].key) {
                     option_values[i]++;
@@ -1693,19 +1693,22 @@ int main(int argc, const char** argv)
         if (!shortsettings[0]) shortsettings[0]='r';
     }
 #ifdef NO_RANDO
-    char dsttitle[strlen("SoE-OpenWorld_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1]; // SoE-OpenWorld_vXXX_e0123
+    size_t dsttitle_len = strlen("SoE-OpenWorld_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1;
+    char* dsttitle = (char*)malloc(dsttitle_len); // SoE-OpenWorld_vXXX_e0123
 #else
-    char dsttitle[strlen("Evermizer_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1+16+1]; // Evermizer_vXXX_e0123caibgsdm_XXXXXXXXXXXXXXXX
-    assert(snprintf(dsttitle, sizeof(dsttitle), "Evermizer_%s%s_%s_%" PRIx64, is_2p?"2P_":"", VERSION, shortsettings, seed) < (int)sizeof(dsttitle));
+    size_t dsttitle_len = strlen("Evermizer_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1+16+1;
+    char* dsttitle = (char*)malloc(dsttitle_len); // Evermizer_vXXX_e0123caibgsdm_XXXXXXXXXXXXXXXX
+    assert(snprintf(dsttitle, dsttitle_len, "Evermizer_%s%s_%s_%" PRIx64, is_2p?"2P_":"", VERSION, shortsettings, seed) < (int)dsttitle_len);
     if (!randomized)
 #endif
-        assert(snprintf(dsttitle, sizeof(dsttitle), "SoE-OpenWorld_%s%s_%s", is_2p?"2P_":"", VERSION, shortsettings) < (int)sizeof(dsttitle));
+        assert(snprintf(dsttitle, dsttitle_len, "SoE-OpenWorld_%s%s_%s", is_2p?"2P_":"", VERSION, shortsettings) < (int)dsttitle_len);
     const char* pSlash = strrchr(src, DIRSEP);
     if (!pSlash && DIRSEP!='/') pSlash = strrchr(src, '/'); // wine support
     const char* ext = strrchr(src, '.');
     if (!ext || ext<pSlash) ext = ".sfc";
     size_t baselen = pSlash ? (pSlash-src+1) : 0;
-    char dstbuf[dstdir? (strlen(dstdir)+1+strlen(dsttitle)+strlen(ext)) : (baselen+strlen(dsttitle)+strlen(ext))+1];
+    size_t dstbuf_len = dstdir? (strlen(dstdir)+1+strlen(dsttitle)+strlen(ext)) : (baselen+strlen(dsttitle)+strlen(ext))+1;
+    char* dstbuf = (char*)malloc(dstbuf_len);
     if (dstdir) {
         size_t p = strlen(dstdir);
         memcpy(dstbuf, dstdir, p);
@@ -1737,7 +1740,8 @@ int main(int argc, const char** argv)
     // write spoiler log
 #ifndef NO_RANDO
     if (spoilerlog) {
-    char logdstbuf[strlen(dst)+strlen("_SPOILER.log")+1];
+    size_t logdstbuf_len = strlen(dst)+strlen("_SPOILER.log")+1;
+    char* logdstbuf = (char*)malloc(logdstbuf_len);;
     pSlash = strrchr(dst, DIRSEP);
     ext = strrchr(dst, '.');
     if (!ext || ext<pSlash) ext = dst+strlen(dst);
@@ -1814,9 +1818,12 @@ int main(int argc, const char** argv)
     #undef ENDL
     fclose(flog); flog=NULL;
     printf("Spoiler log saved as %s!\n", logdstbuf);
+    free(logdstbuf);
     }
 #endif
 
+    free(dstbuf);
+    free(dsttitle);
     free(buf);
     fclose(fsrc);
 #if (defined(WIN32) || defined(_WIN32)) && !defined(NO_UI)

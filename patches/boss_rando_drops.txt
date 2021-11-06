@@ -1,3 +1,5 @@
+#ifndef NO_RANDO
+
 #set
 
 @0x96c125
@@ -114,4 +116,6 @@ a3 41               // call loot part 3 (failed message)
 29 00 00 00     // CALL BOSS_SETUP
 29 25 41 02     // CALL BOSS_DROP
 00              // END
+@
 
+#endif
