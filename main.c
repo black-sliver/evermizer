@@ -784,18 +784,12 @@ int main(int argc, const char** argv)
                         alchemy[loc_index] = 0x01ff; // Remote // TODO: special value
                     else
                         alchemy[loc_index] = (item_type<<10) + item_index;
-                    printf("alchemy %d,%d set to %d,%d\n",
-                           (int)loc_type, (int)loc_index,
-                           (int)item_type, (int)item_index);
                 }
                 else if (loc_type == CHECK_BOSS) {
                     if (item_type == 0)
                         boss_drops[loc_index] = 0x01ff; // Remote // TODO: special value
                     else
                         boss_drops[loc_index] = (uint16_t)(item_type<<10) + item_index;
-                    printf("boss %d,%d set to %d,%d\n",
-                           (int)loc_type, (int)loc_index,
-                           (int)item_type, (int)item_index);
                 }
                 else if (loc_type == CHECK_GOURD) {
                     if (item_type == 0)
