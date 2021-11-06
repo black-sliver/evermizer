@@ -244,6 +244,7 @@ DEF(81, 0x96c113 - 0x800000,
     "\x29\x25\x41\x02" "\x29\x33\x3F\x00" "\x00"   // Magmar
     "\x29\x25\x41\x02" "\x0c\x25\x00\xb1" "\x00"); // Monk
 // Actual boss drops for boss drop rando, right after added drops (TODO: assert that)
+#if 0 // this has been replaced by new boss drops
 DEF(82, 0x96c125 - 0x800000,
     "\x52\x00\x00" "\x00" // Nothing
     "\x0c\x63\x00\xb1" "\x52\xbb\x05" "\x00" // Wheel
@@ -272,6 +273,7 @@ DEF(82, 0x96c125 - 0x800000,
     "\x7c\xb6\x10\x27\x00" "\x52\xa0\x1d" "\x00" // 10k Gold
     "\x14\xad\x00\x07\xad\x00\x29\x31\x9a" "\x52\xd5\x09" "\x00" // Mud Pepper
     );
+#endif
 // Rewrite boss drops for boss drop rando
 DEF(83, 0x93d0b8 - 0x800000, // Thraxx
     "\x29\x25\x41\x02" "\x04\x00\x00" "\x29\x33\x3F\x00" "\xa7\x08" "\xa3\x00" "\x33\x78" "\xa3\x01");

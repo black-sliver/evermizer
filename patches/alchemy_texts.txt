@@ -1,0 +1,207 @@
+#set
+
+#ifndef NO_RANDO
+
+// Acid Rain
+@0x91d59d+2
+00 // uncompressed
+@0xc02e07
+4c 65 61 72 6e 65 64 20 41 63 69 64 20 52 61 69 6e 00 // Learned Acid Rain
+
+// Atlas
+@0x91dd77+2
+00 // uncompressed
+@0xc12493
+4c 65 61 72 6e 65 64 20 41 74 6c 61 73 00 // Learned Atlas
+
+// Barrier
+@0x91dc60+2
+00 // uncompressed
+@0xc113bf
+4c 65 61 72 6e 65 64 20 42 61 72 72 69 65 72 00 // Learned Barrier
+
+// Call Up
+@0x91f2b0+2
+01 // uncompressed
+@0xc32606
+4c 65 61 72 6e 65 64 20 43 61 6c 6c 20 55 70 00 // Learned Call Up
+
+// Corrosion
+@0x91e7bb+2
+01 // uncompressed
+@0xc2121f
+4c 65 61 72 6e 65 64 20 43 6f 72 72 6f 73 69 6f 6e 00 // Learned Corrosion
+
+// Crush
+@0x91dad4+2
+00 // uncompressed
+@0xc07dca
+4c 65 61 72 6e 65 64 20 43 72 75 73 68 00 // Learned Crush
+
+// Cure
+@0x91ddef+2
+00 // uncompressed
+@0xc12a46
+4c 65 61 72 6e 65 64 20 43 75 72 65 00 // Learned Cure
+
+// Defend
+@0x91d9f9+2
+00 // uncompressed
+@0xc06fc7
+4c 65 61 72 6e 65 64 20 44 65 66 65 6e 64 00 // Learned Defend
+
+// Double Drain
+@0x91d690+2
+00 // uncompressed
+@0xc03c6c
+4c 65 61 72 6e 65 64 20 44 6f 75 62 6c 65 20 44 72 61 69 6e 00 // Learned Double Drain
+
+// Drain
+@0x91d69f+2
+00 // uncompressed
+@0xc03d94
+4c 65 61 72 6e 65 64 20 44 72 61 69 6e 00 // Learned Drain
+
+// Energize
+@0x91f2bf+2
+01 // uncompressed
+@0xc326ca
+4c 65 61 72 6e 65 64 20 45 6e 65 72 67 69 7a 65 00 // Learned Energize
+
+// Escape
+@0x91e305+2
+00 // uncompressed
+@0xc16f40
+4c 65 61 72 6e 65 64 20 45 73 63 61 70 65 00 // Learned Escape
+
+// Explosion
+// text can stay
+
+// Fireball
+@0x91e617+2
+00 // uncompressed
+@0xc17e32
+4c 65 61 72 6e 65 64 20 46 69 72 65 62 61 6c 6c 00 // Learned Fireball
+
+// Fire Power
+@0x91e6e0+2
+01 // uncompressed
+@0xc206a9
+4c 65 61 72 6e 65 64 20 46 69 72 65 20 50 6f 77 65 72 00 // Learned Fire Power
+
+// Flash
+@0x91d963+2
+00 // uncompressed
+@0xc06659
+4c 65 61 72 6e 65 64 20 46 6c 61 73 68 00 // Learned Flash
+
+// Force Field
+@0x91ec98+2
+01 // uncompressed
+@0xc25e17
+4c 65 61 72 6e 65 64 20 46 6f 72 63 65 20 46 69 65 6c 64 00 // Learned Force Field
+
+// Hard Ball
+@0x91d651+2
+00 // uncompressed
+@0xc03867
+4c 65 61 72 6e 65 64 20 48 61 72 64 20 42 61 6c 6c 00 // Learned Hard Ball
+
+// Heal
+@0x91d5df+2
+00 // uncompressed
+@0xc031e3
+4c 65 61 72 6e 65 64 20 48 65 61 6c 00 // Learned Heal
+@0x93dc89+1
+df 05 // use primary heal text for both code paths (for now)
+
+// Lance
+@0x91e908+2
+01 // uncompressed
+@0xc2286e
+4c 65 61 72 6e 65 64 20 4c 61 6e 63 65 00 // Learned Lance
+
+// Levitate
+@0x91d609+2
+00 // uncompressed
+@0xc0345b
+4c 65 61 72 6e 65 64 20 4c 65 76 69 74 61 74 65 00 // Learned Levitate
+
+// Lightning Storm
+@0x91ec1a+2
+01 // uncompressed
+@0xc2574f
+4c 65 61 72 6e 65 64 20 4c 69 67 68 74 6e 69 6e 67 20 53 74 6f 72 6d 00 // Learned Lightning Storm
+
+// Miracle Cure
+@0x91da11+2
+00 // uncompressed
+@0xc07186
+4c 65 61 72 6e 65 64 20 4d 69 72 61 63 6c 65 20 43 75 72 65 00 // Learned Miracle Cure
+
+// Nitro
+// text can stay
+
+// One Up
+@0x91ec3e+2
+01 // uncompressed
+@0xc258f3
+4c 65 61 72 6e 65 64 20 4f 6e 65 20 55 70 00 // Learned One Up
+
+// Reflect
+@0x91f316+2
+01 // uncompressed
+@0xc32bbe
+4c 65 61 72 6e 65 64 20 52 65 66 6c 65 63 74 00 // Learned Reflect
+
+// Regrowth
+@0x91ea52+2
+01 // uncompressed
+@0xc23e52
+4c 65 61 72 6e 65 64 20 52 65 67 72 6f 77 74 68 00 // Learned Regrowth
+
+// Revealer
+@0x91e2fc+2
+00 // uncompressed
+@0xc16e27
+4c 65 61 72 6e 65 64 20 52 65 76 65 61 6c 65 72 00 // Learned Revealer
+
+// Revive
+@0x91dab3+2
+00 // uncompressed
+@0xc07bc0
+4c 65 61 72 6e 65 64 20 52 65 76 69 76 65 00 // Learned Revive
+
+// Slow Burn
+// text can stay
+
+// Speed
+@0x91d639+2
+00 // uncompressed
+@0xc036b6
+4c 65 61 72 6e 65 64 20 53 70 65 65 64 00 // Learned Speed
+
+// Sting
+@0x91e338+2
+00 // uncompressed
+@0xc171bf
+4c 65 61 72 6e 65 64 20 53 74 69 6e 67 00 // Learned Sting
+
+// Stop
+@0x91ec9b+2
+01
+@0xc25e3c
+4c 65 61 72 6e 65 64 20 53 74 6f 70 00 // Learned Stop
+
+// Super Heal
+// reuses 2nd heal text
+@0x91d5ee+2
+00
+@0xc032a3
+4c 65 61 72 6e 65 64 20 53 75 70 65 72 20 48 65 61 6c 00 // Learned Super Heal
+
+@
+
+
+
+#endif

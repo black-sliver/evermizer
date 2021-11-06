@@ -667,20 +667,20 @@ int main(int argc, const char** argv)
     #include "sniff.h" // generated list of sniffing spots
     #include "doggo.h" // generated list of doggo changes
     
-    DEF(JUKEBOX_SJUNGLE,      0x938664 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_RAPTORS_1,    0x9391fa - 0x800000, "\x29\x84\x00\x0f\x4d\x4d"); // CALL jukebox3, NOP, NOP
-    DEF(JUKEBOX_RATPROS_3,    0x938878 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_DEFEND,       0x94e5b9 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_NJUNGLE,      0x939664 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_EJUNGLE,      0x93b28a - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_ECRUSTACIA,   0x95bb46 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_ECRUSTACIAR,  0x95ba0b - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_CRUSTACIAFP,  0x97c125 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_NOBILIAF,     0x95d72c - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_NOBILIAFP,    0x97c579 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOX_STRONGHHE,    0x94e625 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOK_SWAMPPEPPER,  0x94dde6 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
-    DEF(JUKEBOK_SWAMPSLEEP,   0x94def3 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_SJUNGLE,      0x938664 - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_RAPTORS_1,    0x9391fa - 0x800000, "\x29\x14\x03\x0f\x4d\x4d"); // CALL jukebox3, NOP, NOP
+    DEF(JUKEBOX_RATPROS_3,    0x938878 - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_DEFEND,       0x94e5b9 - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_NJUNGLE,      0x939664 - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_EJUNGLE,      0x93b28a - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_ECRUSTACIA,   0x95bb46 - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_ECRUSTACIAR,  0x95ba0b - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_CRUSTACIAFP,  0x97c125 - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_NOBILIAF,     0x95d72c - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_NOBILIAFP,    0x97c579 - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOX_STRONGHHE,    0x94e625 - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOK_SWAMPPEPPER,  0x94dde6 - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
+    DEF(JUKEBOK_SWAMPSLEEP,   0x94def3 - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
   //DEF(JUKEBOX_MARKET1,      0x96b80a - 0x800000, "\x29\x70\x00\x0f"); // this requires different code if we really want to randomize this
   //DEF(JUKEBOX_MARKET2,      0x96b80f - 0x800000, "\x29\x70\x00\x0f"); // ^
   //DEF(JUKEBOX_NMARKET1,     0x95cb4e - 0x800000, "\x29\x70\x00\x0f"); // ^
@@ -708,9 +708,11 @@ int main(int argc, const char** argv)
     #endif
 
     #ifndef NO_RANDO
-    uint8_t alchemy[ALCHEMY_COUNT];
-    _Static_assert(sizeof(alchemy) == 34, "Bad alchemy count");
-    for (uint8_t i=0; i<ALCHEMY_COUNT; i++) alchemy[i] = i;
+    // NOTE: alchemy, boss_drops and gourd_drops are 6 msb type + 10 lsb index
+    // NOTE: we also swapped the meaning of alchemy[]. before i was the spell and [i] the location, now it's the other way around
+    uint16_t alchemy[ALCHEMY_COUNT];
+    _Static_assert(ARRAY_SIZE(alchemy) == 34, "Bad alchemy count");
+    for (uint8_t i=0; i<ALCHEMY_COUNT; i++) alchemy[i] = (CHECK_ALCHEMY<<10) + i;
     struct formula ingredients[ALCHEMY_COUNT];
     // preset to vanilla for logic checking without ingredienizer
     {
@@ -723,9 +725,10 @@ int main(int argc, const char** argv)
             ingredients[i].amount2 = ingredient_amounts[2*alchemy_locations[i].id+1];
         }
     }
-    uint8_t boss_drops[] = BOSS_DROPS;
+    uint16_t boss_drops[] = BOSS_DROPS;
+    for (uint8_t i=0; i<ARRAY_SIZE(boss_drops); i++) boss_drops[i] += CHECK_BOSS<<10;
     uint16_t gourd_drops[ARRAY_SIZE(gourd_drops_data)];
-    for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (uint16_t)i;
+    for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (CHECK_GOURD<<10)+(uint16_t)i;
     uint16_t sniff_drops[ARRAY_SIZE(sniffs)];
     for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) sniff_drops[i] = sniffs[i].val;
     uint8_t doggo_map[ARRAY_SIZE(doggo_vals)]; // for non-chaos only
@@ -771,44 +774,34 @@ int main(int argc, const char** argv)
             long item_index = (next && *next == ',' && item_type > 0) ? strtol(next+1, &next, 10) : -1;
             if (loc_type >= 0) { // valid line
                 //printf("place: %s\n", placement_line);
-                if (loc_type < CHECK_ALCHEMY || loc_type > CHECK_GOURD || item_type < 0 || item_type > CHECK_GOURD
-                        || (item_type != 0 && loc_type != item_type)) // TODO: implement mixing checks
+                if (loc_type < CHECK_ALCHEMY || loc_type > CHECK_GOURD || item_type < 0 || item_type > CHECK_GOURD)
                 {
                     free(buf);
                     die("Invalid placement data!\"");
                 }
                 if (loc_type == CHECK_ALCHEMY) {
                     if (item_type == 0)
-                        alchemy[loc_index] = (uint8_t)-1; // Remote
+                        alchemy[loc_index] = 0x01ff; // Remote // TODO: special value
                     else
-                        alchemy[loc_index] = (uint8_t)item_index;
+                        alchemy[loc_index] = (item_type<<10) + item_index;
                     printf("alchemy %d,%d set to %d,%d\n",
                            (int)loc_type, (int)loc_index,
                            (int)item_type, (int)item_index);
                 }
                 else if (loc_type == CHECK_BOSS) {
                     if (item_type == 0)
-                        boss_drops[loc_index] = (uint8_t)-1; // Remote
+                        boss_drops[loc_index] = 0x01ff; // Remote // TODO: special value
                     else
-                        boss_drops[loc_index] = (uint8_t)item_index;
+                        boss_drops[loc_index] = (uint16_t)(item_type<<10) + item_index;
                     printf("boss %d,%d set to %d,%d\n",
                            (int)loc_type, (int)loc_index,
                            (int)item_type, (int)item_index);
                 }
                 else if (loc_type == CHECK_GOURD) {
                     if (item_type == 0)
-                        gourd_drops[loc_index] = (uint16_t)-1; // Remote
+                        gourd_drops[loc_index] = 0x01ff; // Remote // TODO: special value
                     else
-                        gourd_drops[loc_index] = (uint16_t)item_index;
-                }
-            }
-            if (next && *next == ',') {
-                long loc_index = strtol(next+1, &next, 10);
-                if (next && *next == ':') {
-                    long item_type = strtol(next+1, &next, 10);
-                    if (next && *next == ',') {
-                        long item_index = strtol(next+1, &next, 10);
-                    }
+                        gourd_drops[loc_index] = (uint16_t)(item_type<<10) + item_index;
                 }
             }
             if (!lf) break; // assume \0 is end of file
@@ -840,7 +833,7 @@ int main(int argc, const char** argv)
         if ((rollcount+strlen("Rolling"))%79 == 0) printf("\n"); else fflush(stdout); // 79 chars per line
         rollcount++;
         if (!placement_file && alchemizer) {
-            shuffle_u8(alchemy, ALCHEMY_COUNT);
+            shuffle_u16(alchemy, ALCHEMY_COUNT);
             if (difficulty==0 && !ingredienizer) {
                 // make sure that one of acid rain, flash or speed
                 // is obtainable before thraxx on easy
@@ -848,9 +841,9 @@ int main(int argc, const char** argv)
                 uint8_t spell = rand_u8(0, 2);
                 spell = (spell==0) ? FLASH_IDX : (spell==1) ? ACID_RAIN_IDX : SPEED_IDX;
                 for (size_t i=0; i<ALCHEMY_COUNT; i++) {
-                    if (alchemy[i] == at) { // swap alchemy locations
-                        alchemy[i] = alchemy[spell];
-                        alchemy[spell] = at;
+                    if (alchemy[i] == (CHECK_ALCHEMY<<10) + spell) { // swap alchemy locations
+                        alchemy[i] = alchemy[at];
+                        alchemy[at] = (CHECK_ALCHEMY<<10) + spell;
                         break;
                     }
                 }
@@ -869,7 +862,7 @@ int main(int argc, const char** argv)
                 for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
                     uint8_t type1;
                     uint8_t type2;
-                    if (alchemy[i] == cheap_spell_location) {
+                    if (i == cheap_spell_location) {
                         type1 = rand_u8(0, 4);
                         type2 = rand_u8_except(0, 4, type1);
                         type1 = pre_thraxx_ingredients[type1];
@@ -934,7 +927,7 @@ int main(int argc, const char** argv)
             }
         }
         if (!placement_file && bossdropamizer) {
-            shuffle_u8(boss_drops, ARRAY_SIZE(boss_drops));
+            shuffle_u16(boss_drops, ARRAY_SIZE(boss_drops));
         }
         if (!placement_file && gourdomizer) {
             shuffle_u16(gourd_drops, ARRAY_SIZE(gourd_drops));
@@ -1023,12 +1016,6 @@ int main(int argc, const char** argv)
         // general logic checking
         #define REROLL() continue;
         
-        // boss drop logic: thraxx has to drop a weapon unless gourdomizer is on. we can get back from thraxx to bug muck
-        if (!placement_file && bossdropamizer && !gourdomizer)
-        {
-            if (!boss_drop_is_a_weapon(boss_drops[THRAXX_IDX])) REROLL();
-        }
-        
         struct formula* levitate_formula = &ingredients[LEVITATE_IDX];
         struct formula* revealer_formula = &ingredients[REVEALER_IDX];
         struct formula* atlas_formula = &ingredients[ATLAS_IDX];
@@ -1055,8 +1042,9 @@ int main(int argc, const char** argv)
                 if (!ok) REROLL();
             }
             if (!can_buy_ingredients(revealer_formula)) REROLL(); // reroll, unbeatable or would give away a hint
-            if (!alchemy_in_act4(alchemy[LEVITATE_IDX]) && !can_buy_in_act3(levitate_formula)) REROLL(); // // NOTE: alchemy[a] = b moves a to vanilla b location
-            if (!alchemy_in_act4(alchemy[REVEALER_IDX]) && !can_buy_in_act3(revealer_formula)) REROLL(); // as above
+            // two checks below will have to change once we shuffle drops
+            if (!alchemy_in_act4(alchemy_lookup(alchemy,LEVITATE_IDX)) && !can_buy_in_act3(levitate_formula)) REROLL();
+            if (!alchemy_in_act4(alchemy_lookup(alchemy,REVEALER_IDX)) && !can_buy_in_act3(revealer_formula)) REROLL();
             // make sure atlas can be cast on easy in act1-3
             if (difficulty == 0) { // easy
                 if (gourdomizer) {
@@ -1080,7 +1068,7 @@ int main(int argc, const char** argv)
             if (!placement_file && (ingredienizer || alchemizer) && difficulty == 0) {
                 uint8_t castable = 2;
                 for (size_t i=0; i<ALCHEMY_COUNT; i++)
-                    if ((alchemy[i]==FLASH_IDX || alchemy[i]==HARD_BALL_IDX) &&
+                    if ((alchemy[FLASH_IDX]==(CHECK_ALCHEMY<<10)+i || alchemy[HARD_BALL_IDX]==(CHECK_ALCHEMY<<10)+i) &&
                             !can_buy_pre_thraxx(&ingredients[i]))
                         castable--;
                 if (castable<1) {
@@ -1135,11 +1123,10 @@ int main(int argc, const char** argv)
                     if (checks[i].reached) continue;
                     if (check_requires(checks+i, goal)) continue; // don't iterate past goal
                     if (check_reached(checks+i, progress)) {
-                        // NOTE: alchemy[a] = b moves a to vanilla b location
-                        uint16_t idx = checks[i].type==CHECK_ALCHEMY ? alchemy_lookup(alchemy,checks[i].index) :
-                                       checks[i].type==CHECK_BOSS ? boss_drops[checks[i].index] :
-                                       checks[i].type==CHECK_GOURD ? gourd_drops[checks[i].index] : 0;
-                        const drop_tree_item* drop = get_drop(checks[i].type, idx);
+                        uint16_t drop_id = checks[i].type==CHECK_ALCHEMY ? alchemy[checks[i].index] :
+                                           checks[i].type==CHECK_BOSS ? boss_drops[checks[i].index] :
+                                           checks[i].type==CHECK_GOURD ? gourd_drops[checks[i].index] : 0;
+                        const drop_tree_item* drop = get_drop_from_packed(drop_id);
                         check_progress(checks+i, nextprogress);
                         if (! checks[i].missable)
                             drop_progress(drop, nextprogress);
@@ -1467,31 +1454,40 @@ int main(int argc, const char** argv)
     #else
     if (alchemizer) {
         printf("Applying alchemizer...\n");
-        // Alchemy preselection relocation
         grow = true;
-        APPLY_ALCHEMY_RANDO_PRESELECT();
-        // Write randomized values
+
         for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
-//#error TODO: nothing-drops for remote items
-            if (alchemy[i] == (uint8_t)-1) continue; // TODO: <- here
-            // write value from i to locateions of alchemy[i]
-            uint16_t id = alchemy_locations[i].id;
-            size_t to = alchemy[i];
-            //printf("%s @ %s\n", alchemy_locations[i].name, alchemy_locations[to].name);
-            for (size_t j=0; alchemy_locations[to].locations[j] != LOC_END; j++) {
-                size_t loc = alchemy_locations[to].locations[j];
-                assert(loc & 0x8000);
-                buf[rom_off + loc + 0] = id & 0xff;
-                buf[rom_off + loc + 1] = id >> 8;
-                //printf("  writing 0x%02x to 0x%06x\n", (unsigned)id, (unsigned)loc);
+            // Replace alchemy flags by location flags
+            // new flags at $7e2570..74
+            uint16_t new_flag = ((0x2570 - 0x2258)<<3) + alchemy_locations[i].id;
+            for (size_t j=0; alchemy_locations[i].locations[j] != LOC_END; j++) {
+                size_t loc = alchemy_locations[i].locations[j];
+                buf[rom_off + loc + 0] = new_flag & 0xff;
+                buf[rom_off + loc + 1] = new_flag >> 8;
             }
-            for (size_t j=0; j<ARRAY_SIZE(alchemy_locations[to].preselects); j++) {
-                size_t loc = alchemy_locations[to].preselects[j];
-                if (loc == LOC_END) continue; // or break
-                assert(loc & 0x8000);
-                buf[rom_off + loc] = id<<1;
-            }
+            // Insert item setup code (we jump there from whatever gives us the formula)
+            // setups at 0xb0813b + 0x06*ID
+            uint32_t setup_dst = (0xb0813b-0x800000) + 6 * alchemy_locations[i].id;
+            uint8_t write_item[]   = { 0x17, 0x39, 0x01, 0x00, 0x00, 0x00 }; // set item id, end
+            write_item[3] = alchemy_locations[i].id & 0xff;
+            write_item[4] = 0x10;
+            memcpy(buf + rom_off + setup_dst  + 0, write_item, sizeof(write_item));
+            // Insert item reward code (we jump there from vanilla alchemy code)
+            // drops at 0xb08000 + 0x09*ID
+            uint32_t drop_dst  = (0xb08000-0x800000) + 9 * alchemy_locations[i].id;
+            uint8_t call_setup[]   = { 0x29, 0x00, 0x00, 0x00 };       // jump target sets item id and amount
+            uint8_t call_drop[]    = { 0x29, 0x0d, 0x02, 0x0f, 0x00 }; // jump target actually gives reward, end
+            uint32_t setup_tgt = get_drop_setup_target_from_packed(alchemy[i]);
+            call_setup[1] = (uint8_t)(setup_tgt>>0);
+            call_setup[2] = (uint8_t)(setup_tgt>>8);
+            call_setup[3] = (uint8_t)(setup_tgt>>16);
+            memcpy(buf + rom_off + drop_dst + 0, call_setup, sizeof(call_setup)); // TODO: fill in address
+            memcpy(buf + rom_off + drop_dst + 4, call_drop,  sizeof(call_drop));
         }
+
+        // Make alchemy become items
+        APPLY_ALCHEMY_TEXTS();
+        APPLY_ALCHEMY_RANDO_DROPS(); // this has to be applied after changing the alchemy flags
     }
     if (ingredienizer) {
         _Static_assert(sizeof(*ingredients)==4, "Bad padding"); // required for memcpy
@@ -1516,28 +1512,31 @@ int main(int argc, const char** argv)
         }
         printf("Applying boss dropamizer...\n");
         APPLY(77);
-        APPLY(81);  APPLY(82);  APPLY(83);  APPLY(84);  APPLY(85);  APPLY(86);
+        APPLY(81);  /*APPLY(82);*/
+        APPLY_BOSS_RANDO_DROPS();
+        APPLY(83);  APPLY(84);  APPLY(85);  APPLY(86);
         APPLY(87);  APPLY(88);  APPLY(89);  APPLY(90);  APPLY(91);  APPLY(92);
         APPLY(93);  APPLY(94);  APPLY(95);  APPLY(96);  APPLY(97);  APPLY(98);
         APPLY(99);  APPLY(100); APPLY(101); APPLY(102); APPLY(103); APPLY(104);
         APPLY(105);
         // actually apply boss drop randomization
         for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++) {
-//#error TODO: nothing-drops for remote items
-            if (boss_drops[i] == (uint8_t)-1) boss_drops[i] = NOTHING_IDX; // <- REMOTE_IDX here
-            uint32_t tgt = boss_drop_jump_targets[boss_drops[i]];
-            buf[rom_off + boss_drop_jumps[i] + 0] = (uint8_t)(tgt>>0)&0xff;
-            buf[rom_off + boss_drop_jumps[i] + 1] = (uint8_t)(tgt>>8)&0xff;
-            buf[rom_off + boss_drop_jumps[i] + 2] = (uint8_t)(tgt>>16)&0xff;
+            uint32_t drop_dst = boss_drop_setup_jumps[i] - 1;
+            // convert from rom to script addr
+            drop_dst = (drop_dst & 0x7fff) | ((((drop_dst&0x7fffff)-0x120000) >> 1) & 0xff8000);
+            buf[rom_off + boss_drop_jumps[i] + 0] = (uint8_t)(drop_dst>>0)&0xff;
+            buf[rom_off + boss_drop_jumps[i] + 1] = (uint8_t)(drop_dst>>8)&0xff;
+            buf[rom_off + boss_drop_jumps[i] + 2] = (uint8_t)(drop_dst>>16)&0xff;
+            uint32_t setup_dst = get_drop_setup_target_from_packed(boss_drops[i]);
+            buf[rom_off + boss_drop_setup_jumps[i] + 0] = (uint8_t)(setup_dst>>0)&0xff;
+            buf[rom_off + boss_drop_setup_jumps[i] + 1] = (uint8_t)(setup_dst>>8)&0xff;
+            buf[rom_off + boss_drop_setup_jumps[i] + 2] = (uint8_t)(setup_dst>>16)&0xff;
         }
     }
-    if (gourdomizer || (bossdropamizer && progressive_armor)) {
+    if (randomized) {
         printf("Adding new item IDs...\n");
         grow = true;
-        APPLY(GOURDOMIZER_DROPS);  APPLY(GOURDOMIZER_DROPS2);
-        APPLY(GOURDOMIZER_DROPS3); APPLY(GOURDOMIZER_DROPS4);
-        APPLY(GOURDOMIZER_DROPS5); APPLY(GOURDOMIZER_DROPS6);
-        APPLY(GOURDOMIZER_DROPS7);
+        APPLY_GOURDOMIZER_DROPS();
     }
     if (gourdomizer) {
         // v023:
@@ -1558,14 +1557,11 @@ int main(int argc, const char** argv)
         }
         for (size_t i=0; i<ARRAY_SIZE(gourd_data); i++) {
             const struct gourd_data_item* g = &(gourd_data[i]);
-//#error TODO: nothing-drops for remote items
-            const struct gourd_drop_item* d = gourd_drops[i] == (uint16_t)-1 ?
-                    gourd_drops_data + 4 : &(gourd_drops_data[gourd_drops[i]]);
-                    // ^ oil; TODO: "Sent item" here
+            uint32_t setup_addr = get_drop_setup_target_from_packed(gourd_drops[i]);
             memcpy(buf + rom_off + g->pos, g->data, g->len);
-            buf[rom_off + g->call_target_addr+0] = (d->call_addr>> 0) & 0xff;
-            buf[rom_off + g->call_target_addr+1] = (d->call_addr>> 8) & 0xff;
-            buf[rom_off + g->call_target_addr+2] = (d->call_addr>>16) & 0xff;
+            buf[rom_off + g->call_target_addr+0] = (setup_addr>> 0) & 0xff;
+            buf[rom_off + g->call_target_addr+1] = (setup_addr>> 8) & 0xff;
+            buf[rom_off + g->call_target_addr+2] = (setup_addr>>16) & 0xff;
         }
     }
     if (musicmizer) {
@@ -1638,6 +1634,9 @@ int main(int argc, const char** argv)
         APPLY_TURDO_BALANCING(); // rebalance game
     }
 
+    printf("Increasing save file size...\n");
+    APPLY_SAVE_FILE_GROW();
+
 #ifdef WITH_MULTIWORLD
     if (id_data_set) {
         printf("Applying id data...\n");
@@ -1647,7 +1646,7 @@ int main(int argc, const char** argv)
         APPLY_MULTIWORLD();
     }
 #endif
-    
+
 #ifndef NO_RANDO
     // if check value differs, the generated ROMs are different.
     bool chaos = false; // FIXME: use individual state int instead
@@ -1755,25 +1754,52 @@ int main(int argc, const char** argv)
     else
         fprintf(flog,"Tree depth: %d, cyber logic score: %d, cyber gameplay score: %d%s", treedepth, cyberlogicscore, cybergameplayscore, ENDL);
     fprintf(flog, ENDL);
-    fprintf(flog,"     %-15s  %-15s  %-15s   %s" ENDL, "Spell", "Location", "Ingredient 1", "Ingredient 2"); 
+    fprintf(flog,"     %-15s  %-15s   %-15s  %s" ENDL, "Spell", "Ingredient 1", "Ingredient 2", "Location"); 
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     for (size_t i=0; i<ALCHEMY_COUNT; i++) {
         struct formula* f = &(ingredients[i]);
-        size_t to = alchemy[i];
 
-        fprintf(flog,"(%02d) %-15s  %-15s  %dx %-12s + %dx %s" ENDL,
+        const char* location = NULL;
+        for (size_t j=0; j<ALCHEMY_COUNT; j++) {
+            if (alchemy[j] == (CHECK_ALCHEMY<<10) + i) {
+                location = alchemy_locations[i].name;
+                break;
+            }
+        }
+        if (!location) for (size_t j=0; j<ARRAY_SIZE(boss_drops); j++) {
+            if (boss_drops[j] == (CHECK_ALCHEMY<<10) + i) {
+                location = boss_names[j];
+                break;
+            }
+        }
+        if (!location) for (size_t j=0; j<ARRAY_SIZE(gourd_drops); j++) {
+            if (gourd_drops[j] == (CHECK_ALCHEMY<<10) + i) {
+                location = gourd_data[j].name;
+                break;
+            }
+        }
+        if (!location) location = placement_file ? "Remote" : "Missing";
+
+        fprintf(flog,"(%02d) %-15s  %dx %-12s + %dx %-12s  %s" ENDL,
             alchemy_locations[i].id, 
             alchemy_locations[i].name,
-            (to > ALCHEMY_COUNT) ? "Remote" : alchemy_locations[to].name,
             f->amount1, ingredient_names[f->type1],
-            f->amount2, ingredient_names[f->type2]);
+            f->amount2, ingredient_names[f->type2],
+            location);
     }
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     fprintf(flog, ENDL);
-    fprintf(flog,"     %-13s  %s" ENDL, "Boss", "Drop");
+    fprintf(flog,"     %-15s  %s" ENDL, "Boss", "Drop");
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++) {
-        fprintf(flog,"(%02d) %-13s  %s" ENDL, (int)i, boss_names[i], boss_drop_names[boss_drops[i]]);
+        fprintf(flog,"(%02d) %-15s  %s" ENDL, (int)i, boss_names[i], get_drop_name_from_packed(boss_drops[i]));
+    }
+    fprintf(flog,"------------------------------------------------------------------------" ENDL);
+    fprintf(flog, ENDL);
+    fprintf(flog,"     %-15s  %s" ENDL, "Alchemist", "Drop");
+    fprintf(flog,"------------------------------------------------------------------------" ENDL);
+    for (size_t i=0; i<ALCHEMY_COUNT; i++) {
+        fprintf(flog,"(%02d) %-15s  %s" ENDL, (int)i, alchemy_locations[i].name, get_drop_name_from_packed(alchemy[i]));
     }
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     if (gourdomizer) {
@@ -1781,10 +1807,8 @@ int main(int argc, const char** argv)
     fprintf(flog,"      %-19s  %s" ENDL, "Gourd", "Drop");
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) {
-        size_t j=gourd_drops[i];
-        if (j > ARRAY_SIZE(gourd_drops_data)) continue; // remote
-        if (!gourd_drops_data[j].spoiler || !gourd_drops_data[j].name || !gourd_drops_data[j].name[0]) continue;
-        fprintf(flog,"(%03d) %-19s  %s" ENDL, (int)i, gourd_data[i].name, gourd_drops_data[j].name);
+        // TODO: hide crap drops
+        fprintf(flog,"(%03d) %-19s  %s" ENDL, (int)i, gourd_data[i].name, get_drop_name_from_packed(gourd_drops[i]));
     }
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     }

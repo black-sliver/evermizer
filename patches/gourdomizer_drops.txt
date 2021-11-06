@@ -1,9 +1,29 @@
+#set
+
 #ifndef NO_RANDO
+
+// replace debug message 0x009 "gain item: unknown armor" by remote item text
+@0x91d009+2
+00 // mark as uncompressed
+@0xc0003d
+53 65 6e 74 20 61 6e 20 49 74 65 6d 00 // "Sent an Item"
+@
 
 // additional item IDs for gourdomizer: drops
 @0x92a5c6
 29 51 89 0f // jump to custom code for item IDs 0x0100..0x01ff (except 0x0101)
 00 // END
+@
+
+@0x92ab87+9
+// jump 1394 instead of 1409
+72 05
+@
+
+// spell item IDs: drops
+@0x92b104
+29 00 90 0f
+00
 @
 
 // additional item IDs for gourdomizer: loot messages
@@ -12,13 +32,18 @@
 00 // END
 @
 
+// spell item IDs: loot messages
+@0x92b7c3
+29 00 c8 0f
+00
+@
+
 // additional item IDs for gourdomizer: inv full messages
 @0x92bead
 29 00 d0 0f // jump to custom code for unknown item IDs // TODO: show generic message instead?
 00 // END
 @
 
-// added actual drops
 @0xb18951
 09 08 39 01 29 04 f1 01 a2 32 00    // IF $2391 != 0x01f1 (colosseum breast) SKIP 50
 08 87 c8 00 08 00                   // IF bronze chestplate ($2320) SKIP 8
@@ -112,6 +137,24 @@ a3 3e 00                            // call loot part1, end
 0c 62 00 b1                         // set gauge bit ($2264 |= 0x04)
 0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
 
+09 08 39 01 29 04 26 01 a2 1c 00    // IF $2391 != 0x0126 (DE) SKIP 28
+09 85 60 00 0d 00                   // IF !has single DE SKIP 13
+0c 61 00 b1                         // give double DE
+0c 60 00 b0                         // clear single DE
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+0c 60 00 b1                         // give single DE
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 27 01 a2 09 00    // IF $2391 != 0x0127 (wheel) SKIP 9
+0c 63 00 b1                         // set wheel bit ($2264 |= 0x08)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+// 0x128 reserved for energy core/fragment
+
+09 08 39 01 29 04 29 01 a2 0a 00    // IF $2391 != 0x0129 (10k gold) SKIP 10
+7c b6 10 27 00                      // give 10k gold coins
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
 09 08 39 01 29 04 41 01 a2 09 00    // IF $2391 != 0x0141 (regenerate) SKIP 9
 // 09 ... 00                        // TODO: test if horace is unlocked?
 0c 1f 04 b1                         // set regenerate bit ($22db |= 0x80)
@@ -122,6 +165,26 @@ a3 3e 00                            // call loot part1, end
 0c 1e 04 b1                         // set aura bit ($22db |= 0x40)
 0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
 
+09 08 39 01 29 04 12 01 a2 0a 00    // IF $2391 != 0x0112 (gladiator sword) SKIP 10
+17 e9 01 04 00                      // get weapon ($2441) = gladiator sword (0x04)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 13 01 a2 0a 00    // IF $2391 != 0x0113 (crusader sword) SKIP 10
+17 e9 01 06 00                      // get weapon ($2441) = crusader sword (0x06)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 14 01 a2 0a 00    // IF $2391 != 0x0114 (neutron blade) SKIP 10
+17 e9 01 08 00                      // get weapon ($2441) = neutron blade (0x08)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 15 01 a2 0a 00    // IF $2391 != 0x0115 (spider claw) SKIP 10
+17 e9 01 0a 00                      // get weapon ($2441) = spider claw (0x0a)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 16 01 a2 0a 00    // IF $2391 != 0x0116 (bronze axe) SKIP 10
+17 e9 01 0c 00                      // get weapon ($2441) = bronze axe (0x0c)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
 09 08 39 01 29 04 17 01 a2 0a 00    // IF $2391 != 0x0117 (knight basher) SKIP 10
 17 e9 01 0e 00                      // get weapon ($2441) = knight basher (0x0e)
 0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
@@ -130,15 +193,28 @@ a3 3e 00                            // call loot part1, end
 17 e9 01 10 00                      // get weapon ($2441) = atom smasher (0x10)
 0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
 
+09 08 39 01 29 04 19 01 a2 0a 00    // IF $2391 != 0x0119 (horn spear) SKIP 10
+17 e9 01 12 00                      // get weapon ($2441) = horn spear (0x12)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 1a 01 a2 0a 00    // IF $2391 != 0x011a (bronze spear) SKIP 10
+17 e9 01 14 00                      // get weapon ($2441) = bronze spear (0x14)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 1b 01 a2 0a 00    // IF $2391 != 0x011b (lance) SKIP 10
+17 e9 01 16 00                      // get weapon ($2441) = lance (0x16)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
 09 08 39 01 29 04 1c 01 a2 0a 00    // IF $2391 != 0x011c (laser lance) SKIP 10
 17 e9 01 18 00                      // get weapon ($2441) = laser lance (0x18)
 0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
 
-09 08 39 01 29 04 1c 01 a2 1d 00    // IF $2391 != 0x011d (bazooka) SKIP 29
+09 08 39 01 29 04 1d 01 a2 1d 00    // IF $2391 != 0x011d (bazooka) SKIP 29
 09 07 ed 00 29 02 63 9e 09 00       // IF thunderball ($2345) >= 99 (0x63) SKIP 9
 14 ed 00 07 ed 00 29 31 9a          // thunderball = thunderball + 1
 17 e9 01 1a 00                      // get weapon ($2441) = bazooka (0x1a)
 0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+// ^ fix this to give shining armor
 
 09 08 39 01 29 04 31 01 a2 18 00    // IF $2391 != 0x0131 (amulet of annihilation) SKIP 24
 // TODO: support amount?
@@ -168,10 +244,190 @@ a3 3e 00                            // call loot part1, end
 0c 90 04 b1                                 // loot success ($22ea) |= yes (0x01)
 00                                          // end
 
+09 08 39 01 29 04 ff 01 a2 04 00            // IF $2391 != 0x01ff (remote item) SKIP 4
+0c 90 04 b1                                 // loot success ($22ea) |= yes (0x01)
+
 00 // END
 @
 
-// added loot messages, TODO: move this right behind the end of "actual drops" (0xb18b65)
+// added actual drops >1xx; move this once we add the other key items
+@0xb19000
+09 08 39 01 29 04 00 10 a2 0e 00    // IF $2391 != 0x1000 (Acid Rain) SKIP 14
+0c 00 00 b1                         // set inventory bit ($2258 |= 0x01)
+18 ED 01 82 00                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 01 10 a2 0e 00    // IF $2391 != 0x1001 (Atlas) SKIP 14
+0c 01 00 b1                         // set inventory bit ($2258 |= 0x02)
+18 ED 01 82 02                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 02 10 a2 0e 00    // IF $2391 != 0x1002 (Barrier) SKIP 14
+0c 02 00 b1                         // set inventory bit ($2258 |= 0x02)
+18 ED 01 82 04                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x04), end
+
+09 08 39 01 29 04 03 10 a2 0e 00    // IF $2391 != 0x1003 (Call Up) SKIP 14
+0c 03 00 b1                         // set inventory bit ($2258 |= 0x08)
+18 ED 01 82 06                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 04 10 a2 0e 00    // IF $2391 != 0x1004 (Corrosion) SKIP 14
+0c 04 00 b1                         // set inventory bit ($2258 |= 0x10)
+18 ED 01 82 08                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 05 10 a2 0e 00    // IF $2391 != 0x1005 (Crush) SKIP 14
+0c 05 00 b1                         // set inventory bit ($2258 |= 0x20)
+18 ED 01 82 0a                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 06 10 a2 0e 00    // IF $2391 != 0x1006 (Cure) SKIP 14
+0c 06 00 b1                         // set inventory bit ($2258 |= 0x40)
+18 ED 01 82 0c                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 07 10 a2 0e 00    // IF $2391 != 0x1007 (Defend) SKIP 14
+0c 07 00 b1                         // set inventory bit ($2258 |= 0x80)
+18 ED 01 82 0e                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 08 10 a2 0e 00    // IF $2391 != 0x1008 (Double Drain) SKIP 14
+0c 08 00 b1                         // set inventory bit ($2259 |= 0x01)
+18 ED 01 82 10                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 09 10 a2 0e 00    // IF $2391 != 0x1009 (Drain) SKIP 14
+0c 09 00 b1                         // set inventory bit ($2259 |= 0x02)
+18 ED 01 82 12                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 0a 10 a2 0e 00    // IF $2391 != 0x100a (Energize) SKIP 14
+0c 0a 00 b1                         // set inventory bit ($2259 |= 0x04)
+18 ED 01 82 14                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 0b 10 a2 0e 00    // IF $2391 != 0x100b (Escape) SKIP 14
+0c 0b 00 b1                         // set inventory bit ($2259 |= 0x08)
+18 ED 01 82 16                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 0c 10 a2 0e 00    // IF $2391 != 0x100c (Explosion) SKIP 14
+0c 0c 00 b1                         // set inventory bit ($2259 |= 0x10)
+18 ED 01 82 18                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 0d 10 a2 0e 00    // IF $2391 != 0x100d (Fireball) SKIP 14
+0c 0d 00 b1                         // set inventory bit ($2259 |= 0x20)
+18 ED 01 82 1a                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 0e 10 a2 0e 00    // IF $2391 != 0x100e (Fire Power) SKIP 14
+0c 0e 00 b1                         // set inventory bit ($2259 |= 0x40)
+18 ED 01 82 1c                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 0f 10 a2 0e 00    // IF $2391 != 0x100f (Flash) SKIP 14
+0c 0f 00 b1                         // set inventory bit ($2259 |= 0x80)
+18 ED 01 82 1e                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 10 10 a2 0e 00    // IF $2391 != 0x1010 (Force Field) SKIP 14
+0c 10 00 b1                         // set inventory bit ($225a |= 0x01)
+18 ED 01 82 20                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 11 10 a2 0e 00    // IF $2391 != 0x1011 (Hard Ball) SKIP 14
+0c 11 00 b1                         // set inventory bit ($225a |= 0x02)
+18 ED 01 82 22                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 12 10 a2 0e 00    // IF $2391 != 0x1012 (Heal) SKIP 14
+0c 12 00 b1                         // set inventory bit ($225a |= 0x04)
+18 ED 01 82 24                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 13 10 a2 0e 00    // IF $2391 != 0x1013 (Lance) SKIP 14
+0c 13 00 b1                         // set inventory bit ($225a |= 0x08)
+18 ED 01 82 26                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+// no laser.
+
+09 08 39 01 29 04 15 10 a2 0e 00    // IF $2391 != 0x1015 (Levitate) SKIP 14
+0c 15 00 b1                         // set inventory bit ($225a |= 0x20)
+18 ED 01 82 2a                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 16 10 a2 0e 00    // IF $2391 != 0x1016 (Lightning Storm) SKIP 14
+0c 16 00 b1                         // set inventory bit ($225a |= 0x40)
+18 ED 01 82 2c                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 17 10 a2 0e 00    // IF $2391 != 0x1017 (Miracle Cure) SKIP 14
+0c 17 00 b1                         // set inventory bit ($225a |= 0x80)
+18 ED 01 82 2e                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 18 10 a2 0e 00    // IF $2391 != 0x1018 (Nitro) SKIP 14
+0c 18 00 b1                         // set inventory bit ($225b |= 0x01)
+18 ED 01 82 30                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 19 10 a2 0e 00    // IF $2391 != 0x1019 (One Up) SKIP 14
+0c 19 00 b1                         // set inventory bit ($225b |= 0x02)
+18 ED 01 82 32                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 1a 10 a2 0e 00    // IF $2391 != 0x101a (Reflect) SKIP 14
+0c 1a 00 b1                         // set inventory bit ($225b |= 0x04)
+18 ED 01 82 34                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 1b 10 a2 0e 00    // IF $2391 != 0x101b (Regrowth) SKIP 14
+0c 1b 00 b1                         // set inventory bit ($225b |= 0x08)
+18 ED 01 82 36                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 1c 10 a2 0e 00    // IF $2391 != 0x101c (Revealer) SKIP 14
+0c 1c 00 b1                         // set inventory bit ($225b |= 0x10)
+18 ED 01 82 38                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 1d 10 a2 0e 00    // IF $2391 != 0x101d (Revive) SKIP 14
+0c 1d 00 b1                         // set inventory bit ($225b |= 0x20)
+18 ED 01 82 3a                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 1e 10 a2 0e 00    // IF $2391 != 0x101e (Slow Burn) SKIP 14
+0c 1e 00 b1                         // set inventory bit ($225b |= 0x40)
+18 ED 01 82 3c                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 1f 10 a2 0e 00    // IF $2391 != 0x101f (Speed) SKIP 14
+0c 1f 00 b1                         // set inventory bit ($225b |= 0x80)
+18 ED 01 82 3e                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 20 10 a2 0e 00    // IF $2391 != 0x1020 (Sting) SKIP 14
+0c 20 00 b1                         // set inventory bit ($225c |= 0x01)
+18 ED 01 82 40                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 21 10 a2 0e 00    // IF $2391 != 0x1021 (Stop) SKIP 14
+0c 21 00 b1                         // set inventory bit ($225c |= 0x02)
+18 ED 01 82 42                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+09 08 39 01 29 04 22 10 a2 0e 00    // IF $2391 != 0x1022 (Super Heal) SKIP 14
+0c 22 00 b1                         // spell inventory bit ($225c |= 0x04)
+18 ED 01 82 44                      // preselect
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+00
+@
+
+// added loot messages, TODO: move this right behind the end of "actual drops"
 @0xb1c000
 09 08 39 01 29 04 03 01 a2 04 00    // IF $2391 != 0x0103 (thug's cloak) SKIP 4
 52 0c 0c 00                         // Show text, end
@@ -179,11 +435,35 @@ a3 3e 00                            // call loot part1, end
 09 08 39 01 29 04 25 01 a2 04 00    // IF $2391 != 0x0125 (gauge) SKIP 4
 52 f1 05 00                         // Show text, end
 
+09 08 39 01 29 04 26 01 a2 04 00    // IF $2391 != 0x0126 (DE) SKIP 4
+52 ec 04 00                         // Show text, end
+
+09 08 39 01 29 04 27 01 a2 04 00    // IF $2391 != 0x0127 (wheel) SKIP 4
+52 bb 05 00                         // Show text, end
+
+09 08 39 01 29 04 29 01 a2 04 00    // IF $2391 != 0x0129 (10k gold) SKIP 4
+52 a0 1d 00                         // Show text, end
+
 09 08 39 01 29 04 41 01 a2 04 00    // IF $2391 != 0x0141 (regenerate) SKIP 4
 52 6b 0a 00                         // Show text, end
 
 09 08 39 01 29 04 42 01 a2 04 00    // IF $2391 != 0x0142 (aura) SKIP 4
 52 c4 17 00                         // Show text, end
+
+09 08 39 01 29 04 12 01 a2 04 00    // IF $2391 != 0x0112 (gladiator sword) SKIP 4
+52 ec 1c 00                         // Show text, end
+
+09 08 39 01 29 04 13 01 a2 04 00    // IF $2391 != 0x0113 (crusader sword) SKIP 4
+52 7a 1c 00                         // Show text, end
+
+09 08 39 01 29 04 14 01 a2 04 00    // IF $2391 != 0x0114 (neutron blade) SKIP 4
+52 30 21 00                         // Show text, end
+
+09 08 39 01 29 04 15 01 a2 04 00    // IF $2391 != 0x0115 (spider claw) SKIP 4
+52 b8 05 00                         // Show text, end
+
+09 08 39 01 29 04 16 01 a2 04 00    // IF $2391 != 0x0116 (bronze axe) SKIP 4
+52 71 0a 00                         // Show text, end
 
 09 08 39 01 29 04 17 01 a2 04 00    // IF $2391 != 0x0117 (knight basher) SKIP 4
 52 96 1b 00                         // Show text, end
@@ -191,10 +471,19 @@ a3 3e 00                            // call loot part1, end
 09 08 39 01 29 04 18 01 a2 04 00    // IF $2391 != 0x0118 (atom smasher) SKIP 4
 52 93 1b 00                         // Show text, end
 
+09 08 39 01 29 04 19 01 a2 04 00    // IF $2391 != 0x0119 (horn spear) SKIP 4
+52 c1 05 00                         // Show text, end
+
+09 08 39 01 29 04 1a 01 a2 04 00    // IF $2391 != 0x011a (bronze spear) SKIP 4
+52 29 16 00                         // Show text, end
+
+09 08 39 01 29 04 1b 01 a2 04 00    // IF $2391 != 0x011b (lance) SKIP 4
+52 89 1c 00                         // Show text, end
+
 09 08 39 01 29 04 1c 01 a2 04 00    // IF $2391 != 0x011c (laser lance) SKIP 4
 52 47 22 00                         // Show text, end
 
-09 08 39 01 29 04 1c 01 a2 04 00    // IF $2391 != 0x011d (bazooka) SKIP 4
+09 08 39 01 29 04 1d 01 a2 04 00    // IF $2391 != 0x011d (bazooka) SKIP 4
 52 46 1a 00                         // Show text, end
 
 09 08 39 01 29 04 31 01 a2 04 00    // IF $2391 != 0x0131 (amulet of annihilation) SKIP 4
@@ -213,15 +502,100 @@ a3 3e 00                            // call loot part1, end
 // TODO: support amount?
 52 06 21 00                         // Show text, end
 
+09 08 39 01 29 04 ff 01 a2 04 00    // IF $2391 != 0x01ff (remote item) SKIP 4
+52 09 00 00                         // Show text, end
+
 00 // END
 @
 
-// added loot error messages, TODO: move this right behind "loot messages" (+180)
+
+// added loot messages for spells, TODO: move this right behind stuff above
+@0xb1c800
+09 08 39 01 29 04 00 10 a2 04 00    // IF $2391 != 0x1000 (Acid Rain) SKIP 4
+52 9d 05 00                         // Show text, end
+09 08 39 01 29 04 01 10 a2 04 00    // IF $2391 != 0x1001 (Atlas) SKIP 4
+52 77 0d 00                         // Show text, end
+09 08 39 01 29 04 02 10 a2 04 00    // IF $2391 != 0x1002 (Barrier) SKIP 4
+52 60 0c 00                         // Show text, end
+09 08 39 01 29 04 03 10 a2 04 00    // IF $2391 != 0x1003 (Call Up) SKIP 4
+52 b0 22 00                         // Show text, end
+09 08 39 01 29 04 04 10 a2 04 00    // IF $2391 != 0x1004 (Corrosion) SKIP 4
+52 bb 17 00                         // Show text, end
+09 08 39 01 29 04 05 10 a2 04 00    // IF $2391 != 0x1005 (Crush) SKIP 4
+52 d4 0a 00                         // Show text, end
+09 08 39 01 29 04 06 10 a2 04 00    // IF $2391 != 0x1006 (Cure) SKIP 4
+52 ef 0d 00                         // Show text, end
+09 08 39 01 29 04 07 10 a2 04 00    // IF $2391 != 0x1007 (Defend) SKIP 4
+52 f9 09 00                         // Show text, end
+09 08 39 01 29 04 08 10 a2 04 00    // IF $2391 != 0x1008 (Double Drain) SKIP 4
+52 90 06 00                         // Show text, end
+09 08 39 01 29 04 09 10 a2 04 00    // IF $2391 != 0x1009 (Drain) SKIP 4
+52 9f 06 00                         // Show text, end
+09 08 39 01 29 04 0a 10 a2 04 00    // IF $2391 != 0x100a (Energize) SKIP 4
+52 bf 22 00                         // Show text, end
+09 08 39 01 29 04 0b 10 a2 04 00    // IF $2391 != 0x100b (Escape) SKIP 4
+52 05 13 00                         // Show text, end
+09 08 39 01 29 04 0c 10 a2 04 00    // IF $2391 != 0x100c (Explosion) SKIP 4
+52 75 1b 00                         // Show text, end
+09 08 39 01 29 04 0d 10 a2 04 00    // IF $2391 != 0x100d (Fireball) SKIP 4
+52 17 16 00                         // Show text, end
+09 08 39 01 29 04 0e 10 a2 04 00    // IF $2391 != 0x100f (Fire Power) SKIP 4
+52 e0 16 00                         // Show text, end
+09 08 39 01 29 04 0f 10 a2 04 00    // IF $2391 != 0x1010 (Flash) SKIP 4
+52 63 09 00                         // Show text, end
+09 08 39 01 29 04 10 10 a2 04 00    // IF $2391 != 0x1011 (Force Field) SKIP 4
+52 98 1c 00                         // Show text, end
+09 08 39 01 29 04 11 10 a2 04 00    // IF $2391 != 0x1012 (Hard Ball) SKIP 4
+52 51 06 00                         // Show text, end
+09 08 39 01 29 04 12 10 a2 04 00    // IF $2391 != 0x1013 (Heal) SKIP 4
+52 df 05 00                         // Show text, end
+09 08 39 01 29 04 13 10 a2 04 00    // IF $2391 != 0x1014 (Lance) SKIP 4
+52 08 19 00                         // Show text, end
+// no laser.
+09 08 39 01 29 04 15 10 a2 04 00    // IF $2391 != 0x1015 (Levitate) SKIP 4
+52 09 06 00                         // Show text, end
+09 08 39 01 29 04 16 10 a2 04 00    // IF $2391 != 0x1016 (Lightning Storm) SKIP 4
+52 1a 1c 00                         // Show text, end
+09 08 39 01 29 04 17 10 a2 04 00    // IF $2391 != 0x1017 (Miracle Cure) SKIP 4
+52 11 0a 00                         // Show text, end
+09 08 39 01 29 04 18 10 a2 04 00    // IF $2391 != 0x1018 (Nitro) SKIP 4
+52 78 1b 00                         // Show text, end
+09 08 39 01 29 04 19 10 a2 04 00    // IF $2391 != 0x1019 (One Up) SKIP 4
+52 3e 1c 00                         // Show text, end
+09 08 39 01 29 04 1a 10 a2 04 00    // IF $2391 != 0x101a (Reflect) SKIP 4
+52 16 23 00                         // Show text, end
+09 08 39 01 29 04 1b 10 a2 04 00    // IF $2391 != 0x101b (Regrowth) SKIP 4
+52 52 1a 00                         // Show text, end
+09 08 39 01 29 04 1c 10 a2 04 00    // IF $2391 != 0x101c (Revealer) SKIP 4
+52 fc 12 00                         // Show text, end
+09 08 39 01 29 04 1d 10 a2 04 00    // IF $2391 != 0x101d (Revive) SKIP 4
+52 b3 0a 00                         // Show text, end
+09 08 39 01 29 04 1e 10 a2 04 00    // IF $2391 != 0x101e (Slow Burn) SKIP 4
+52 8a 1b 00                         // Show text, end
+09 08 39 01 29 04 1f 10 a2 04 00    // IF $2391 != 0x101f (Speed) SKIP 4
+52 39 06 00                         // Show text, end
+09 08 39 01 29 04 20 10 a2 04 00    // IF $2391 != 0x1020 (Sting) SKIP 4
+52 38 13 00                         // Show text, end
+09 08 39 01 29 04 21 10 a2 04 00    // IF $2391 != 0x1021 (Stop) SKIP 4
+52 9b 1c 00                         // Show text, end
+09 08 39 01 29 04 22 10 a2 04 00    // IF $2391 != 0x1022 (Super Heal) SKIP 4
+52 ee 05 00                         // Show text, end
+00
+@
+
+
+// added loot error messages, TODO: move this right behind "loot messages"
 @0xb1d000
 1c e1 02 88 39 01   // WRITE arg1 ($2539) = prize ($2391)
 52 88 02            // show generic message
 00                  // END
 @
+
+// special loot setup scripts
+@0xb1d200
+17 39 01 ff 01      // WRITE LOOT ITEM = REMOTE (0x01ff)
+00                  // END
+// TODO: traps and what not
 
 // replace "unknown","item" with "any","more" and remove <arg1> from "Can't carry unknown item <arg1>"
 @0xc00c29+7

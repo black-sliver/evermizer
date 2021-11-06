@@ -1,29 +1,29 @@
 #ifndef NO_RANDO
-@0xb08070
+@0xb08300
 // we have 61 = 0x3d tracks -> first index is 0x00, last index is 0x3c
 // we use 7e2880, let's hope that it's a temp and is never used
 
 // TODO: replaces calls by JMP / inlining?
 
-jukebox1:   // @0xb08070, as used in most scripts
-29 91 00 0f // call "jukebox impl"; TODO: rcall or jmp?
+jukebox1:   // @0xb08300, as used in most scripts
+29 21 03 0f // call "jukebox impl"; TODO: rcall or jmp?
 a3 01       // call "start music"
 04 13 00    // skip 19 to jukebox_end
 
-jukebox2:   // @0xb08079, as used for raptors 2
-29 91 00 0f // call "jukebox impl"; TODO: rcall or jmp?
+jukebox2:   // @0xb08309, as used for raptors 2
+29 21 03 0f // call "jukebox impl"; TODO: rcall or jmp?
 18 35 01 b0 // write CHANGE MUSIC ($238d) = 0x0000
 04 08 00    // skip 8 to jukebox_end
 
-jukebox3:   // @0xb08084, as used for raptors 1
-29 91 00 0f // call "jukebox impl"; TODO: rcall or jmp?
+jukebox3:   // @0xb08314, as used for raptors 1
+29 21 03 0f // call "jukebox impl"; TODO: rcall or jmp?
 18 67 01 b0 // write $23bf = 0x0000
 
 jukebox_end:
 19 4c 00 b0 // clear temp // FIXME: this is unnecessary
 00          // end
 
-start: @0xb08091
+start: @0xb08321
 09 85 d8 04 07 00               // if !22f3&0x01 (crush dialog to be shown) skip 7 to tmp=random
 11 4c 00 e9                     // tmp = (byte) 0x19 (play track 0x3a)
 04 06 00                        // skip 6 over tmp=random

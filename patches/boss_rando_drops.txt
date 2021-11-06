@@ -1,0 +1,117 @@
+#set
+
+@0x96c125
+// BOSS_DROP func to give boss reward
+a3 3e               // call loot part 1
+09 85 90 04 05 00   // if not loot successfull skip 5
+a3 3f               // call loot part 2 (looted message)
+04 02 00            // skip 2
+a3 41               // call loot part 3 (failed message)
+00                  // end
+
+// Nothing setup @ 0x96c135
+17 39 01 00 00 00   // write item = Nothing, end
+// Wheel setup
+17 39 01 27 01 00   // write item = Wheel, end
+// Gladiator Sword setup
+17 39 01 12 01 00   // write item = Gladiator Sword, end
+// Crusader Sword setup
+17 39 01 13 01 00   // write item = Crusader Sword, end
+// Spider Claw setup
+17 39 01 15 01 00   // write item = Spider Claw, end
+// Bronze Axe setup
+17 39 01 16 01 00   // write item = Bronze Axe, end
+// Horn Spear setup
+17 39 01 19 01 00   // write item = Horn Spear, end
+// Bronze Spear setup
+17 39 01 1a 01 00   // write item = Bronze Spear, end
+// Lance setup
+17 39 01 1b 01 00   // write item = Lance setup, end
+// Honey setup; FIXME: this should be the honey that does not check inventory size
+17 39 01 02 08 00   // write item = Honey, end
+// Progressive breast armor instead setup
+17 39 01 f4 01 00   // write item = Progressive breast, end
+// Bazooka+Shells OR ... setup
+17 39 01 1d 01 00   // write item = Bazooka+Shells, end
+// 10k Gold setup
+17 39 01 29 01 00   // write item = 10k Gold, end
+// Mud Pepper setup
+// FIXME: save amount, set amount = 1; or special mud pepper
+17 39 01 05 02 00   // write item = Mud Pepper, end
+// FIXME: restore amount
+// Diamond eye setup
+17 39 01 26 01 00   // write item = Diamond eye, end
+
+// Thraxx drop @ 0x96C18F
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Coleoptera drop @ Thraxx + 9
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Mammoth Viper drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Cave Raptors drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Salabog drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Vigor drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Megataur drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Rimsala drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Aquagoth drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Bad Boys drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Timberdrake drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Verminator drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Tiny drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Mungola drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Sons of Sth. drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Volcano Viper drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Magmar drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+// Mad Monk drop
+29 00 00 00     // CALL BOSS_SETUP
+29 25 41 02     // CALL BOSS_DROP
+00              // END
+

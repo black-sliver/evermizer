@@ -16,13 +16,33 @@ ea ea           //NOP NOP
 2d 04 01        //AND $0104
 8d 04 01        //STA $0104
 
-// new: if $7e2577 (8bit) == 0 goto RTL below
+// if $7e2577 (8bit) == 0 goto RETURN (JML) below
 af 77 25 7e     //LDA (long) $7e2577
 29 ff 00        //AND #$00ff
-d0 04           //BNE below jml (skips 4 bytes return if not 0)
+d0 04           //BNE below jml (skips 4 bytes if not 0)
 5c a9 84 c0     //JML $c084a9
 
-// TODO: check if the script stack has space?
+// if $86 (next active script list index) > 0 goto RETURN (JML) below
+a5 86           //LDA $86
+f0 04           //BEQ below jml (skips 4 bytes if 0)
+//c9 03 00        //CMP #$0003 (if A-3<0 then $86<2, so <=1 scripts active)
+//30 04           //BMI below jml (skips 4 bytes)
+// TODO: allow some scripts (like market timer check) in slot 0
+5c a9 84 c0     //JML $c084a9
+
+//// if 'I' (disable interrupts) is set, RETURN (JML) below
+//08 08           //PHP, PHP
+//68              //PLA
+//29 04 00        //AND #$0004
+//f0 04           //BEQ below jml (skips 4 bytes if 0)
+//5c a9 84 c0     //JML $c084a9
+
+// if in animation ($22eb & 0x20) is set, RETURN (JML) below
+//ad eb 22        //LDA $22eb
+af eb 22 7e     //LDA (long) $7e22eb
+29 20 00        //AND #$0020
+f0 04           //BEQ below jml (skips 4 bytes if 0)
+5c a9 84 c0     //JML $c084a9
 
 // write script address for fd8000 to $26..$28: 00 80 15
 // fd8000 - c00000 + 800000 - 928000 = 2b0000. >>=1: 158000
@@ -53,17 +73,31 @@ e2 00           //SEP #$00: 16bit mode
 @0xfd8000
 // bd8000-920000 = 2b0000, erase 8000 bit -> 158000 as script address
 
-// TODO: handle item index
-// TODO: use correct address for item amount (addr below is "next add")
+08 09 1d 03 29 09 20 03 a3 5e 00 // if new index (2578) != expected index (2575), jump to clear lock (+94)
+
+1e 00 89 39 01      // save prize to script arg0
+1e 02 89 3b 01      // save amount to script arg2
+1e 04 89 09 02      // save "next add" to script arg4
 
 18 39 01 89 24 03   // copy prize to 2391 from 257c
-18 09 02 89 22 03   // copy amount to 2461 from 257a; TODO: to 2393 for money and petals
+
+08 08 39 01 29 04 00 ff a4 09 00 // if prize & 0xff00 skip 9 (use "next add")
+18 3b 01 89 22 03                // copy amount from 257a to 2393
+04 0e 00                         // skip 14
+17 3b 01 01 00                   // amount ($2393) = 1
+18 09 02 09 22 03 29 31 9b       // copy amount - 1 from 257a to "next add" 2461
 
 a3 3e               // call loot part 1
 09 85 90 04 05 00   // if not loot successfull skip 5
 a3 3f               // call loot part 2 (looted message)
 04 02 00            // skip 2
 a3 41               // call loot part 3 (failed message)
+
+18 39 01 93 00      // restore prize from script arg0
+18 3b 01 93 02      // restore amount from script arg2
+18 09 02 93 04      // restore "next add" from script arg4
+
+18 1d 03 09 20 03 29 31 9a // expected index (2575) = new index (2578) + 1 // (or expected index + 1)
 18 24 03 b0         // clear the item being received ("lock") at 257c
 00                  // end
 
