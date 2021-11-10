@@ -22,5 +22,5 @@
     {"bit": ["0x7e22e6", "0x01"], "drop": false, "name": "footknight"},
     {"bit": ["0x7e22dd", "0x02"], "drop": false, "name": "sterling"},
     {"bit": ["0x7e22e6", "0x80"], "drop": false, "name": "wall face"},
-    {"bit": ["0x7e22f3", "0x40"], "drop": false, "name": "carltron's robot"}
+    {"bit": ["0x7e22f1", "0x40"], "drop": false, "name": "carltron's robot"}
 ]
