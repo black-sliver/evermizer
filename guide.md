@@ -1,27 +1,22 @@
 # Evermizer Guide
-*Version 2020-11-14 for v032+*
+*Version 2021-11-10 for v040+ and multiworld*
 
 ## Goal
 With default settings (not bingo) the goal is to defeat the final boss.
 
 Required items are rocket parts (2 Diamond Eyes, Wheel, Gauge) and Energy Core, with
-* 3 Diamond Eyes being boss rewards
-* Wheel being a boss reward
-* Gauge coming from a gourd/pot/chest
+* 3 Diamond Eyes, Wheel and Gauge in random locations
 * Energy core not shuffled yet. Draw bridge opens after defeating Mungola, which is accessible after defeating Sterling. Dark Forest being an alternative route to chess board.
 
 **Possibly** required drops along the path:
-* Levitate and Revealer as alchemy
-* Lance, Bronze Spear and Bronze Axe being boss rewards
-* Knight Basher, Atom Smasher and Laser Lance coming from gourds/pots/chests
+* Levitate and Revealer alchemy
+* Lance, Bronze Spear and Bronze Axe, Knight Basher, Atom Smasher and Laser Lance weapons
 
 See [General Strats](#general-strats) below for strats, see [FAQ](#faq) below if you are stuck.
 
 ## Drop locations
 With default settings
-* Boss rewards are shuffled between bosses.
-* Gourd/pot/chest drops are shuffled between all gourds/pots/chests.
-* Spells are shuffled between all alchemists.
+* Gourd/pot/chest, boss and alchemy drops are shuffled to random locations
 * NPC drops (Jaguar Ring, Cecil's bazooka, Call Beads, Collars, ...) are not randomized.
 
 ### Bosses
@@ -53,7 +48,8 @@ See [Boss Strats](#boss-strats) below for strats.
 24. __Carltron__: accessible with Energy Core
 
 ### Gourds/pots/chests
-None missable, all included on normal and hard, some excluded on easy.
+None missable, all included on normal and hard, some excluded on easy.\
+Always all included in multiworld.
 
 Please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore) if you don't know them all.
 
