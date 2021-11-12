@@ -37,11 +37,17 @@ f0 04           //BEQ below jml (skips 4 bytes if 0)
 //f0 04           //BEQ below jml (skips 4 bytes if 0)
 //5c a9 84 c0     //JML $c084a9
 
-// if in animation ($22eb & 0x20) is set, RETURN (JML) below
-//ad eb 22        //LDA $22eb
+// NOTE: in-animation check below is probably not needed anymore, but testing was done with it enabled
+// if in animation ($7e22eb & 0x20) is set, RETURN (JML) below
 af eb 22 7e     //LDA (long) $7e22eb
 29 20 00        //AND #$0020
 f0 04           //BEQ below jml (skips 4 bytes if 0)
+5c a9 84 c0     //JML $c084a9
+
+// if screen brightness fading ($7e0106 != 0x000f), RETURN (JML) below
+af 06 01 7e     //LDA (long) $7e0106
+c9 0f 00        //CMP #$000f
+f0 04           //BEQ below jml (skips 4 bytes if A-#$0f==#$00)
 5c a9 84 c0     //JML $c084a9
 
 // write script address for fd8000 to $26..$28: 00 80 15
