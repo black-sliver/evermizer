@@ -63,7 +63,7 @@
 55          // HIDE TEXT
 29 3f 00 0f // CALL 0xb0803f
 04 03 00 00 // SKIP 3 (END)
-00 00       // clear dead code
+00          // clear dead code, but keep the CLEAR TEXT for other code path
 
 @0x94a692
 // Double Drain, 17 B
