@@ -2,15 +2,14 @@
 
 Uses [Archipelago](https://github.com/ArchipelagoMW/Archipelago) ("AP") for multi-game multiworld generation and synchronization\
 See [black-sliver / Archipelago / soe](https://github.com/black-sliver/archipelago/tree/soe) for seed generation\
-See [black-sliver / pyevermizer](https://github.com/black-sliver/pyevermizer) for the interface to Archipelago
+See [black-sliver / pyevermizer](https://github.com/black-sliver/pyevermizer) for the interface to Archipelago\
+See [black-sliver / apbpatch](https://github.com/black-sliver/apbpatch) for ROM patching\
+See [black-sliver / ap-soeclient](https://github.com/black-sliver/ap-soeclient) for AP client
 
 ## Required features for AP
 
 * Mix spells and items (levitate and revealer are progression items)
 
-* ~~Temp. var in "loot item" to decide if an animation should be played (own item),\
-  or a simple unframed text should be displayed (received item)~~
-  
 * Routine (on NMI?) to (schedule script to) award items through memory writes
 
 * Client that sends out and receives items from the AP server
@@ -49,9 +48,6 @@ _Status: **DONE**_
 ### AP item placement
 
 _Status: **DONE**_
-
-* Logic/placement: **done**
-* Placement output: **done**
 
 ### AP interface
 
@@ -115,11 +111,6 @@ from/to SRAM to accommodate for the additional values above.
 
 _Status: **DONE**_
 
-* Assign item IDs
-* Call loot script instead of rewarding spell directly
-* Change dialogs
-* Use spell location flags instead of spell flags in alchemists' scripts
-
 ### Change item and location definition
 
 _Status: UNCERTAIN_
@@ -127,26 +118,16 @@ _Status: UNCERTAIN_
 * Move boss locations, drops and addresses to `bosses.json?
 * Add utilities `bosses2h.py?
 * Same for alchemy?
-* ~~Generate code on the fly (required to mix drops)?~~
 
 ### Implement receiving of remote items in game
 
 _Status: **DONE**_
 
-* Reading item: **done**
-* Setting up item: **done**
-* Reading amount: **done**
-* Setting up amount: **done**
-* Saving and restoring old item/amount: **done**
-* Check and update item index: **done**
-
 ### AP client
 
-_Status: PARTIAL_
+_Status: MOSTLY DONE_
 
-* automatically send items to the server: **done**
-* receive and forward items to the game: **done**
-* manually resync items: **TODO**
+* see https://github.com/black-sliver/ap-soeclient/#todo
 
 ### Change how "unrandom" works
 
@@ -171,3 +152,8 @@ _Status: TODO_
 * Test everything
 * Add options to mix pools
 
+### Add remote player/item names
+
+_Status: TODO_
+
+In a future version we may want to display who sent or received an item.
