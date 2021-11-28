@@ -1695,13 +1695,20 @@ int main(int argc, const char** argv)
 #ifdef NO_RANDO
     size_t dsttitle_len = strlen("SoE-OpenWorld_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1;
     char* dsttitle = (char*)malloc(dsttitle_len); // SoE-OpenWorld_vXXX_e0123
+    int printlen;
+    if (1)
 #else
     size_t dsttitle_len = strlen("Evermizer_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1+16+1;
     char* dsttitle = (char*)malloc(dsttitle_len); // Evermizer_vXXX_e0123caibgsdm_XXXXXXXXXXXXXXXX
-    assert(snprintf(dsttitle, dsttitle_len, "Evermizer_%s%s_%s_%" PRIx64, is_2p?"2P_":"", VERSION, shortsettings, seed) < (int)dsttitle_len);
+    int printlen = snprintf(dsttitle, dsttitle_len, "Evermizer_%s%s_%s_%" PRIx64, is_2p?"2P_":"", VERSION, shortsettings, seed);
+    assert(printlen < (int)dsttitle_len);
     if (!randomized)
 #endif
-        assert(snprintf(dsttitle, dsttitle_len, "SoE-OpenWorld_%s%s_%s", is_2p?"2P_":"", VERSION, shortsettings) < (int)dsttitle_len);
+    {
+        printlen = snprintf(dsttitle, dsttitle_len, "SoE-OpenWorld_%s%s_%s", is_2p?"2P_":"", VERSION, shortsettings);
+        assert(printlen < (int)dsttitle_len);
+        (void)printlen;
+    }
     const char* pSlash = strrchr(src, DIRSEP);
     if (!pSlash && DIRSEP!='/') pSlash = strrchr(src, '/'); // wine support
     const char* ext = strrchr(src, '.');
