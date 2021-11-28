@@ -758,11 +758,14 @@ int main(int argc, const char** argv)
         long placement_size = ftell(f);
         rewind(f);
         char* placement = (char*)malloc(placement_size+1);
-        placement[placement_size] = 0;
-        if (fread(placement, 1, placement_size, f) != placement_size) {
+        if (placement && placement_size>=0 && fread(placement, 1, placement_size, f) != (size_t)placement_size) {
             free(buf);
+            free(placement);
+            fclose(f);
             die("Error reading placement data!\n");
         }
+        placement[placement_size] = 0;
+        fclose(f);
         char* placement_line = placement;
         do {
             char* lf = strchr(placement_line, '\n');
@@ -779,35 +782,41 @@ int main(int argc, const char** argv)
             long item_index = (next && *next == ',' && item_type > 0) ? strtol(next+1, &next, 10) : -1;
             if (loc_type >= 0) { // valid line
                 //printf("place: %s\n", placement_line);
-                if (loc_type < CHECK_ALCHEMY || loc_type > CHECK_GOURD || item_type < 0 || item_type > CHECK_GOURD)
+                if (loc_type < CHECK_ALCHEMY || loc_type > CHECK_GOURD || item_type < 0 || item_type > CHECK_GOURD
+                        || loc_index < 0)
                 {
                     free(buf);
+                    free(placement);
                     die("Invalid placement data!\"");
                 }
-                if (loc_type == CHECK_ALCHEMY) {
+                if (loc_type == CHECK_ALCHEMY && (size_t)loc_index < ARRAY_SIZE(alchemy)) {
                     if (item_type == 0)
                         alchemy[loc_index] = 0x01ff; // Remote // TODO: special value
                     else
                         alchemy[loc_index] = (item_type<<10) + item_index;
                 }
-                else if (loc_type == CHECK_BOSS) {
+                else if (loc_type == CHECK_BOSS && (size_t)loc_index < ARRAY_SIZE(boss_drops)) {
                     if (item_type == 0)
                         boss_drops[loc_index] = 0x01ff; // Remote // TODO: special value
                     else
                         boss_drops[loc_index] = (uint16_t)(item_type<<10) + item_index;
                 }
-                else if (loc_type == CHECK_GOURD) {
+                else if (loc_type == CHECK_GOURD && (size_t)loc_index < ARRAY_SIZE(gourd_drops)) {
                     if (item_type == 0)
                         gourd_drops[loc_index] = 0x01ff; // Remote // TODO: special value
                     else
                         gourd_drops[loc_index] = (uint16_t)(item_type<<10) + item_index;
+                }
+                else {
+                    free(buf);
+                    free(placement);
+                    die("Index out of range for placement data\n");
                 }
             }
             if (!lf) break; // assume \0 is end of file
             placement_line = lf+1;
         } while (true);
         free(placement);
-        fclose(f);
     }
 #else
     #define placement_file false

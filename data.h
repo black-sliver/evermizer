@@ -605,12 +605,12 @@ const size_t callbead_spell_item_addrs[] = {
 static uint32_t get_drop_setup_target(enum check_tree_item_type type, uint16_t idx)
 {
     if (type == CHECK_NONE) return 0x0fd200; // remote item
-    if (type == CHECK_GOURD) return gourd_drops_data[idx].call_addr;
-    if (type == CHECK_ALCHEMY) {
+    if (type == CHECK_GOURD && idx<ARRAY_SIZE(gourd_drops_data)) return gourd_drops_data[idx].call_addr;
+    if (type == CHECK_ALCHEMY && idx<ARRAY_SIZE(alchemy_locations)) {
         uint32_t addr = 0xb0813b + 6 * alchemy_locations[idx].id;
         return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
     }
-    if (type == CHECK_BOSS) {
+    if (type == CHECK_BOSS && idx<ARRAY_SIZE(boss_drop_names)) {
         uint32_t addr = 0x96c135 + 6 * idx;
         return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
     }
@@ -626,9 +626,9 @@ static uint32_t get_drop_setup_target_from_packed(uint16_t packed)
 static const char* get_drop_name(enum check_tree_item_type type, uint16_t idx)
 {
     if (type == CHECK_NONE) return "Remote";
-    if (type == CHECK_GOURD) return gourd_drops_data[idx].name;
-    if (type == CHECK_ALCHEMY) return alchemy_locations[idx].name;
-    if (type == CHECK_BOSS) return boss_drop_names[idx];
+    if (type == CHECK_GOURD && idx<ARRAY_SIZE(gourd_drops_data)) return gourd_drops_data[idx].name;
+    if (type == CHECK_ALCHEMY && idx<ARRAY_SIZE(alchemy_locations)) return alchemy_locations[idx].name;
+    if (type == CHECK_BOSS && idx<ARRAY_SIZE(boss_drop_names)) return boss_drop_names[idx];
     assert(0);
     return "";
 }
