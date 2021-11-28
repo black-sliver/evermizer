@@ -76,6 +76,7 @@ static bool batch = true;
 #else
 static bool batch = false;
 #endif
+#ifndef die
 void die(const char* msg)
 {
     if (msg) fprintf(stderr, "%s", msg);
@@ -86,6 +87,8 @@ void die(const char* msg)
 #endif
     exit(1);
 }
+#endif
+
 const char B32[] = "abcdefghijklmnopqrstuvwxyz234567=";
 char b32(uint64_t v) { return B32[v&0x1f]; }
 #define APPLY_PATCH(buf, patch, loc) memcpy(buf+loc, patch, sizeof(patch)-1)
