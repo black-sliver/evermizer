@@ -602,6 +602,7 @@ const size_t callbead_spell_item_addrs[] = {
     0x0e9d95+1, 0x0e9d9b+1, 0x0e9d8f+1,             // sidney
 };
 
+#ifndef NO_RANDO
 static uint32_t get_drop_setup_target(enum check_tree_item_type type, uint16_t idx)
 {
     if (type == CHECK_NONE) return 0x0fd200; // remote item
@@ -638,3 +639,4 @@ static const char* get_drop_name_from_packed(uint16_t packed)
     uint16_t idx = packed&0x3ff;
     return get_drop_name(type, idx);
 }
+#endif

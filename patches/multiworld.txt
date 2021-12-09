@@ -1,3 +1,4 @@
+#ifndef NO_RANDO
 #set // directive to create patch set as APPLY_MULTIWORLD()
 
 // we hook into c084a3 after reading controller inputs
@@ -106,4 +107,6 @@ a3 41               // call loot part 3 (failed message)
 18 1d 03 09 20 03 29 31 9a // expected index (2575) = new index (2578) + 1 // (or expected index + 1)
 18 24 03 b0         // clear the item being received ("lock") at 257c
 00                  // end
+@
 
+#endif

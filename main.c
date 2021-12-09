@@ -62,8 +62,10 @@ char getch() {
 #define DIRSEP '/'
 #endif
 
-#if !defined NO_MULTIWORLD && !defined WITH_MULTIWORLD && !defined __EMSCRIPTEN__
+#if !defined NO_MULTIWORLD && !defined WITH_MULTIWORLD && !defined __EMSCRIPTEN__ && !defined NO_RANDO
 #define WITH_MULTIWORLD
+#elif defined WITH_MULTIWORLD && defined NO_RANDO
+#error "Can't enable MULTIWORLD with NO_RANDO"
 #endif
 
 #include "util.h"
