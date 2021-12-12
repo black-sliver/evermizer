@@ -1055,12 +1055,12 @@ int main(int argc, const char** argv)
                 if (!ok) REROLL();
             }
             if (!can_buy_ingredients(revealer_formula)) REROLL(); // reroll, unbeatable or would give away a hint
-            // two checks below will have to change once we shuffle drops
-            if (!alchemy_in_act4(alchemy_lookup(alchemy,LEVITATE_IDX)) && !can_buy_in_act3(levitate_formula)) REROLL();
-            if (!alchemy_in_act4(alchemy_lookup(alchemy,REVEALER_IDX)) && !can_buy_in_act3(revealer_formula)) REROLL();
+            // two checks below can be changed to only require <=act3 if the drop is in act4
+            if (!can_buy_in_act3(levitate_formula)) REROLL();
+            if (!can_buy_in_act3(revealer_formula)) REROLL();
             // make sure atlas can be cast on easy in act1-3
             if (difficulty == 0) { // easy
-                if (gourdomizer) {
+                if (placement_file || gourdomizer) {
                      if (atlas_formula->type1 == GREASE || atlas_formula->type2 == GREASE) REROLL();
                      if (atlas_formula->type1 == DRY_ICE || atlas_formula->type2 == DRY_ICE) REROLL();
                      if (atlas_formula->type1 == METEORITE || atlas_formula->type2 == METEORITE) REROLL();
@@ -1344,13 +1344,14 @@ int main(int argc, const char** argv)
     APPLY(ALCHEMY_ACCESSIBLE2);
     
     #ifndef NO_RANDO
-    if (gourdomizer || bossdropamizer) {
-        // v015:
+    // FIXME: test this
+    if (placement_file || gourdomizer || bossdropamizer) {
+        // v015: Disable collapsing bridges in pyramids
         APPLY(126); APPLY(127); APPLY(128); APPLY(129); APPLY(130); APPLY(131);
         APPLY(132); APPLY(133); APPLY(134); APPLY(135); APPLY(136); APPLY(137);
         APPLY(138);
     }
-    if (bossdropamizer && !gourdomizer && progressive_armor) {
+    if (!placement_file && bossdropamizer && !gourdomizer && progressive_armor) {
         // v030: update vanilla armor gourds to have progressive drops
         // NOTE: this requires part of gourdomizer to be applied, see below
         APPLY(PROGRESSIVE_ARMOR2); APPLY(PROGRESSIVE_ARMOR3);
@@ -1358,7 +1359,7 @@ int main(int argc, const char** argv)
         APPLY(PROGRESSIVE_ARMOR6); APPLY(PROGRESSIVE_ARMOR7);
         APPLY(PROGRESSIVE_ARMOR8); APPLY(PROGRESSIVE_ARMOR9);
     }
-    if (gourdomizer && !bossdropamizer && progressive_armor) {
+    if (!placement_file && gourdomizer && !bossdropamizer && progressive_armor) {
         // v030: update vanilla boss drops to have progressive drops
         APPLY(PROGRESSIVE_ARMOR);
     }
@@ -1516,7 +1517,7 @@ int main(int argc, const char** argv)
         // v015:
         APPLY(78a); APPLY(78b); APPLY(78c); APPLY(78d); APPLY(78e);
         APPLY(143); APPLY(144);
-        if (!gourdomizer) {
+        if (!placement_file && !gourdomizer) {
             // v026: swap Halls SW Wings with Halls NE Wax
             APPLY(HALLS_WINGS);  APPLY(HALLS_WINGS2);
             APPLY(HALLS_WINGS3); APPLY(HALLS_WINGS4);
@@ -1551,7 +1552,7 @@ int main(int argc, const char** argv)
         grow = true;
         APPLY_GOURDOMIZER_DROPS();
     }
-    if (gourdomizer) {
+    if (placement_file || gourdomizer) {
         // v023:
         printf("Applying fixes for randomized gourds...\n");
         APPLY(REVERSE_BBM); APPLY(REVERSE_BBM2); APPLY(REVERSE_BBM3);
@@ -1826,7 +1827,7 @@ int main(int argc, const char** argv)
         fprintf(flog,"(%02d) %-15s  %s" ENDL, (int)i, alchemy_locations[i].name, get_drop_name_from_packed(alchemy[i]));
     }
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
-    if (gourdomizer) {
+    if (placement_file || gourdomizer) {
     fprintf(flog, ENDL);
     fprintf(flog,"      %-19s  %s" ENDL, "Gourd", "Drop");
     fprintf(flog,"------------------------------------------------------------------------" ENDL);

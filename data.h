@@ -571,14 +571,6 @@ static bool can_buy_pre_thraxx(const struct formula* f) {
     return (can_buy_ingredient_pre_thraxx(f->type1) &&
             can_buy_ingredient_pre_thraxx(f->type2));
 }
-static uint8_t alchemy_lookup(const uint16_t* alchemy, uint16_t idx) {
-    // NOTE: alchemy[a] = b moves b to vanilla a location
-    // FIXME: using this should be broken now
-    for (uint8_t i=0; i<ALCHEMY_COUNT; i++)
-        if (alchemy[i]==(CHECK_ALCHEMY<<10)+idx) return i;
-    assert(false);
-    return 0xff;
-}
 #endif
 
 #define CHARACTER_TOTAL 142
