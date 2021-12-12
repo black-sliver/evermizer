@@ -1787,7 +1787,7 @@ int main(int argc, const char** argv)
         const char* location = NULL;
         for (size_t j=0; j<ALCHEMY_COUNT; j++) {
             if (alchemy[j] == (CHECK_ALCHEMY<<10) + i) {
-                location = alchemy_locations[i].name;
+                location = alchemy_locations[j].name;
                 break;
             }
         }
