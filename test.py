@@ -223,6 +223,8 @@ class DropTest(EvermizerTest):
                 s = line.lstrip()
                 if s.startswith(b'Spell '):
                     block = BLOCK_SPELL
+                elif s.startswith(b'Alchemist '):
+                    block = BLOCK_NONE
                 elif s.startswith(b'Boss '):
                     block = BLOCK_BOSS
                     tmp = s.split(b'Boss',1)[1]
@@ -236,7 +238,7 @@ class DropTest(EvermizerTest):
                 elif block == BLOCK_SPELL:
                     s = s.split(b' ',1)[1]
                     spell = s[:17].rstrip()
-                    loc = s[17:34].rstrip()
+                    loc = s[52:].rstrip()
                     n_spell = SPELL_IDS[spell]
                     n_loc = SPELL_IDS[loc]
                     self.spells[n_loc][n_spell] += 1
