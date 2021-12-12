@@ -134,16 +134,16 @@ const static struct option options[] = {
     { '9', 0, "Shorter dialogs", "Few",    "Shorten some dialogs/cutscenes. Ongoing effort.", OFF_ON },
 #ifndef NO_RANDO
     { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas", OFF_ON },
-    { 'i', 1, "Ingredienizer", NULL,       "Randomize ingredients required for formulas", OFF_ON_CHAOS },
+    { 'i', 1, "Ingredienizer", NULL,       "Shuffle (non-chaos) or randomize (chaos) ingredients required for formulas", OFF_ON_CHAOS },
     { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops", OFF_ON },
     { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops", OFF_ON },
-    { 's', 1, "Sniffamizer", NULL,         "Randomize ingredient drops", OFF_ON_CHAOS },
-    { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead menus (non-chaos), shuffle spells (chaos)", OFF_ON_CHAOS },
-    { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act (non-chaos) or room (chaos)", OFF_ON_CHAOS },
+    { 's', 1, "Sniffamizer", NULL,         "Shuffle (non-chaos) or randomize (chaos) ingredient drops", OFF_ON_CHAOS },
+    { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead characters (non-chaos) or shuffle individual spells (chaos)", OFF_ON_CHAOS },
+    { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act (non-chaos) or per room (chaos)", OFF_ON_CHAOS },
     { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere!", OFF_ON },
     { 'm', 0, "Musicmizer", "Demo",        "Random music for some rooms", OFF_ON },
 #endif
-    { 'f', 0, "Short boss rush", NULL,     "Start boss rush at Magmar, cut HP in half", OFF_ON },
+    { 'f', 0, "Short boss rush", NULL,     "Start boss rush at Metal Magmar, cut HP in half", OFF_ON },
     { 't', 0, "Turdo Mode", NULL,          "Yes.", OFF_ON },
 #ifndef NO_RANDO
     { 'l', 0, "Spoiler Log", NULL,         "Generate a spoiler log file", OFF_ON },
