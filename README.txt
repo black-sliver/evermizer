@@ -7,7 +7,7 @@ HOWTO:
 3b Exe should ask you for settings and spit out success or error in a "dos"
    window, create a file starting with "Evermizer" in source ROM's directory
    and print out the complete filename.
-4. Checksum is wrong, but neither sd2snes nor (most) emulators seem to care
+4. Checksum is wrong, but neither FXPAK nor tested emulators seem to care
 5. You can skip the intro by pressing start (even without a prior save)
 6. You have to loot gourds/chests or kill Thraxx to get a weapon that can cut
    grass to get access to the Windwalker.
@@ -41,14 +41,13 @@ CHANGES SO FAR:
     Horace will not steal your DEs
     Thraxx will always drop a weapon for now
     Bridges in pyramid won't collapse
-    Horace spawn should be fixed (tied to DEs in inventory or DEs lost)
-    Horace dialog should correcly indicate how many DEs you have
+    Horace spawn and dialog is changed (tied to DEs in inventory or DEs lost)
     Tinker taking away your diamond eyes sets flag to not lock-out Aegis
     If gourdomizer is on as well, you can go back through Big Bug after Thraxx
   Gourdomizer: shuffle gourd/pot/chest drops, no gourds are missable
-  Sniffamizer: non-chaos shuffles, chaos randomizes dog-sniff ingredients
-  Callbeadmizer: non-chaos swaps call bead rings, chaos shuffles spells
-  Doggomizer: swap (non-chaos) or randomize (chaos) dogs
+  Sniffamizer: "On" shuffles, "Chaos" randomizes dog-sniff ingredients
+  Callbeadmizer: "On" swaps call bead rings, "Chaos" shuffles individual spells
+  Doggomizer: "On" swaps, "Chaos" randomizes the dog in your party
     Act1-3 only because toaster evasion sound hardlocks for some music tracks
   Pupdunk: Act0 doggo everywhere!
   Musicmizer: randomize music, in testing stage
@@ -130,8 +129,10 @@ CHANGES SO FAR:
 
 
 STILL TO BE FIXED:
-  Show info to the player if market timer is over but vigor won't spawn yet
+  Show info to the player if market timer is over but Vigor won't spawn yet
+    you have to jump down the ravine next to Blimp's cave
   Act3 can have camera location bugs in houses until blindly talked to Lance
+    saving and loading is a work-around
   A lot of vanilla crashes/softlocks
   See discord and github for ideas and feature requests
 
