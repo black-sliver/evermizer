@@ -722,7 +722,7 @@ int main(int argc, const char** argv)
     // NOTE: we also swapped the meaning of alchemy[]. before i was the spell and [i] the location, now it's the other way around
     uint16_t alchemy[ALCHEMY_COUNT];
     _Static_assert(ARRAY_SIZE(alchemy) == 34, "Bad alchemy count");
-    for (uint8_t i=0; i<ALCHEMY_COUNT; i++) alchemy[i] = (CHECK_ALCHEMY<<10) + i;
+    for (size_t i=0; i<ALCHEMY_COUNT; i++) alchemy[i] = (CHECK_ALCHEMY<<10) + (uint16_t)i;
     struct formula ingredients[ALCHEMY_COUNT];
     // preset to vanilla for logic checking without ingredienizer
     {
@@ -736,9 +736,9 @@ int main(int argc, const char** argv)
         }
     }
     uint16_t boss_drops[] = BOSS_DROPS;
-    for (uint8_t i=0; i<ARRAY_SIZE(boss_drops); i++) boss_drops[i] += CHECK_BOSS<<10;
+    for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++) boss_drops[i] += CHECK_BOSS<<10;
     uint16_t gourd_drops[ARRAY_SIZE(gourd_drops_data)];
-    for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (CHECK_GOURD<<10)+(uint16_t)i;
+    for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (CHECK_GOURD<<10) + (uint16_t)i;
     uint16_t sniff_drops[ARRAY_SIZE(sniffs)];
     for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) sniff_drops[i] = sniffs[i].val;
     uint8_t doggo_map[ARRAY_SIZE(doggo_vals)]; // for non-chaos only
