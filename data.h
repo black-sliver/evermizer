@@ -631,4 +631,41 @@ static const char* get_drop_name_from_packed(uint16_t packed)
     uint16_t idx = packed&0x3ff;
     return get_drop_name(type, idx);
 }
+
+static bool is_real_progression(const drop_tree_item* drop)
+{
+    if (drop->type == CHECK_BOSS) {
+        // all defined boss drops are progression
+        return true;
+    }
+    if (drop->type == CHECK_ALCHEMY) {
+        return (drop->index == REVEALER_IDX || drop->index == LEVITATE_IDX);
+    }
+    if (drop->type == CHECK_GOURD) {
+        return (drop->provides[0].progress == P_GAUGE || drop->provides[0].progress == P_WEAPON);
+    }
+    return false;
+}
+
+static bool is_real_progression_from_packed(uint16_t packed)
+{
+    enum check_tree_item_type type = (enum check_tree_item_type)packed>>10;
+    uint16_t idx = packed&0x3ff;
+
+    for (size_t i=0; i<ARRAY_SIZE(drops); i++) {
+        const drop_tree_item* drop = drops+i;
+        if (drop->type == type && drop->index == idx)
+            return is_real_progression(drop);
+    }
+    return false;
+}
+
+static size_t count_real_progression_from_packed(uint16_t* packed, size_t count)
+{
+    size_t n = 0;
+    for (size_t i=0; i<count; i++) {
+        if (is_real_progression_from_packed(packed[i])) n++;
+    }
+    return n;
+}
 #endif

@@ -26,25 +26,31 @@ CHANGES SO FAR:
     Allow to specify output directory with -d
     Run the program without any file/arguments to see possible arguments
     Run the program in UI mode to see possible settings
-  Alchemizer: randomize where you get which alchemy and
-    Make sure Atlas is obtainable and usable in Easy/+Chaos and Normal/+Chaos
-    Make sure Levitate and Revealer is obtainable and usable when required
-    Easy will give you one formula with buyable ingredients pre-thraxx
-    Newly learned alchemy is now preselected/highlighted for alchemy selection
-    Strong Heart only teaches one formula, the other one is in the market
-    (Texts still unchanged)
   Ingredienizer:
     Randomize ingredient requirements
     Scales with difficulty
     Goes crazy with chaos
-  Boss dropamizer: randomize what each boss drops and
+  Alchemizer: "On" randomizes where you get which alchemy and
+    Make sure Atlas is obtainable and usable in Easy/+Chaos and Normal/+Chaos
+    Make sure Levitate and Revealer is obtainable and usable when required
+    Newly learned alchemy is now preselected/highlighted for alchemy selection
+    Strong Heart only teaches one formula, the other one is in the market
+    "Pool" shuffles spells with other enabled pools
+    (Dialogs still unchanged)
+  Boss dropamizer: "On" randomizes what each boss drops and
     Horace will not steal your DEs
     Thraxx will always drop a weapon for now
     Bridges in pyramid won't collapse
     Horace spawn and dialog is changed (tied to DEs in inventory or DEs lost)
     Tinker taking away your diamond eyes sets flag to not lock-out Aegis
     If gourdomizer is on as well, you can go back through Big Bug after Thraxx
-  Gourdomizer: shuffle gourd/pot/chest drops, no gourds are missable
+    "Pool" shuffles boss drops with other enabled pools
+  Gourdomizer: "On" shuffles gourd/pot/chest drops, no gourds are missable and
+    "Pool" shuffles gourd drops with other enabled pools
+  Mixed Pool Strategy: when pooling is enabled
+    "Balance" keeps the amount of key items in each pool constant
+    "Random" may redistribute key items randomly
+    "Bosses" will move all key items to bosses
   Sniffamizer: "On" shuffles, "Chaos" randomizes dog-sniff ingredients
   Callbeadmizer: "On" swaps call bead rings, "Chaos" shuffles individual spells
   Doggomizer: "On" swaps, "Chaos" randomizes the dog in your party
