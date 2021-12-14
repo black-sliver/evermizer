@@ -1806,41 +1806,24 @@ int main(int argc, const char** argv)
 
 #ifndef NO_RANDO
     // if check value differs, the generated ROMs are different.
-    bool chaos = false; // FIXME: use individual state int instead
-    for (size_t i=0; i<ARRAY_SIZE(options); i++)
-        if (O(i)==CHAOS) chaos = true;
-    
     uint64_t seedcheck = (uint16_t)(rand64()&0x3ff); // 10bits=2 b32 chars
-    if (openworld)      seedcheck |= 0x000000400;
-    if (fixsequence)    seedcheck |= 0x000000800;
-    if (fixcheats)      seedcheck |= 0x000001000; // excluding atlas
-    if (glitchless)     seedcheck |= 0x000002000;
-    if (bossdropamizer) seedcheck |= 0x000004000;
-    if (alchemizer)     seedcheck |= 0x000008000;
-    if (ingredienizer)  seedcheck |= 0x000010000;
-    if (gourdomizer)    seedcheck |= 0x000020000;
-    if (sniffamizer)    seedcheck |= 0x000040000;
-    if (doggomizer)     seedcheck |= 0x000080000;
-    //if (enemizer)     seedcheck |= ??;
-    if (accessible)     seedcheck |= 0x000100000;
-    if (keepdog)        seedcheck |= 0x000200000;
-    // 0x00400000 and 0x00800000 = difficulty
-    if (chaos)          seedcheck |= 0x001000000;
-    if (pupdunk)        seedcheck |= 0x002000000;
-    if (fixammo)        seedcheck |= 0x004000000;
-    if (money_den!=money_num) seedcheck |= 0x008000000;
-    if (exp_den!=exp_num)     seedcheck |= 0x010000000;
-    if (fixatlas)       seedcheck |= 0x020000000;
-    if (turdomode)      seedcheck |= 0x040000000;
-    if (shortbossrush)  seedcheck |= 0x080000000;
-    if (fixwings)       seedcheck |= 0x100000000;
-    // 33 bits in use -> 7 b32 chars
-    seedcheck |= ((uint64_t)difficulty<<22);
-    printf("\nCheck: %c%c%c%c%c%c%c (Please compare before racing)\n",
-           b32(seedcheck>>30),
-           b32(seedcheck>>25), b32(seedcheck>>20), b32(seedcheck>>15),
-           b32(seedcheck>>10), b32(seedcheck>>5),  b32(seedcheck>>0));
-    #endif
+    uint64_t curflag = 0x400;
+    for (size_t i=0; i<ARRAY_SIZE(options); i++) {
+        if (options[i].key == 'm') continue;
+        size_t n=0;
+        for (;options[i].state_names[n]; n++);
+        if (n) {
+            seedcheck |= curflag * option_values[i];
+            for (;n>1;n=(n+1)/2) curflag <<= 1;
+        }
+    }
+    seedcheck |= curflag * difficulty;
+    char sseedcheckbuf[14]; // ceil(64/5)+1
+    for (uint8_t i=0, j=0; i<64; i+=5) sseedcheckbuf[j++] = b32(seedcheck>>(60-i));
+    const char* sseedcheck = sseedcheckbuf;
+    while (sseedcheck[0] == 'a' && sseedcheck[1]) sseedcheck++;
+    printf("\nCheck: %s (Please compare before racing)\n", sseedcheck);
+#endif
     
     
     char shortsettings[sizeof(settings)];
