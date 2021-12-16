@@ -114,11 +114,11 @@ char b32(uint64_t v) { return B32[v&0x1f]; }
 const char DIFFICULTY_CHAR[] = {'e','n','h','x'};
 const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard","Random"};
 const char* OFF_ON[] = { "Off", "On", NULL };
-const char* OFF_ON_CHAOS[] = { "Off", "On", "Chaos", NULL };
+const char* OFF_ON_FULL[] = { "Off", "On", "Full", NULL };
 const char* OFF_ON_POOL[] = { "Off", "On", "Pool", NULL };
 const char* POOL_STRATEGY_VALUES[] = { "Balance", "Random", "Bosses", NULL };
 #define ON 1
-#define CHAOS 2
+#define FULL 2
 #define POOL 2
 #define STRATEGY_BALANCED 0
 #define STRATEGY_RANDOM 1
@@ -140,14 +140,14 @@ const static struct option options[] = {
     { '7', 0, "Fix wings glitch", NULL,    "Fix wings granting invincibility if they 'did not work'", OFF_ON },
     { '9', 0, "Shorter dialogs", "Few",    "Shorten some dialogs/cutscenes. Ongoing effort.", OFF_ON },
 #ifndef NO_RANDO
-    { 'i', 1, "Ingredienizer", NULL,       "Shuffle (non-chaos) or randomize (chaos) ingredients required for formulas", OFF_ON_CHAOS },
+    { 'i', 1, "Ingredienizer", NULL,       "Shuffle ('on') or randomize ('full') ingredients required for formulas", OFF_ON_FULL },
     { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas", OFF_ON_POOL },
     { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops", OFF_ON_POOL },
     { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops", OFF_ON_POOL },
     { 'o', 0, "Mixed Pool Strategy", NULL, "Key item placement strategy", POOL_STRATEGY_VALUES },
-    { 's', 1, "Sniffamizer", NULL,         "Shuffle (non-chaos) or randomize (chaos) ingredient drops", OFF_ON_CHAOS },
-    { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead characters (non-chaos) or shuffle individual spells (chaos)", OFF_ON_CHAOS },
-    { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act (non-chaos) or per room (chaos)", OFF_ON_CHAOS },
+    { 's', 1, "Sniffamizer", NULL,         "Shuffle ('on') or randomize ('full') ingredient drops", OFF_ON_FULL },
+    { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead characters ('on') or shuffle individual spells ('full')", OFF_ON_FULL },
+    { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act ('on') or per room ('full')", OFF_ON_FULL },
     { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere!", OFF_ON },
     { 'm', 0, "Musicmizer", "Demo",        "Random music for some rooms", OFF_ON },
 #endif
@@ -224,7 +224,7 @@ enum option_indices {
         assert(ARRAY_SIZE(s)>ARRAY_SIZE(options)+2);\
         *t++ = 'r'; *t++ = DIFFICULTY_CHAR[difficulty];\
         for (size_t i=0; i<ARRAY_SIZE(options); i++)\
-            if (C(i) && options[i].key) *t++ = ( (O(i)==CHAOS) ? toupper(options[i].key) : tolower(options[i].key) );\
+            if (C(i) && options[i].key) *t++ = ( (O(i)==FULL) ? toupper(options[i].key) : tolower(options[i].key) );\
         *t++ = 0;\
     } while (false)
 #else
@@ -234,7 +234,7 @@ enum option_indices {
         assert(ARRAY_SIZE(s)>ARRAY_SIZE(options)+2);\
         *t++ = 'r';\
         for (size_t i=0; i<ARRAY_SIZE(options); i++)\
-            if (C(i) && options[i].key) *t++ = ( (O(i)==CHAOS) ? toupper(options[i].key) : tolower(options[i].key) );\
+            if (C(i) && options[i].key) *t++ = ( (O(i)==FULL) ? toupper(options[i].key) : tolower(options[i].key) );\
         *t++ = 0;\
     } while (false)
 #endif
@@ -827,7 +827,7 @@ int main(int argc, const char** argv)
     for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (CHECK_GOURD<<10) + (uint16_t)i;
     uint16_t sniff_drops[ARRAY_SIZE(sniffs)];
     for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) sniff_drops[i] = sniffs[i].val;
-    uint8_t doggo_map[ARRAY_SIZE(doggo_vals)]; // for non-chaos only
+    uint8_t doggo_map[ARRAY_SIZE(doggo_vals)]; // for non-full only
     for (size_t i=0; i<ARRAY_SIZE(doggo_map); i++) doggo_map[i] = doggo_vals[i];
     uint8_t doggo_changes[ARRAY_SIZE(doggos)]; // preset to vanilla
     for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) doggo_changes[i] = doggos[i].val;
@@ -982,7 +982,7 @@ int main(int argc, const char** argv)
             uint8_t cheap_spell_location = (difficulty==0) ? ((rand64()%2) ? HARD_BALL_IDX : FLASH_IDX) : 0xff;
             
             int cur_total_cost = 0;
-            if (ingredienizer==CHAOS) {
+            if (ingredienizer==FULL) {
                 for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
                     uint8_t type1;
                     uint8_t type2;
@@ -1140,7 +1140,7 @@ int main(int argc, const char** argv)
             for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
                 doggo_changes[i] = doggo_vals[0]; // act0 dog only
             }
-        } else if (doggomizer && doggomizer!=CHAOS) {
+        } else if (doggomizer && doggomizer!=FULL) {
             shuffle_u8(doggo_map+1, ARRAY_SIZE(doggo_map)-2); // keep act0 and act4 dog
             for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
                 for (size_t j=0; j<ARRAY_SIZE(doggo_map); j++) {
@@ -1155,7 +1155,7 @@ int main(int argc, const char** argv)
                 doggo_changes[i] = doggo_vals[rand_u8(0, ARRAY_SIZE(doggo_vals)-2)]; // act0-3 dogs only
             }
         }
-        if (sniffamizer && sniffamizer!=CHAOS) {
+        if (sniffamizer && sniffamizer!=FULL) {
             shuffle_u16(sniff_drops, ARRAY_SIZE(sniff_drops));
         } else if (sniffamizer) {
             for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
@@ -1164,7 +1164,7 @@ int main(int argc, const char** argv)
         }
         if (callbeadamizer) {
             shuffle_u8(callbead_menus, ARRAY_SIZE(callbead_menus));
-            if (callbeadamizer==CHAOS) {
+            if (callbeadamizer==FULL) {
                 shuffle_u16(callbead_spells, ARRAY_SIZE(callbead_spells));
             }
         }
@@ -1772,7 +1772,7 @@ int main(int argc, const char** argv)
         for (size_t i=0; i<ARRAY_SIZE(callbead_menus); i++) {
             write8(buf, rom_off+callbead_menu_action_addrs[i], callbead_menus[i]);
         }
-        if (callbeadamizer==CHAOS) {
+        if (callbeadamizer==FULL) {
             for (size_t i=0; i<ARRAY_SIZE(callbead_spells); i++) {
                 write16(buf, rom_off+callbead_spell_item_addrs[i], callbead_spells[i]);
             }

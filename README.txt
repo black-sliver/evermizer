@@ -29,9 +29,9 @@ CHANGES SO FAR:
   Ingredienizer:
     Randomize ingredient requirements
     Scales with difficulty
-    Goes crazy with chaos
+    Goes crazy with "Full"
   Alchemizer: "On" randomizes where you get which alchemy and
-    Make sure Atlas is obtainable and usable in Easy/+Chaos and Normal/+Chaos
+    Make sure Atlas is obtainable and usable in Easy and Normal
     Make sure Levitate and Revealer is obtainable and usable when required
     Newly learned alchemy is now preselected/highlighted for alchemy selection
     Strong Heart only teaches one formula, the other one is in the market
@@ -51,9 +51,9 @@ CHANGES SO FAR:
     "Balance" keeps the amount of key items in each pool constant
     "Random" may redistribute key items randomly
     "Bosses" will move all key items to bosses
-  Sniffamizer: "On" shuffles, "Chaos" randomizes dog-sniff ingredients
-  Callbeadmizer: "On" swaps call bead rings, "Chaos" shuffles individual spells
-  Doggomizer: "On" swaps, "Chaos" randomizes the dog in your party
+  Sniffamizer: "On" shuffles, "Full" randomizes dog-sniff ingredients
+  Callbeadmizer: "On" swaps call bead rings, "Full" shuffles individual spells
+  Doggomizer: "On" swaps, "Full" randomizes the dog in your party
     Act1-3 only because toaster evasion sound hardlocks for some music tracks
   Pupdunk: Act0 doggo everywhere!
   Musicmizer: randomize music, in testing stage
