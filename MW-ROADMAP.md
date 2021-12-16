@@ -1,24 +1,26 @@
 # Multiworld Roadmap
 
+Multiworld is functional.
+
 Uses [Archipelago](https://github.com/ArchipelagoMW/Archipelago) ("AP") for multi-game multiworld generation and synchronization\
 See [black-sliver / Archipelago / soe](https://github.com/black-sliver/archipelago/tree/soe) for seed generation\
 See [black-sliver / pyevermizer](https://github.com/black-sliver/pyevermizer) for the interface to Archipelago\
 See [black-sliver / apbpatch](https://github.com/black-sliver/apbpatch) for ROM patching\
 See [black-sliver / ap-soeclient](https://github.com/black-sliver/ap-soeclient) for AP client
 
-## Required features for AP
+Below are the items that are still to be done.
 
-* Mix spells and items (levitate and revealer are progression items)
+## Additional features for AP
 
-* Routine (on NMI?) to (schedule script to) award items through memory writes
+* Traps (items)
 
-* Client that sends out and receives items from the AP server
+* Death link (similar to items)
 
-* Counter to (re-)synchronize received items
+* Copy seed/slot from ROM to RAM
 
-* Flags for checked alchemy locations (in addition to flags for received spells)
+* Ingredienizer in AP to put alchemy in logic
 
-* Plando-like interface to have item placement come from AP
+* Show remote player and/or item name
 
 ## Semi-related features
 
@@ -36,32 +38,6 @@ See [black-sliver / ap-soeclient](https://github.com/black-sliver/ap-soeclient) 
 * Add flag "--hide-settings" that gets written to ROM so the tracker does not spoil (Mystery seed)
 
 ## Steps
-
-### Add LGPL text + info in readme
-
-_Status: **DONE**_
-
-### Add missing item names
-
-_Status: **DONE**_
-
-### AP item placement
-
-_Status: **DONE**_
-
-### AP interface
-
-_Status: MOSTLY DONE_
-
-AP will have to
-* generate a `placement.txt`: **done**
-* generate an ID sequence for seed/slot: **done**
-
-`main()` will have to
-* take a `placement.txt`: **done**
-* take an ID sequence: **done**
-* do some error checking: **TODO**
-
 
 ### ROM generation
 
@@ -100,17 +76,6 @@ see [wiki/Memory-Layout#ram-layout](https://github.com/black-sliver/evermizer/wi
 * Some bytes for multiworld communication
   **done**
 
-### SRAM-save, SRAM-load
-
-_Status: **DONE**_
-
-We change the addresses and sizes when the game loads/saves
-from/to SRAM to accommodate for the additional values above.
-
-### Convert spells to items
-
-_Status: **DONE**_
-
 ### Change item and location definition
 
 _Status: UNCERTAIN_
@@ -118,16 +83,6 @@ _Status: UNCERTAIN_
 * Move boss locations, drops and addresses to `bosses.json?
 * Add utilities `bosses2h.py?
 * Same for alchemy?
-
-### Implement receiving of remote items in game
-
-_Status: **DONE**_
-
-### AP client
-
-_Status: MOSTLY DONE_
-
-* see https://github.com/black-sliver/ap-soeclient/#todo
 
 ### Change how "unrandom" works
 
@@ -148,9 +103,6 @@ Implement setting above bits when opening the corresponding ring menu.
 _Status: TODO_
 
 * Remove old patches
-* Fix warnings
-* Test everything
-* Add options to mix pools
 
 ### Add remote player/item names
 
