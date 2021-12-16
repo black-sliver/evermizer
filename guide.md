@@ -7,6 +7,7 @@ With default settings (not bingo) the goal is to defeat the final boss.
 Required items are rocket parts (2 Diamond Eyes, Wheel, Gauge) and Energy Core, with
 * 3 Diamond Eyes, Wheel and Gauge in random locations
 * Energy core not shuffled yet. Draw bridge opens after defeating Mungola, which is accessible after defeating Sterling. Dark Forest being an alternative route to chess board.
+* Distribution of key items depends on settings (Pooling, Gourdomizer, Alchemizer, Boss dropamizer)
 
 **Possibly** required drops along the path:
 * Levitate and Revealer alchemy
