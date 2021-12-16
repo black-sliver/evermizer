@@ -543,6 +543,19 @@ bool alchemy_is_good(uint16_t alchemy_idx) {
             return false;
     }
 }
+bool alchemy_is_healing(uint16_t alchemy_idx) {
+    switch (alchemy_idx) {
+        case BARRIER_IDX:
+        case CALL_UP_IDX:
+        case HEAL_IDX:
+        case MIRACLE_CURE_IDX:
+        case ONE_UP_IDX:
+        case SUPER_HEAL_IDX:
+            return true;
+        default:
+            return false;
+    }
+}
 bool ingredient_is_cheap(uint8_t i) {
     return (i==WAX || i==WATER || i==VINEGAR || i==ROOT || i==OIL || i==LIMESTONE || i==ETHANOL || i==CRYSTAL || i==CLAY || i==BONE || i==ASH);
 }

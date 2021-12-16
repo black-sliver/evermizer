@@ -1176,13 +1176,12 @@ int main(int argc, const char** argv)
         struct formula* revealer_formula = &ingredients[REVEALER_IDX];
         struct formula* atlas_formula = &ingredients[ATLAS_IDX];
         {
-            // TODO: if glitches are required and sequence is broken, don't reroll on ingredients
             if (levitate_formula->type1 == METEORITE ||
                 levitate_formula->type2 == METEORITE)
                     REROLL(); // reroll, unbeatable or would give away a hint
             if ((levitate_formula->type1 == DRY_ICE && levitate_formula->amount1>1) ||
                 (levitate_formula->type2 == DRY_ICE && levitate_formula->amount2>1))
-                    REROLL();
+                    REROLL(); // reroll, unbeatable or would give away a hint
             if ((levitate_formula->type1 == DRY_ICE && levitate_formula->amount1==1) ||
                 (levitate_formula->type2 == DRY_ICE && levitate_formula->amount2==1))
             {
@@ -1198,8 +1197,8 @@ int main(int argc, const char** argv)
                 if (!ok) REROLL();
             }
             if (!can_buy_ingredients(revealer_formula)) REROLL(); // reroll, unbeatable or would give away a hint
-            // two checks below can be changed to only require <=act3 if the drop is in act4
-            if (!can_buy_in_act3(levitate_formula)) REROLL();
+            // two checks below should be changed to only require <=act3 if the drop is before act4
+            if (!can_buy_in_act3(levitate_formula)) REROLL(); // TODO: put ingredients in logic instead
             if (!can_buy_in_act3(revealer_formula)) REROLL();
             // make sure atlas can be cast on easy in act1-3
             if (difficulty == 0) { // easy
@@ -1220,7 +1219,8 @@ int main(int argc, const char** argv)
                 }
             }
             // make sure we get one castable spell pre-thraxx on easy
-            // NOTE: this should be guaranteed by generation
+            // NOTE: this should be guaranteed by generation; at the moment only if ingredienzier is off
+            // TODO: this does not work for POOL
             if (!placement_file && alchemizer!=POOL && (ingredienizer || alchemizer) && difficulty == 0) {
                 uint8_t castable = 2;
                 for (size_t i=0; i<ALCHEMY_COUNT; i++)
@@ -1228,8 +1228,10 @@ int main(int argc, const char** argv)
                             !can_buy_pre_thraxx(&ingredients[i]))
                         castable--;
                 if (castable<1) {
-                    fprintf(stderr, "PRE-THRAXX INGREDIENTS BUG: "
-                            "Please report this with seed and settings.\n");
+                    if (!ingredienizer) {
+                        fprintf(stderr, "PRE-THRAXX INGREDIENTS BUG: "
+                                "Please report this with seed and settings.\n");
+                    }
                     REROLL();
                 }
             }
@@ -1240,6 +1242,21 @@ int main(int argc, const char** argv)
                     if (ingredients[i].type1 == ingredients[i].type2)
                         ok = false;
                 if (!ok) REROLL();
+            }
+            // make sure we have at least 98 casts of good offensive and 33 healing spells before boss rush
+            // NOTE: this should be put in logic in a way that makes you find usable alchemy before act3 prison
+            if (ingredienizer) {
+                unsigned offensive = 0;
+                unsigned healing = 0;
+                for (size_t i=0; i<ALCHEMY_COUNT; i++) {
+                    if (alchemy_is_good(i) && can_buy_ingredients(ingredients+i)) {
+                        offensive += 99/MAX(ingredients[i].amount1, ingredients[i].amount2);
+                    }
+                    else if (alchemy_is_healing(i) && can_buy_ingredients(ingredients+i)) {
+                        healing += 99/MAX(ingredients[i].amount1, ingredients[i].amount2);
+                    }
+                }
+                if (offensive<98 || healing<33) REROLL();
             }
         }
         #undef REROLL
