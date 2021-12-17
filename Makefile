@@ -14,7 +14,7 @@ endif
 ifeq ($(OS),Windows_NT)
 # native, whatever architecture you are on
 WIN32CC?=$(CC)
-WIN32CFLAGS?=$(CFLAGS)
+WIN32CFLAGS?=$(CFLAGS) -U_FORTIFY_SOURCE
 WIN32WINDRES?=windres
 # tools
 MV?=move
@@ -24,7 +24,7 @@ SED:=$(shell where sed)
 else
 # cross compile, we build both 32bit and 64bit
 WIN32CC?=i686-w64-mingw32-gcc
-WIN32CFLAGS?=-Wall -Werror -DWITH_ASSERT -D_FORTIFY_SOURCE=2 -pie -fPIE -static -static-libgcc -ffunction-sections -fdata-sections -Wl,--gc-sections -s -flto=4 -Os
+WIN32CFLAGS?=-Wall -Werror -DWITH_ASSERT -pie -fPIE -static -static-libgcc -ffunction-sections -fdata-sections -Wl,--gc-sections -s -flto=4 -Os
 WIN32WINDRES?=i686-w64-mingw32-windres
 WIN64CC?=x86_64-w64-mingw32-gcc
 WIN64CFLAGS?=$(WIN32CFLAGS)
