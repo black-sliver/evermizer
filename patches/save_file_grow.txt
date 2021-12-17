@@ -1,0 +1,59 @@
+#set
+
+// save/load to/from sram is done in multiple blocks per save file. we increase the last block by 68 bytes and
+// move all blocks by n*68 in SRAM for n=0...3
+
+// Save/Load base address table
+@0xc4599a
+02 60
+77 63
+ec 66
+61 6a
+@
+
+// Patch checksum verification
+@0x8dc946
+69 75 03 // ADC #$0375 instead of #$0331
+@
+
+// Load file display loop, ADC=next, CMP=end
+@0x8dcd22
+69 75 03 // ADC #$0375 instead of #$0331
+@0x8dcd1c
+c9 61 6a // CMP #$6a61 (#$6002+3*#$375) instead of #$6995 (#$6002+3*#$331)
+@
+
+// Save file display loop, as above
+@0x8dd2c8
+69 75 03 // ADC #$0375
+@0x8dd2c2
+c9 61 6a // CMP #$6a61
+@
+
+// Save (strings) loop, as above
+@0x8dd89d
+69 75 03 // ADC #$0375
+@0x8dd897
+c9 61 6a // CMP #$6a61
+@
+
+// Increase (copy) size of last block when saving
+@0x8db450
+a0 64 00 // LDY #$0064 instead of #$0020
+@
+
+// Increase (copy) size of last block when loading
+@0x8db7b2
+a0 64 00 // LDY #$0064 instead of #$0020
+@
+
+// Increase checksum calculation window when saving
+@0x8db469
+a0 73 03 // LDY #$0373 (#$0375-2) instead of #$032f (#$0331-2)
+@
+
+// Increase checksum calculation window when loading
+@0x8dc919
+a0 73 03 // LDY #$0373 instead of #$032f
+@
+

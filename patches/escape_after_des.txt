@@ -13,7 +13,7 @@
 05 61 00 29 05 0d 04 a7 // has DEs OR DEs stolen
 
 @
-// Don't access/despawn/...? Horace if he did not spaw
+// Don't access/despawn/...? Horace if he did not spawn
 //@0x96dba7 Orig: 08 05 07 04 29 05 06 04 a8 08 00
 //@0x96dba7 New:  08 05 61 00 29 05 0d 04 a7 08 00
 @0x96dba7+1

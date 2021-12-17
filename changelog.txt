@@ -1,3 +1,8 @@
+v040:
+  Add support for multiworld. See archipelago.gg
+  Add options to mix item pools
+  Rename 'Chaos' to 'Full'
+
 v039:
   Mark hidden gourds/chests in Tiny's hideout and Outside Ivor as hidden
   Rename Pyramid basement to Tiny's hideout in spoiler

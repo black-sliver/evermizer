@@ -174,6 +174,8 @@ const char* ingredient_names[] = { // has to match ingame-numbers/order
 _Static_assert(WAX==0x00 && ACORN==0x15, "Bad ingredient numbering");
 _Static_assert(ARRAY_SIZE(ingredient_names)==ACORN+1, "Bad ingredient names");
 #ifndef NO_RANDO
+// boss_drop_jumps is where we put the relocation of drops.
+// This jumps to a fixed address in v040+
 const static size_t boss_drop_jumps[] = { // has to match PATCH 81,83-105
     0x93d0b8 + 1 - 0x800000, // Thraxx
     0x93d1ed + 1 - 0x800000, // Coleoptera
@@ -194,6 +196,29 @@ const static size_t boss_drop_jumps[] = { // has to match PATCH 81,83-105
     0x96c113 + 1 - 0x800000, // Magmar
     0x96c11c + 1 - 0x800000, // Mad Monk
 };
+// boss_drop_setup_jumps is where we have to set the address of the drop setup
+// (in the relocated code mentioned above)
+// setup jump target we put there is calculated in get_drop_setup_target
+const static uint32_t boss_drop_setup_jumps[] = { // has to match boss_rando_drops.txt
+    0x96C18F +  0 * 9 + 1 - 0x800000, // Thraxx
+    0x96C18F +  1 * 9 + 1 - 0x800000, // Coleoptera
+    0x96C18F +  2 * 9 + 1 - 0x800000, // Mammoth Viper
+    0x96C18F +  3 * 9 + 1 - 0x800000, // Cave Raptors
+    0x96C18F +  4 * 9 + 1 - 0x800000, // Salabog
+    0x96C18F +  5 * 9 + 1 - 0x800000, // Vigor
+    0x96C18F +  6 * 9 + 1 - 0x800000, // Megataur
+    0x96C18F +  7 * 9 + 1 - 0x800000, // Rimsala
+    0x96C18F +  8 * 9 + 1 - 0x800000, // Aquagoth
+    0x96C18F +  9 * 9 + 1 - 0x800000, // Bad Boys
+    0x96C18F + 10 * 9 + 1 - 0x800000, // Timberdrake
+    0x96C18F + 11 * 9 + 1 - 0x800000, // Verminator
+    0x96C18F + 12 * 9 + 1 - 0x800000, // Tiny
+    0x96C18F + 13 * 9 + 1 - 0x800000, // Mungola
+    0x96C18F + 14 * 9 + 1 - 0x800000, // Sons of Sth.
+    0x96C18F + 15 * 9 + 1 - 0x800000, // Volcano Viper
+    0x96C18F + 16 * 9 + 1 - 0x800000, // Magmar
+    0x96C18F + 17 * 9 + 1 - 0x800000, // Mad Monk
+};
 enum boss_indices { // has to match boss_drop_jumps
     THRAXX_IDX, COLEOPTERA_IDX, MAMMOTH_VIPER_IDX, CAVE_RAPTORS_IDX,
     SALABOG_IDX, VIGOR_IDX, MEGATAUR_IDX, RIMSALA_IDX, AQUAGOTH_IDX,
@@ -209,24 +234,8 @@ const static char* boss_names[] = {
 _Static_assert(THRAXX_IDX==0 && MONK_IDX==ARRAY_SIZE(boss_drop_jumps)-1, "Bad boss indices");
 _Static_assert(ARRAY_SIZE(boss_names)==ARRAY_SIZE(boss_drop_jumps), "Bad boss name list");
 
-const static uint32_t boss_drop_jump_targets[] = { // has to match PATCH 82
-    0x024125, // Nothing
-    0x024129, // Wheel
-    0x024131, // Gladiator Sword
-    0x024139, // Crusader Sword
-    0x024141, // Spider Claw
-    0x024149, // Bronze Axe
-    0x024151, // Horn Spear
-    0x024159, // Bronze Spear
-    0x024161, // Lance
-    0x024169, // Honey
-    0x024176, // Progressive armor / Dino Skin / Talons
-    0x024190, // Bazooka+Shells / Shining Armor / 5,000 Gold Coins
-    0x0241c3, // 10,000 Gold Coins
-    0x0241cc, // Mud Pepper
-    0x005594, // Diamond Eye
-};
-enum boss_drop_indices { // has to match boss_drop_jump_targets
+
+enum boss_drop_indices { // has to match boss_rando_drops.txt
     NOTHING_IDX, WHEEL_IDX, GLADIATOR_SWORD_IDX, CRUSADER_SWORD_IDX,
     SPIDER_CLAW_IDX, BRONZE_AXE_IDX, HORN_SPEAR_IDX, BRONZE_SPEAR_IDX,
     LANCE_WEAPON_IDX, HONEY_DROP_IDX, DINO_DROP_IDX, BAZOOKA_DROP_IDX,
@@ -247,9 +256,9 @@ const static char* boss_drop_names[] = {
     DIAMOND_EYE_DROP_IDX, GOLD_10K_IDX,         BRONZE_AXE_IDX,\
     MUD_PEPPER_DROP_IDX,  NOTHING_IDX,          BRONZE_SPEAR_IDX\
 };
-_Static_assert(NOTHING_IDX==0 && DIAMOND_EYE_DROP_IDX==ARRAY_SIZE(boss_drop_jump_targets)-1, "Bad boss drop indices");
-_Static_assert(ARRAY_SIZE(boss_drop_jump_targets)<=ARRAY_SIZE(boss_drop_jumps), "More drops than bosses");
-_Static_assert(ARRAY_SIZE(boss_drop_names)==ARRAY_SIZE(boss_drop_jump_targets), "Bad boss drop name list");
+_Static_assert(NOTHING_IDX==0/* && DIAMOND_EYE_DROP_IDX==ARRAY_SIZE(boss_drop_setup_jumps)-1*/, "Bad boss drop indices");
+_Static_assert(ARRAY_SIZE(boss_drop_setup_jumps)==ARRAY_SIZE(boss_drop_jumps), "Bad boss jump list");
+_Static_assert(ARRAY_SIZE(boss_drop_names)==DIAMOND_EYE_DROP_IDX+1, "Bad boss drop name list");
 #endif
 
 #ifndef NO_RANDO
@@ -479,6 +488,12 @@ static inline const drop_tree_item* get_drop(enum check_tree_item_type type, uin
         if (drops[i].type == type && drops[i].index == idx) return drops+i;
     return NULL;
 }
+static inline const drop_tree_item* get_drop_from_packed(uint16_t packed)
+{
+    enum check_tree_item_type type = (enum check_tree_item_type)packed>>10;
+    uint16_t idx = packed&0x3ff;
+    return get_drop(type, idx);
+}
 static int drop_provides(const drop_tree_item* drop, uint16_t progress)
 {
     if (!drop) return 0;
@@ -508,12 +523,12 @@ const char* drop2str(const drop_tree_item* drop)
     if (drop->type == CHECK_GOURD) return gourd_drops_data[drop->index].name;
     return "Unknown";
 }
-bool alchemy_in_act4(uint8_t alchemy_idx) {
+bool alchemy_in_act4(uint16_t alchemy_idx) {
     return (alchemy_idx==CALL_UP_IDX || alchemy_idx==ENERGIZE_IDX ||
             alchemy_idx==FORCE_FIELD_IDX || alchemy_idx==NITRO_IDX ||
             alchemy_idx==REFLECT_IDX || alchemy_idx==STOP_IDX);
 }
-bool alchemy_is_good(uint8_t alchemy_idx) {
+bool alchemy_is_good(uint16_t alchemy_idx) {
     switch (alchemy_idx) {
         case CRUSH_IDX:
         case EXPLOSION_IDX:
@@ -523,6 +538,19 @@ bool alchemy_is_good(uint8_t alchemy_idx) {
         case NITRO_IDX:
         case STING_IDX:
         case CALL_UP_IDX:
+            return true;
+        default:
+            return false;
+    }
+}
+bool alchemy_is_healing(uint16_t alchemy_idx) {
+    switch (alchemy_idx) {
+        case BARRIER_IDX:
+        case CALL_UP_IDX:
+        case HEAL_IDX:
+        case MIRACLE_CURE_IDX:
+        case ONE_UP_IDX:
+        case SUPER_HEAL_IDX:
             return true;
         default:
             return false;
@@ -556,19 +584,6 @@ static bool can_buy_pre_thraxx(const struct formula* f) {
     return (can_buy_ingredient_pre_thraxx(f->type1) &&
             can_buy_ingredient_pre_thraxx(f->type2));
 }
-static bool boss_drop_is_a_weapon(uint8_t idx) {
-    return (idx==GLADIATOR_SWORD_IDX || idx==CRUSADER_SWORD_IDX ||
-            idx==SPIDER_CLAW_IDX || idx==BRONZE_AXE_IDX ||
-            idx==HORN_SPEAR_IDX || idx==BRONZE_SPEAR_IDX ||
-            idx==LANCE_WEAPON_IDX);
-}
-static uint8_t alchemy_lookup(uint8_t* alchemy, uint8_t idx) {
-    // NOTE: alchemy[a] = b moves a to vanilla b location
-    for (uint8_t i=0; i<ALCHEMY_COUNT; i++)
-        if (alchemy[i]==idx) return i;
-    assert(false);
-    return 0xff;
-}
 #endif
 
 #define CHARACTER_TOTAL 142
@@ -592,3 +607,78 @@ const size_t callbead_spell_item_addrs[] = {
     0x0e9d95+1, 0x0e9d9b+1, 0x0e9d8f+1,             // sidney
 };
 
+#ifndef NO_RANDO
+static uint32_t get_drop_setup_target(enum check_tree_item_type type, uint16_t idx)
+{
+    if (type == CHECK_NONE) return 0x0fd200; // remote item
+    if (type == CHECK_GOURD && idx<ARRAY_SIZE(gourd_drops_data)) return gourd_drops_data[idx].call_addr;
+    if (type == CHECK_ALCHEMY && idx<ARRAY_SIZE(alchemy_locations)) {
+        uint32_t addr = 0xb0813b + 6 * alchemy_locations[idx].id;
+        return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
+    }
+    if (type == CHECK_BOSS && idx<ARRAY_SIZE(boss_drop_names)) {
+        uint32_t addr = 0x96c135 + 6 * idx;
+        return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
+    }
+    assert(0);
+    return 0;
+}
+static uint32_t get_drop_setup_target_from_packed(uint16_t packed)
+{
+    enum check_tree_item_type type = (enum check_tree_item_type)packed>>10;
+    uint16_t idx = packed&0x3ff;
+    return get_drop_setup_target(type, idx);
+}
+static const char* get_drop_name(enum check_tree_item_type type, uint16_t idx)
+{
+    if (type == CHECK_NONE) return "Remote";
+    if (type == CHECK_GOURD && idx<ARRAY_SIZE(gourd_drops_data)) return gourd_drops_data[idx].name;
+    if (type == CHECK_ALCHEMY && idx<ARRAY_SIZE(alchemy_locations)) return alchemy_locations[idx].name;
+    if (type == CHECK_BOSS && idx<ARRAY_SIZE(boss_drop_names)) return boss_drop_names[idx];
+    assert(0);
+    return "";
+}
+static const char* get_drop_name_from_packed(uint16_t packed)
+{
+    enum check_tree_item_type type = (enum check_tree_item_type)packed>>10;
+    uint16_t idx = packed&0x3ff;
+    return get_drop_name(type, idx);
+}
+
+static bool is_real_progression(const drop_tree_item* drop)
+{
+    if (drop->type == CHECK_BOSS) {
+        // all defined boss drops are progression
+        return true;
+    }
+    if (drop->type == CHECK_ALCHEMY) {
+        return (drop->index == REVEALER_IDX || drop->index == LEVITATE_IDX);
+    }
+    if (drop->type == CHECK_GOURD) {
+        return (drop->provides[0].progress == P_GAUGE || drop->provides[0].progress == P_WEAPON);
+    }
+    return false;
+}
+
+static bool is_real_progression_from_packed(uint16_t packed)
+{
+    enum check_tree_item_type type = (enum check_tree_item_type)packed>>10;
+    uint16_t idx = packed&0x3ff;
+
+    for (size_t i=0; i<ARRAY_SIZE(drops); i++) {
+        const drop_tree_item* drop = drops+i;
+        if (drop->type == type && drop->index == idx)
+            return is_real_progression(drop);
+    }
+    return false;
+}
+
+static size_t count_real_progression_from_packed(uint16_t* packed, size_t count)
+{
+    size_t n = 0;
+    for (size_t i=0; i<count; i++) {
+        if (is_real_progression_from_packed(packed[i])) n++;
+    }
+    return n;
+}
+#endif

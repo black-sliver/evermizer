@@ -10,10 +10,10 @@
 #else
 #ifndef NO_ASSERT
 #define NO_ASSERT
-#pragma message "NOTE: Defaulting to NO_ASSERT"
+#pragma message("NOTE: Defaulting to NO_ASSERT")
 #endif
 #ifdef assert
-#pragma message "NOTE: Compiling with NO_ASSERT, but assert is already defined"
+#pragma message("NOTE: Compiling with NO_ASSERT, but assert is already defined")
 #else
 #define assert(x) do { if(x){} } while(false);
 #endif
@@ -21,6 +21,9 @@
 
 #ifndef MIN
 #define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
+#ifndef MAX
+#define MAX(a,b) (((a)>(b))?(a):(b))
 #endif
 #ifndef SWAP
 #define SWAP(a,b,T) do {\
@@ -104,6 +107,49 @@ int u8_fraction_to_percent(uint8_t num, uint8_t den)
 {
     if (num == den || den == 0) return 100;
     return (int)num * 100 / den;
+}
+
+static inline uint8_t hex2nibble(char hex) {
+    if (hex >= '0' && hex <= '9') return (uint8_t)(hex-'0');
+    if (hex >= 'A' && hex <= 'F') return (uint8_t)(hex-'A'+0x0a);
+    if (hex >= 'a' && hex <= 'f') return (uint8_t)(hex-'a'+0x0a);
+    return 0xff;
+}
+
+static inline bool parse_id(uint8_t* out, const size_t outlen, const char* in)
+{
+    // two allowed formats: hex(<32B>)':'hex(<32B>) or hex(<64B>)
+    // prefer ':' syntax because it will cut overflow of each individual block
+    bool colon = false;
+    size_t inlen = strlen(in);
+    size_t outpos = 0;
+
+    memset(out, 0, outlen);
+
+    for (size_t i = 0; i < inlen; i += 2) {
+        if (in[i] == ':' && outlen > 32 && !colon) {
+            // colon skips to byte 32, clear bytes already written beyond 32, only one colon allowed
+            i--;
+            colon = true;
+            if (outpos > 32) memset(out + 32, 0, outpos - 32);
+            outpos = 32;
+            continue;
+        }
+        if (i+1 >= inlen) return false; // unpaired nibble
+
+        if (outpos < outlen) {
+            // put nibble pair into id buffer
+            uint8_t hi = hex2nibble(in[i]);
+            uint8_t lo = hex2nibble(in[i+1]);
+            if (hi == 0xff || lo == 0xff) return false;
+            out[outpos] = hi;
+            out[outpos] <<= 4;
+            out[outpos] |= lo;
+            outpos++;
+        }
+    }
+
+    return true;
 }
 
 #endif // UTIL_H_INCLUDED

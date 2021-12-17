@@ -7,7 +7,7 @@ HOWTO:
 3b Exe should ask you for settings and spit out success or error in a "dos"
    window, create a file starting with "Evermizer" in source ROM's directory
    and print out the complete filename.
-4. Checksum is wrong, but neither sd2snes nor (most) emulators seem to care
+4. Checksum is wrong, but neither FXPAK nor tested emulators seem to care
 5. You can skip the intro by pressing start (even without a prior save)
 6. You have to loot gourds/chests or kill Thraxx to get a weapon that can cut
    grass to get access to the Windwalker.
@@ -26,29 +26,34 @@ CHANGES SO FAR:
     Allow to specify output directory with -d
     Run the program without any file/arguments to see possible arguments
     Run the program in UI mode to see possible settings
-  Alchemizer: randomize where you get which alchemy and
-    Make sure Atlas is obtainable and usable in Easy/+Chaos and Normal/+Chaos
-    Make sure Levitate and Revealer is obtainable and usable when required
-    Easy will give you one formula with buyable ingredients pre-thraxx
-    Newly learned alchemy is now preselected/highlighted for alchemy selection
-    Strong Heart only teaches one formula, the other one is in the market
-    (Texts still unchanged)
   Ingredienizer:
     Randomize ingredient requirements
     Scales with difficulty
-    Goes crazy with chaos
-  Boss dropamizer: randomize what each boss drops and
+    Goes crazy with "Full"
+  Alchemizer: "On" randomizes where you get which alchemy and
+    Make sure Atlas is obtainable and usable in Easy and Normal
+    Make sure Levitate and Revealer is obtainable and usable when required
+    Newly learned alchemy is now preselected/highlighted for alchemy selection
+    Strong Heart only teaches one formula, the other one is in the market
+    "Pool" shuffles spells with other enabled pools
+    (Dialogs still unchanged)
+  Boss dropamizer: "On" randomizes what each boss drops and
     Horace will not steal your DEs
     Thraxx will always drop a weapon for now
     Bridges in pyramid won't collapse
-    Horace spawn should be fixed (tied to DEs in inventory or DEs lost)
-    Horace dialog should correcly indicate how many DEs you have
+    Horace spawn and dialog is changed (tied to DEs in inventory or DEs lost)
     Tinker taking away your diamond eyes sets flag to not lock-out Aegis
     If gourdomizer is on as well, you can go back through Big Bug after Thraxx
-  Gourdomizer: shuffle gourd/pot/chest drops, no gourds are missable
-  Sniffamizer: non-chaos shuffles, chaos randomizes dog-sniff ingredients
-  Callbeadmizer: non-chaos swaps call bead rings, chaos shuffles spells
-  Doggomizer: swap (non-chaos) or randomize (chaos) dogs
+    "Pool" shuffles boss drops with other enabled pools
+  Gourdomizer: "On" shuffles gourd/pot/chest drops, no gourds are missable and
+    "Pool" shuffles gourd drops with other enabled pools
+  Mixed Pool Strategy: when pooling is enabled
+    "Balance" keeps the amount of key items in each pool constant
+    "Random" may redistribute key items randomly
+    "Bosses" will move all key items to bosses
+  Sniffamizer: "On" shuffles, "Full" randomizes dog-sniff ingredients
+  Callbeadmizer: "On" swaps call bead rings, "Full" shuffles individual spells
+  Doggomizer: "On" swaps, "Full" randomizes the dog in your party
     Act1-3 only because toaster evasion sound hardlocks for some music tracks
   Pupdunk: Act0 doggo everywhere!
   Musicmizer: randomize music, in testing stage
@@ -130,8 +135,10 @@ CHANGES SO FAR:
 
 
 STILL TO BE FIXED:
-  Show info to the player if market timer is over but vigor won't spawn yet
+  Show info to the player if market timer is over but Vigor won't spawn yet
+    you have to jump down the ravine next to Blimp's cave
   Act3 can have camera location bugs in houses until blindly talked to Lance
+    saving and loading is a work-around
   A lot of vanilla crashes/softlocks
   See discord and github for ideas and feature requests
 
@@ -162,8 +169,9 @@ CREDITS:
   Special thanks to elwismw for existing. #hereforelwis
 
 LICENSE:
-  The source tree and generated binaries are distributed under
-  the terms of GPL v3. See LICENSE file.
+  The source tree and generated binaries are distributed under the terms of
+  GPL v3 - see LICENSE file - or alternatively under the terms of
+  LGPL v3 if built into a DLL - see lgpl-3.0.txt.
   The patches found in patches/ directory are in public domain unless
   noted otherwise. See patches/LICENSE file.
   For the patches found in ips/, see the corresponding .txt files.

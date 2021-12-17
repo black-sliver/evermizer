@@ -1,0 +1,356 @@
+#ifndef NO_RANDO
+
+#set
+
+// Add alchemy drop jumps to vanilla code
+
+@0x93aeda
+// Acid Rain, 13 B
+29 00 00 0f // CALL 0xb08000
+04 06 00 00 // SKIP 6 (END)
+
+@0x95e853
+// Atlas, 15 B
+29 09 00 0f // CALL 0xb08009
+04 08 00 00 // SKIP 8 (END)
+
+@0x95d3d3
+// Barrier pt1, 4 B
+04 01 00 00 // SKIP 1 (END)
+// keep 0x95d3d7
+@0x95d3db
+// Barrier pt2, 5 B
+55          // HIDE TEXT
+29 12 00 0f // CALL 0xb08012
+
+@0x9bcec2
+// Call Up pt1, 6 B
+29 1b 00 0f // CALL 0xb0801b
+4d 4d       // NOP NOP
+// keep 0x9bcec8
+@0x9bcecc
+// Call Up pt2, 5 B
+04 02 00 00 // SKIP 2 (END)
+
+@0x98b2fd
+// Corrosion pt1, 4 B
+04 01 00 00 // SKIP 1 (END)
+// keep 0x98b301
+@0x98b305
+// Corrosion pt2, 5 B
+55          // HIDE TEXT
+29 24 00 0f // CALL 0xb08024
+
+@0x95ba74
+// Crush, 11 B
+29 2d 00 0f // CALL 0xb0802d
+04 04 00 00 // SKIP 4 (END)
+
+@0x968435
+// Cure pt1, 8 B
+55          // HIDE TEXT
+30 40       // PLAY SOUND EFFECT 0x40
+29 36 00 0f // CALL 0xb08036
+4d          // NOP
+// keep 0x96843d
+
+@0x968441
+// Cure pt2, 5 B
+04 02 00 00 // SKIP 2 (END)
+
+@0x94e50a
+// Defend, 11 B
+55          // HIDE TEXT
+29 3f 00 0f // CALL 0xb0803f
+04 03 00 00 // SKIP 3 (END)
+00          // clear dead code, but keep the CLEAR TEXT for other code path
+
+@0x94a692
+// Double Drain, 17 B
+55          // HIDE TEXT
+29 48 00 0f // CALL 0xb08048
+04 09 00 00 // SKIP 9 (END)
+00 00 00    // clear some dead code
+
+@0x94a6de
+// Drain, 11 B
+29 51 00 0f // CALL 0xb08051
+04 04 00 00 // SKIP 4 (END)
+
+@0x9bcf44
+// Energize, 9 B
+55          // HIDE TEXT
+29 5a 00 0f // CALL 0xb0805a
+04 01 00 00 // SKIP 2 (END)
+
+@0x96db81
+// Escape pt1, 5 B
+55          // HIDE TEXT
+29 63 00 0f // CALL 0xb08063
+// keep 0x96db86
+@0x96db8a
+// Escape pt2, 5 B
+04 02 00 00 // SKIP 2 (END)
+
+@0x9987af
+// Explosion pt1, 16 B
+04 0d 00 00 // SKIP 13 (END)
+// Explosion/Nitor pt1.5
+@0x9987c7
+4d          // NOP instead of 5a
+@0x9987d3
+// Explosion pt2
+29 6c 00 0f // CALL 0xb0806c
+4d          // NOP
+
+@0x97a0fd
+// Fireball, 9 B
+55          // HIDE TEXT
+29 75 00 0f // CALL 0xb08075
+04 01 00 00 // SKIP 1 (END)
+
+@0x97ea24
+// Fire Power pt1, 6 B
+04 03 00 00 // SKIP 3 (END)
+00 00       // clear dead code
+// keep 0x97ea2a
+@0x97ea2e
+// Fire Power pt2, 5 B
+55          // HIDE TEXT
+29 7e 00 0f // CALL 0xb0807e
+
+@0x94da46
+// Flash, 11 B
+29 87 00 0f // CALL 0xb08087
+04 04 00 00 // SKIP 4 (END)
+
+@0x99da11
+// Force Field pt1, 3 B
+04 00 00    // SKIP 0
+@0x99da1e
+// Force Field pt2
+29 90 00 0f // CALL 0xb08090
+4d          // NOP
+@0x99da27+4
+// Force Field pt3
+09 // if ... skip 9 instead of 4
+
+@0x94a3e5
+// Hard Ball pt1, 6 B
+29 99 00 0f // CALL 0xb08099
+4d 4d       // NOP NOP
+// keep 0x94a3eb
+@0x94a3ef
+// Hard Ball pt2, 6 B
+04 03 00 00 // SKIP 3 (END)
+
+@0x93dbe8
+// Heal #1, 10 B
+55          // HIDE TEXT
+29 a2 00 0f // CALL 0xb080a2
+04 02 00 00 // SKIP 2 (END)
+00          // clear dead code
+@0x93dc87
+// Heal #2, 12 B
+29 a2 00 0f // CALL 0xb080a2
+04 05 00    // SKIP 5 (END)
+
+@0x98d34e
+// Lance, 12 B
+29 ab 00 0f // CALL 0xb080ab
+55          // CLEAR TEXT
+04 04 00 00 // SKIP 4 (END)
+
+// no Laser (0xb080b4)
+
+@0x94808f
+// Levitate pt1, 10 B
+29 bd 00 0f // CALL 0xb080bd
+04 03 00 00 // SKIP 3 (END)
+// keep 0x948099
+@0x94809d
+// Levitate pt2, 6 B
+04 03 00 00 // SKIP 3 (END)
+
+@0x9996ea
+// Lightning Storm pt1, 6 B
+4d 4d       // NOP NOP
+29 c6 00 0f // CALL 0xb080c6
+// keep 0x9996f0
+@0x9996f4
+// Lightning Storm pt2, 6 B
+04 03 00 00 // SKIP 3 (END)
+
+@0x94e715
+// Miracle Cure, 12 B
+55          // HIDE TEXT
+29 cf 00 0f // CALL 0xb080cf
+04 04 00 00 // SKIP 4 (END)
+00 00 00    // clear dead code
+
+@0x9987af
+// Nitro pt1, 16 B
+04 0d 00 00 // SKIP 13 (END)
+@0x9987f5
+// Nitro pt2, 6 B
+29 d8 00 0f // CALL 0xb080d8
+4d 4d       // NOP NOP
+
+@0x99b757
+// One Up pt1, 4 B
+04 01 00 00 // SKIP 1 (END)
+// keep 0x99b75b
+@0x99b75f
+// One Up pt2, 6 B
+55          // HIDE TEXT
+29 e1 00 0f // CALL 0xb080e1
+4d          // NOP
+
+@0x9be02c
+// Reflect pt1, 4 B
+//29 ea 00 0f // CALL 0xb080ea
+04 01 00 00 // SKIP 1 (END)
+// keep 0x9be030
+@0x9be034
+// Reflect pt2, 6 B
+55          // HIDE TEXT
+29 ea 00 0f // CALL 0xb080ea
+4d          // NOP
+//04 30 00 00 // SKIP 3 (END) <- typo :(
+
+@0x98de21
+// Regrowth pt1, 4 B
+55          // CLOSE TEXTBOX
+04 00 00    // SKIP 0
+// keep 0x98de25
+@0x98de29
+// Regrowth pt2, 6 B
+29 f3 00 0f // CALL 0xb080f3
+4d 4d       // NOP NOP
+
+@0x96db45
+// Revealer, 12 B
+// NOTE: cut cutscenes writes to 0x96db47
+4d 4d       // NOP, NOP
+04 01 00 00 // SKIP 1 (END) (same as cut cutscenes)
+55          // HIDE TEXT
+29 fc 00 0f // CALL 0xb080fc
+4d          // NOP
+
+@0x95b23c
+// Revive, 12 B
+55          // HIDE TEXT
+29 05 01 0f // CALL 0xb08105
+04 04 00 00 // SKIP 4 (END)
+00 00 00    // clear dead code
+
+@0x998838
+// Slow Burn pt1, 3 B
+04 00 00    // SKIP 0
+@0x998847
+// Slow Burn pt2, 6 B
+29 0e 01 0f // CALL 0xb0810e
+4d 4d       // NOP NOP
+
+@0x949cbb
+// Speed pt1, 6 B
+04 03 00 00 // SKIP 1, END
+00 00       // clear dead code
+// keep 0x949cc1
+@0x949cc5
+// Speed pt2, 6 B
+29 17 01 0f // CALL 0xb08117
+4d 4d         // NOP NOP
+
+@0x96e159
+// Sting, 7 B
+55          // CLEAR TEXT
+29 20 01 0f // CALL 0xb08120
+4d 4d       // NOP NOP
+
+@0x99da14
+// Stop/Force Field pt0
+08 85 d0 18 0d 00 // IF force field checked ($2572 & 0x01) SKIP 13 to 99da27
+@0x99da1a
+// Stop pt1, 3 B
+04 00 00    // SKIP 0
+@0x99da31
+// Stop pt2, 5 B
+// FIXME: this spot can be looted multiple times
+29 29 01 0f // CALL 0xb08129
+4d          // NOP
+
+@0x9abc1c
+// Super Heal, 6B
+29 32 01 0f // CALL 0xb08132
+4d 4d       // NOP NOP
+
+// New alchemy drops (this replaces old preselect relocation target)
+// 9 bytes each: 4B jump to setup, 4B jump to reward (0xb0820d), 1B end
+//@0xb08000 // Acid Rain drop
+//@0xb08009 // Atlas
+//@0xb08012 // Barrier
+//@0xb0801b // Call Up
+//@0xb08024 // Corrosion
+//@0xb0802d // Crush
+//@0xb08036 // Cure
+//@0xb0803f // Defend
+//@0xb08048 // Double Drain
+//@0xb08051 // Drain
+//@0xb0805a // Energize
+//@0xb08063 // Escape
+//@0xb0806c // Explosion
+//@0xb08075 // Fireball
+//@0xb0807e // Fire Power
+//@0xb08087 // Flash
+//@0xb08090 // Force Field
+//@0xb08099 // Hard Ball
+//@0xb080a2 // Heal
+//@0xb080ab // Lance
+//@0xb080b4 // #Laser
+//@0xb080bd // Levitate
+//@0xb080c6 // Lightning Storm
+//@0xb080cf // Miracle Cure
+//@0xb080d8 // Nitro
+//@0xb080e1 // One Up
+//@0xb080ea // Reflect
+//@0xb080f3 // Regrowth
+//@0xb080fc // Revealer
+//@0xb08105 // Revive
+//@0xb0810e // Slow Burn
+//@0xb08117 // Speed
+//@0xb08120 // Sting
+//@0xb08129 // Stop
+//@0xb08132 // Super Heal
+
+// main will place
+//29 xx xx 0f     // CALL ALCHEMY_SETUP
+//29 0d 02 0f     // CALL ALCHEMY_DROP
+//00              // END
+// for each alchemy drop in addresses above
+
+// New alchemy reward setup (this is compatible to gourds)
+// 6 bytes each: 5B write item ID, 1B end
+//@0xb0813b // Acid Rain ID
+//...
+//@0xb08207 // Super Heal
+
+// main will place
+//17 39 01 xx 10  // WRITE LOOT ITEM = 0x10xx
+//00              // END
+// for each alchemy drop in addresses above
+
+@0xb0820d
+// ALCHEMY_DROP (right after after super heal drop)
+a3 3e               // call loot part 1
+09 85 90 04 05 00   // if not loot successfull skip 5
+a3 3f               // call loot part 2 (looted message)
+04 02 00            // skip 2
+a3 41               // call loot part 3 (failed message)
+a7 99               // sleep 2 sec
+09 08 39 01 29 04 00 10 a4 01 00    // if not a spell then skip 1
+63                  // open alchemy selection
+00                  // end
+@
+
+#endif
