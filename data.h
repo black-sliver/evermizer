@@ -490,7 +490,7 @@ static inline const drop_tree_item* get_drop(enum check_tree_item_type type, uin
 }
 static inline const drop_tree_item* get_drop_from_packed(uint16_t packed)
 {
-    enum check_tree_item_type type = (enum check_tree_item_type)packed>>10;
+    enum check_tree_item_type type = (enum check_tree_item_type)(packed>>10);
     uint16_t idx = packed&0x3ff;
     return get_drop(type, idx);
 }
@@ -625,7 +625,7 @@ static uint32_t get_drop_setup_target(enum check_tree_item_type type, uint16_t i
 }
 static uint32_t get_drop_setup_target_from_packed(uint16_t packed)
 {
-    enum check_tree_item_type type = (enum check_tree_item_type)packed>>10;
+    enum check_tree_item_type type = (enum check_tree_item_type)(packed>>10);
     uint16_t idx = packed&0x3ff;
     return get_drop_setup_target(type, idx);
 }
@@ -640,7 +640,7 @@ static const char* get_drop_name(enum check_tree_item_type type, uint16_t idx)
 }
 static const char* get_drop_name_from_packed(uint16_t packed)
 {
-    enum check_tree_item_type type = (enum check_tree_item_type)packed>>10;
+    enum check_tree_item_type type = (enum check_tree_item_type)(packed>>10);
     uint16_t idx = packed&0x3ff;
     return get_drop_name(type, idx);
 }
@@ -662,7 +662,7 @@ static bool is_real_progression(const drop_tree_item* drop)
 
 static bool is_real_progression_from_packed(uint16_t packed)
 {
-    enum check_tree_item_type type = (enum check_tree_item_type)packed>>10;
+    enum check_tree_item_type type = (enum check_tree_item_type)(packed>>10);
     uint16_t idx = packed&0x3ff;
 
     for (size_t i=0; i<ARRAY_SIZE(drops); i++) {
