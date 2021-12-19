@@ -1836,6 +1836,7 @@ int main(int argc, const char** argv)
     }
     seedcheck |= curflag * difficulty;
     char sseedcheckbuf[14]; // ceil(64/5)+1
+    memset(sseedcheckbuf, 0, sizeof(sseedcheckbuf));
     for (uint8_t i=0, j=0; i<64; i+=5) sseedcheckbuf[j++] = b32(seedcheck>>(60-i));
     const char* sseedcheck = sseedcheckbuf;
     while (sseedcheck[0] == 'a' && sseedcheck[1]) sseedcheck++;
