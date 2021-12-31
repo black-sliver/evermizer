@@ -132,18 +132,18 @@ const static struct option options[] = {
     { '3', 1, "Glitchless beatable", NULL, "Never require glitches to finish", OFF_ON, "General", NULL },
     { '4', 0, "All accessible", NULL,      "Make sure all key items are obtainable", OFF_ON, "General", NULL },
     { 'l', 0, "Spoiler Log", NULL,         "Generate a spoiler log file", OFF_ON, "General", NULL },
-    { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Poolable" },
-    { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Poolable" },
-    { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Poolable" },
+    { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
+    { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
+    { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
     { 'o', 0, "Mixed Pool Strategy", NULL, "Key item placement strategy for the mixed pool. Requires at least one option on 'pool'\\n"
                                            "Balanced will keep the original distribution of key items per pool (4 in gourds, 2 in alchemy, rest in boss drops)\\n"
                                            "Random will randomly distribut key items into any selected pool\\n"
-                                           "Bosses will try to place all key items into boss drops. Requires boss dropamizer on 'pool'", POOL_STRATEGY_VALUES, "General", "Poolable" },
-    { 'i', 1, "Ingredienizer", NULL,       "Shuffle ('on') or randomize ('full') ingredients required for formulas", OFF_ON_FULL, "General", "Unpoolable" },
-    { 's', 1, "Sniffamizer", NULL,         "Shuffle ('on') or randomize ('full') ingredient drops", OFF_ON_FULL, "General", "Unpoolable"  },
-    { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead characters ('on') or shuffle individual spells ('full')", OFF_ON_FULL, "General", "Unpoolable"  },
-    { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act ('on') or per room ('full')", OFF_ON_FULL, "General", "Unpoolable"  },
-    { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere! Overrides Doggomizer", OFF_ON, "General", "Unpoolable" },
+                                           "Bosses will try to place all key items into boss drops. Requires boss dropamizer on 'pool'", POOL_STRATEGY_VALUES, "General", "Key items" },
+    { 'i', 1, "Ingredienizer", NULL,       "Shuffle ('on') or randomize ('full') ingredients required for formulas", OFF_ON_FULL, "General", "Other" },
+    { 's', 1, "Sniffamizer", NULL,         "Shuffle ('on') or randomize ('full') ingredient drops", OFF_ON_FULL, "General", "Other"  },
+    { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead characters ('on') or shuffle individual spells ('full')", OFF_ON_FULL, "General", "Other"  },
+    { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act ('on') or per room ('full')", OFF_ON_FULL, "General", "Other"  },
+    { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere! Overrides Doggomizer", OFF_ON, "General", "Other" },
     { 'm', 0, "Musicmizer", "Demo",        "Random music for some rooms", OFF_ON, "General", "Cosmetic" },
 #endif
     { '1', 1, "Fix sequence", NULL,        "Fix some sequence breaks: Volcano rock, final boss hatch", OFF_ON, "Accessibility", NULL },
