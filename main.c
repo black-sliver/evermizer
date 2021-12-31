@@ -125,55 +125,64 @@ const char* POOL_STRATEGY_VALUES[] = { "Balance", "Random", "Bosses", NULL };
 #define STRATEGY_BOSSES 2
 
 #define DEFAULT_difficulty 1
-struct option { char key; uint8_t def; const char* text; const char* info; const char* description; const char** state_names; };
+struct option { char key; uint8_t def; const char* text; const char* info; const char* description; const char** state_names; const char* section; const char* subsection;};
 const static struct option options[] = {
-    { 0,   1, "Open World", NULL,          "Make windwalker available in every firepit", OFF_ON },
-    { 'k', 1, "Keep dog", NULL,            "Keep dog in some places to avoid softlocks", OFF_ON },
-    { '1', 1, "Fix sequence", NULL,        "Fix some sequence breaks: Volcano rock, final boss hatch", OFF_ON },
-    { '2', 1, "Fix cheats", NULL,          "Fix vanilla cheats: Infinite call beads", OFF_ON },
+    { 0,   1, "Open World", NULL,          "Make windwalker available in every firepit", OFF_ON, NULL },    
 #ifndef NO_RANDO
-    { '3', 1, "Glitchless beatable", NULL, "Never require glitches to finish", OFF_ON },
-    { '4', 0, "All accessible", NULL,      "Make sure all key items are obtainable", OFF_ON },
+    { '3', 1, "Glitchless beatable", NULL, "Never require glitches to finish", OFF_ON, "General", NULL },
+    { '4', 0, "All accessible", NULL,      "Make sure all key items are obtainable", OFF_ON, "General", NULL },
+    { 'l', 0, "Spoiler Log", NULL,         "Generate a spoiler log file", OFF_ON, "General", NULL },
+    { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Poolable" },
+    { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Poolable" },
+    { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Poolable" },
+    { 'o', 0, "Mixed Pool Strategy", NULL, "Key item placement strategy for mixed pool. Requires at least one option on 'pool'\\n"
+                                           "Balanced will keep the original distribution of key items per pool (4 in gourds, 2 in alchemy, rest in boss drops)\\n"
+                                           "Random will randomly distribut key items into any selected pool\\n"
+                                           "Bosses will try to place all key items into boss drops. Requires boss dropamizer on 'pool'", POOL_STRATEGY_VALUES, "General", "Poolable" },
+    { 'i', 1, "Ingredienizer", NULL,       "Shuffle ('on') or randomize ('full') ingredients required for formulas", OFF_ON_FULL, "General", "Unpoolable" },
+    { 's', 1, "Sniffamizer", NULL,         "Shuffle ('on') or randomize ('full') ingredient drops", OFF_ON_FULL, "General", "Unpoolable"  },
+    { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead characters ('on') or shuffle individual spells ('full')", OFF_ON_FULL, "General", "Unpoolable"  },
+    { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act ('on') or per room ('full')", OFF_ON_FULL, "General", "Unpoolable"  },
+    { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere!", OFF_ON, "General", "Unpoolable" },
+    { 'm', 0, "Musicmizer", "Demo",        "Random music for some rooms", OFF_ON, "General", "Cosmetic" },
 #endif
-    { '5', 0, "Fix infinite ammo", NULL,   "Fix bug that would have bazooka ammo not drain", OFF_ON },
-    { '6', 0, "Fix atlas glitch", NULL,    "Fix status effects cancelling with pixie dust", OFF_ON },
-    { '7', 0, "Fix wings glitch", NULL,    "Fix wings granting invincibility if they 'did not work'", OFF_ON },
-    { '9', 0, "Shorter dialogs", "Few",    "Shorten some dialogs/cutscenes. Ongoing effort.", OFF_ON },
-#ifndef NO_RANDO
-    { 'i', 1, "Ingredienizer", NULL,       "Shuffle ('on') or randomize ('full') ingredients required for formulas", OFF_ON_FULL },
-    { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas", OFF_ON_POOL },
-    { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops", OFF_ON_POOL },
-    { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops", OFF_ON_POOL },
-    { 'o', 0, "Mixed Pool Strategy", NULL, "Key item placement strategy", POOL_STRATEGY_VALUES },
-    { 's', 1, "Sniffamizer", NULL,         "Shuffle ('on') or randomize ('full') ingredient drops", OFF_ON_FULL },
-    { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead characters ('on') or shuffle individual spells ('full')", OFF_ON_FULL },
-    { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act ('on') or per room ('full')", OFF_ON_FULL },
-    { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere!", OFF_ON },
-    { 'm', 0, "Musicmizer", "Demo",        "Random music for some rooms", OFF_ON },
-#endif
-    { 'f', 0, "Short boss rush", NULL,     "Start boss rush at Metal Magmar, cut HP in half", OFF_ON },
-    { 't', 0, "Turdo Mode", NULL,          "Yes.", OFF_ON },
-#ifndef NO_RANDO
-    { 'l', 0, "Spoiler Log", NULL,         "Generate a spoiler log file", OFF_ON },
-#endif
+    { '1', 1, "Fix sequence", NULL,        "Fix some sequence breaks: Volcano rock, final boss hatch", OFF_ON, "Accessibility", NULL },
+    { '2', 1, "Fix cheats", NULL,          "Fix vanilla cheats: Infinite call beads", OFF_ON, "Accessibility", NULL },
+    { '5', 0, "Fix infinite ammo", NULL,   "Fix bug that would have bazooka ammo not drain", OFF_ON, "Accessibility", NULL  },
+    { '6', 0, "Fix atlas glitch", NULL,    "Fix status effects cancelling with pixie dust", OFF_ON, "Accessibility", NULL  },
+    { '7', 0, "Fix wings glitch", NULL,    "Fix wings granting invincibility if they 'did not work'", OFF_ON, "Accessibility", NULL  },
+    { 'f', 1, "Short boss rush", NULL,     "Start boss rush at Metal Magmar, cut HP in half", OFF_ON, "Accessibility", NULL  },
+    { 'k', 1, "Keep dog", NULL,            "Keep dog in some places to avoid softlocks", OFF_ON, "Quality of Life", NULL },
+    { '9', 1, "Shorter dialogs", "Few",    "Shorten some dialogs/cutscenes. Ongoing effort.", OFF_ON, "Quality of Life", NULL },
+    { 't', 0, "Turdo Mode", NULL,          "Replaces all offensive spells, weakens weapons, reduces enemies' Magic Def.", OFF_ON, "\\\"Fun\\\"", NULL },
 };
 enum option_indices {
-    openworld_idx, keepdog_idx, fixsequence_idx, fixcheats_idx,
+    openworld_idx,
 #ifndef NO_RANDO
-    glitchless_idx, accessible_idx,
-#endif
-    fixammo_idx, fixatlas_idx, fixwings_idx, shortdialogs_idx,
-#ifndef NO_RANDO
-    ingredienizer_idx,
-    alchemizer_idx, bossdropamizer_idx, gourdomizer_idx,
-    mixedpool_idx,
-    sniffamizer_idx, callbeadamizer_idx,
-    doggomizer_idx, pupdunk_idx, /*enemizer_idx,*/ musicmizer_idx,
-#endif
-    shortbossrush_idx, turdomode_idx,
-#ifndef NO_RANDO
+    glitchless_idx,
+    accessible_idx,
     spoilerlog_idx,
+    alchemizer_idx,
+    bossdropamizer_idx,
+    gourdomizer_idx,
+    mixedpool_idx,
+    ingredienizer_idx,
+    sniffamizer_idx,
+    callbeadamizer_idx,
+    doggomizer_idx,
+    pupdunk_idx, 
+    /*enemizer_idx,*/
+    musicmizer_idx,
 #endif
+    fixsequence_idx,
+    fixcheats_idx,
+    fixammo_idx,
+    fixatlas_idx,
+    fixwings_idx,
+    shortbossrush_idx, 
+    keepdog_idx,
+    shortdialogs_idx,
+    turdomode_idx,
 };
 #define D(IDX) options[ IDX ].def
 #define O(IDX) option_values[ IDX ]
@@ -313,6 +322,10 @@ static void print_settings_json()
                                i==DEFAULT_difficulty?"true":"false");
     }
     printf("\n ],\n");
+    printf(" \"Difficulty Description\": \"Judges item placement based on logic depth (amount of key items needed to reach the goal) and gameplay difficulty (early call beads, strong weapons or spells, hard-to-reach-checks, etc.) and will reroll until these parameters are within bounds for the selected difficulty. Also effects spell cost with Ingredienizer."
+                                        "\\nEasy will exclude key items at hidden gourds (behind walkthru walls and not near alchemist) from Gourdomizer and make sure Atlas is usable before act 4."
+                                        "\\nNormal will make sure Atlas is reachable before boss rush."
+                                        "\\nRandom will allow any seed.\",\n");
 #endif
     printf(" \"Options\": [\n");
     bool first_opt = true;
@@ -328,12 +341,12 @@ static void print_settings_json()
             if (j != 0) printf(", ");
             printf("\"%s\"", opt->state_names[j]);
         }
-        printf("] ]");
+        printf("], \"%s\", \"%s\" ]", opt->section, opt->subsection==NULL?"":opt->subsection);
     }
     printf("\n ],\n");
     printf(" \"Args\": [\n");
-    printf("  [ \"exp\", \"Exp%%\", \"int\", \"100\", \"Character, alchemy and weapon experience modifier\" ],\n");
-    printf("  [ \"money\", \"Money%%\", \"int\", \"100\", \"Enemy money modifier\" ]\n");
+    printf("  [ \"exp\", \"Exp%%\", \"int\", \"100\", \"Character, alchemy and weapon experience modifier in percent. (1-2500)\",  \"Accessibility\", \"\", 1, 2500 ],\n");
+    printf("  [ \"money\", \"Money%%\", \"int\", \"100\", \"Enemy money modifier in percent. (1-2500)\", \"Accessibility\", \"\", 1, 2500 ]\n");
     printf(" ]\n}\n\n");
 }
 
