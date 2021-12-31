@@ -1922,6 +1922,7 @@ int main(int argc, const char** argv)
         fprintf(flog,"Placement from file" ENDL);
     else
         fprintf(flog,"Tree depth: %d, cyber logic score: %d, cyber gameplay score: %d%s", treedepth, cyberlogicscore, cybergameplayscore, ENDL);
+    fprintf(flog,"Exp%%: %d, Money%%: %d%s", u8_fraction_to_percent(exp_num,exp_den), u8_fraction_to_percent(money_num,money_den), ENDL);
     fprintf(flog, ENDL);
     fprintf(flog,"     %-15s  %-15s   %-15s  %s" ENDL, "Spell", "Ingredient 1", "Ingredient 2", "Location"); 
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
