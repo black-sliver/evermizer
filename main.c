@@ -133,9 +133,9 @@ const static struct option options[] = {
     { '4', 0, "All accessible", NULL,      "Make sure all key items are obtainable", OFF_ON, "General", NULL },
     { 'l', 0, "Spoiler Log", NULL,         "Generate a spoiler log file", OFF_ON, "General", NULL },
     { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Poolable" },
-    { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Poolable" },
-    { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Poolable" },
-    { 'o', 0, "Mixed Pool Strategy", NULL, "Key item placement strategy for mixed pool. Requires at least one option on 'pool'\\n"
+    { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Poolable" },
+    { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Poolable" },
+    { 'o', 0, "Mixed Pool Strategy", NULL, "Key item placement strategy for the mixed pool. Requires at least one option on 'pool'\\n"
                                            "Balanced will keep the original distribution of key items per pool (4 in gourds, 2 in alchemy, rest in boss drops)\\n"
                                            "Random will randomly distribut key items into any selected pool\\n"
                                            "Bosses will try to place all key items into boss drops. Requires boss dropamizer on 'pool'", POOL_STRATEGY_VALUES, "General", "Poolable" },
@@ -143,7 +143,7 @@ const static struct option options[] = {
     { 's', 1, "Sniffamizer", NULL,         "Shuffle ('on') or randomize ('full') ingredient drops", OFF_ON_FULL, "General", "Unpoolable"  },
     { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead characters ('on') or shuffle individual spells ('full')", OFF_ON_FULL, "General", "Unpoolable"  },
     { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act ('on') or per room ('full')", OFF_ON_FULL, "General", "Unpoolable"  },
-    { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere!", OFF_ON, "General", "Unpoolable" },
+    { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere! Overrides Doggomizer", OFF_ON, "General", "Unpoolable" },
     { 'm', 0, "Musicmizer", "Demo",        "Random music for some rooms", OFF_ON, "General", "Cosmetic" },
 #endif
     { '1', 1, "Fix sequence", NULL,        "Fix some sequence breaks: Volcano rock, final boss hatch", OFF_ON, "Accessibility", NULL },
@@ -154,7 +154,7 @@ const static struct option options[] = {
     { 'f', 1, "Short boss rush", NULL,     "Start boss rush at Metal Magmar, cut HP in half", OFF_ON, "Accessibility", NULL  },
     { 'k', 1, "Keep dog", NULL,            "Keep dog in some places to avoid softlocks", OFF_ON, "Quality of Life", NULL },
     { '9', 1, "Shorter dialogs", "Few",    "Shorten some dialogs/cutscenes. Ongoing effort.", OFF_ON, "Quality of Life", NULL },
-    { 't', 0, "Turdo Mode", NULL,          "Replaces all offensive spells, weakens weapons, reduces enemies' Magic Def.", OFF_ON, "\\\"Fun\\\"", NULL },
+    { 't', 0, "Turdo Mode", NULL,          "Replaces all offensive spells with \\\"turd balls\\\", weakens weapons, reduces enemies' Magic Def.", OFF_ON, "\\\"Fun\\\"", NULL },
 };
 enum option_indices {
     openworld_idx,
