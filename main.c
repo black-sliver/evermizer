@@ -247,6 +247,19 @@ enum option_indices {
         *t++ = 0;\
     } while (false)
 #endif
+
+struct preset {const char* name; const char* settings; int exp; int money;};
+const static struct preset presets[] = {
+    {"First-Timer", "rel", 300, 300},
+    {"Beginner", "rel", 200, 250},
+    {"Advanced", "rlABGSCd67", 150, 200},
+    {"Pro", "rhlABGISCD567", 125, 150},
+    {"Hell", "rhlABGOISCp567f", 75, 75},
+    {"Hell+", "rhlABGOISCp567f", 1, 1},
+    {"Turdo", "rxlABGoISCDm567t", 125, 200},
+    {"Full Random", "rxlABGoISCDm67", -1, -1} //-1 => weekly-esque random value
+};
+
 #ifdef NO_UI
 #define _FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
 #else
@@ -275,8 +288,10 @@ static void print_usage(const char* appname)
 #ifndef __EMSCRIPTEN__
     fprintf(stderr, "       %s --settings         show available settings\n", appname);
     fprintf(stderr, "       %s --settings.json    above as json\n", appname);
+    fprintf(stderr, "       %s --presets.json     available presets as json\n", appname);    
 #else
     fprintf(stderr, "       %s --settings.json    available settings as json\n", appname);
+    fprintf(stderr, "       %s --presets.json     available presets as json\n", appname);
 #endif
 #if defined(WIN32) || defined(_WIN32)
     fprintf(stderr, "       or simply drag & drop your ROM onto the EXE\n");
@@ -348,6 +363,27 @@ static void print_settings_json()
     printf("  [ \"exp\", \"Exp%%\", \"int\", \"100\", \"Character, alchemy and weapon experience modifier in percent. (1-2500)\",  \"Accessibility\", \"\", 1, 2500 ],\n");
     printf("  [ \"money\", \"Money%%\", \"int\", \"100\", \"Enemy money modifier in percent. (1-2500)\", \"Accessibility\", \"\", 1, 2500 ]\n");
     printf(" ]\n}\n\n");
+}
+
+static void print_presets_json()
+{    
+    printf("[\n");
+    bool first = true;
+    for (size_t i=0; i<ARRAY_SIZE(presets); i++) {
+        const struct preset* preset = presets+i;
+        if (! preset->name) continue;
+        if (!first) printf(",\n");
+        first = false;
+        printf(" {\n");
+        printf("  \"Name\": \"%s\",\n", preset->name);
+        printf("  \"Settings\": \"%s\",\n", preset->settings);
+        printf("  \"Args\": [\n");
+        printf("   [ \"exp\", %i],\n", preset->exp);
+        printf("   [ \"money\", %i]\n", preset->money);
+        printf("  ]\n");
+        printf(" }");
+    }
+    printf("\n]\n");
 }
 
 #ifndef NO_RANDO
@@ -505,6 +541,9 @@ int main(int argc, const char** argv)
     #endif
         } else if (strcmp(argv[1], "--settings.json") == 0) {
             print_settings_json();
+            return 0;
+        } else if (strcmp(argv[1], "--presets.json") == 0) {
+            print_presets_json();
             return 0;
         } else if (strcmp(argv[1], "--verify") == 0) {
             argv++; argc--;
