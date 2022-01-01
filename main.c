@@ -127,7 +127,7 @@ const char* POOL_STRATEGY_VALUES[] = { "Balance", "Random", "Bosses", NULL };
 #define DEFAULT_difficulty 1
 struct option { char key; uint8_t def; const char* text; const char* info; const char* description; const char** state_names; const char* section; const char* subsection;};
 const static struct option options[] = {
-    { 0,   1, "Open World", NULL,          "Make windwalker available in every firepit", OFF_ON, NULL },    
+    { 0,   1, "Open World", NULL,          "Make windwalker available in every firepit", OFF_ON, NULL, NULL },    
 #ifndef NO_RANDO
     { '3', 1, "Glitchless beatable", NULL, "Never require glitches to finish", OFF_ON, "General", NULL },
     { '4', 0, "All accessible", NULL,      "Make sure all key items are obtainable", OFF_ON, "General", NULL },
