@@ -247,7 +247,7 @@ enum option_indices {
         *t++ = 0;\
     } while (false)
 #endif
-
+#ifdef __EMSCRIPTEN__
 struct preset {const char* name; const char* settings; int exp; int money;};
 const static struct preset presets[] = {
     {"First-Timer", "rel", 300, 300},
@@ -259,7 +259,7 @@ const static struct preset presets[] = {
     {"Turdo", "rxlABGoISCDm567t", 125, 200},
     {"Full Random", "rxlABGoISCDm67", -1, -1} //-1 => weekly-esque random value
 };
-
+#endif
 #ifdef NO_UI
 #define _FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
 #else
@@ -287,8 +287,7 @@ static void print_usage(const char* appname)
     fprintf(stderr, "       %s --verify <rom.sfc> check if rom is compatible\n", appname);
 #ifndef __EMSCRIPTEN__
     fprintf(stderr, "       %s --settings         show available settings\n", appname);
-    fprintf(stderr, "       %s --settings.json    above as json\n", appname);
-    fprintf(stderr, "       %s --presets.json     available presets as json\n", appname);    
+    fprintf(stderr, "       %s --settings.json    above as json\n", appname);        
 #else
     fprintf(stderr, "       %s --settings.json    available settings as json\n", appname);
     fprintf(stderr, "       %s --presets.json     available presets as json\n", appname);
@@ -364,7 +363,7 @@ static void print_settings_json()
     printf("  [ \"money\", \"Money%%\", \"int\", \"100\", \"Enemy money modifier in percent. (1-2500)\", \"Accessibility\", \"\", 1, 2500 ]\n");
     printf(" ]\n}\n\n");
 }
-
+#ifdef __EMSCRIPTEN__
 static void print_presets_json()
 {    
     printf("[\n");
@@ -385,7 +384,7 @@ static void print_presets_json()
     }
     printf("\n]\n");
 }
-
+#endif
 #ifndef NO_RANDO
 static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t len2, uint8_t strategy)
 {
@@ -542,9 +541,11 @@ int main(int argc, const char** argv)
         } else if (strcmp(argv[1], "--settings.json") == 0) {
             print_settings_json();
             return 0;
+    #ifdef __EMSCRIPTEN__
         } else if (strcmp(argv[1], "--presets.json") == 0) {
             print_presets_json();
             return 0;
+    #endif
         } else if (strcmp(argv[1], "--verify") == 0) {
             argv++; argc--;
             verify=true;
