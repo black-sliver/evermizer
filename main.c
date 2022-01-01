@@ -255,7 +255,7 @@ const static struct preset presets[] = {
     {"Advanced", "rlABGSCd67", 150, 200},
     {"Pro", "rhlABGISCD567", 125, 150},
     {"Hell", "rhlABGOISCp567f", 75, 75},
-    {"Hell+", "rhlABGOISCp567f", 1, 1},
+    {"Menblock", "rhlABGOISCp567f", 1, 1},
     {"Turdo", "rxlABGoISCDm567t", 125, 200},
     {"Full Random", "rxlABGoISCDm67", -1, -1} //-1 => weekly-esque random value
 };
