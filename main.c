@@ -522,6 +522,8 @@ int main(int argc, const char** argv)
     bool id_data_set = false;
     const size_t id_loc = 0x3d0040;
     const char* placement_file = NULL;
+    #else
+    #define placement_file false
     #endif
     
     // parse command line arguments
@@ -985,8 +987,6 @@ int main(int argc, const char** argv)
         } while (true);
         free(placement);
     }
-#else
-    #define placement_file false
 #endif
     
     int treedepth=0;
