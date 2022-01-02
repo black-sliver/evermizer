@@ -351,10 +351,15 @@ static void print_settings_json()
                                i==DEFAULT_difficulty?"true":"false");
     }
     printf("\n ],\n");
-    printf(" \"Difficulty Description\": \"Judges item placement based on logic depth (amount of key items needed to reach the goal) and gameplay difficulty (early call beads, strong weapons or spells, hard-to-reach-checks, etc.) and will reroll until these parameters are within bounds for the selected difficulty. Also effects spell cost with Ingredienizer."
-                                        "\\nEasy will exclude key items at hidden gourds (behind walkthru walls and not near alchemist) from Gourdomizer and make sure Atlas is usable before act 4."
-                                        "\\nNormal will make sure Atlas is reachable before boss rush."
-                                        "\\nRandom will allow any seed.\",\n");
+    printf(" \"Difficulty Description\": "
+            "\"Judges item placement based on logic depth (amount of key items needed to reach the goal) "
+            "and gameplay difficulty (early call beads, strong weapons or spells, hard-to-reach-checks, etc.) "
+            "and will reroll until these parameters are within bounds for the selected difficulty. "
+            "Also affects spell cost with Ingredienizer.\\n"
+            "Easy will exclude key items at hidden gourds (behind walkthru walls and not near alchemist) "
+            "from Gourdomizer and make sure Atlas is usable before act 4.\\n"
+            "Normal will make sure Atlas is reachable before boss rush.\\n"
+            "Random will allow any seed.\",\n");
 #endif
     printf(" \"Options\": [\n");
     bool first_opt = true;
