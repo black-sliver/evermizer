@@ -91,8 +91,10 @@ void die(const char* msg)
 }
 #endif
 
+#ifndef NO_RANDO
 const char B32[] = "abcdefghijklmnopqrstuvwxyz234567=";
-char b32(uint64_t v) { return B32[v&0x1f]; }
+static char b32(uint64_t v) { return B32[v&0x1f]; }
+#endif
 #define APPLY_PATCH(buf, patch, loc) memcpy(buf+loc, patch, sizeof(patch)-1)
 
 #include "rng.h"
@@ -1010,7 +1012,7 @@ int main(int argc, const char** argv)
 
         if (!placement_file) {
             // reset checks
-            uint16_t tmp[] = BOSS_DROPS;
+            const uint16_t tmp[] = BOSS_DROPS;
             for (size_t i=0; i<ALCHEMY_COUNT; i++) alchemy[i] = (CHECK_ALCHEMY<<10) + (uint16_t)i;
             for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++) boss_drops[i] = (CHECK_BOSS<<10) + tmp[i];
             for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (CHECK_GOURD<<10) + (uint16_t)i;

@@ -462,7 +462,7 @@ static inline bool check_requires(check_tree_item* check, enum progression progr
             return true;
     return false;
 }
-static inline bool check_reached(check_tree_item* check, int* progress)
+static inline bool check_reached(check_tree_item* check, const int* progress)
 {
     for (size_t i=0; i<ARRAY_SIZE(check->requires); i++)
         if (check->requires[i].pieces>progress[check->requires[i].progress])
