@@ -1,5 +1,7 @@
-next:
+v041:
   Better UI and presets for WebUI by cyb3r
+  Make sons of sth. unmissable
+  Fix a potential pyramid softlock (free dog before breaking a wall)
 
 v040:
   Add support for multiworld. See archipelago.gg
