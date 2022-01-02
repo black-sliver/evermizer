@@ -36,6 +36,9 @@ CLOSURECOMPILER:=$(shell which closure-compiler)
 SED:=$(shell which sed)
 endif
 
+CPPCHECK_OPT=--enable=all --suppress=missingIncludeSystem --suppress=duplicateExpression -q
+CPPCHECKS=cppcheck1 cppcheck2 cppcheck3 cppcheck4 cppcheck5 cppcheck6 cppcheck7 cppcheck8 cppcheck9 cppcheck10 cppcheck11 cppcheck12 cppcheck13 cppcheck14 cppcheck15 cppcheck16
+
 EMCC?=emcc
 EMFLAGS?=-D NO_ASSERT -s ENVIRONMENT=web -s WASM=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=0 -s ASSERTIONS=0 -s TOTAL_STACK=1048576 -s INITIAL_MEMORY=6291456 -Os --closure 0
 # NOTE: em's --closure 1 may fail/remove too much or clash with other code, we call closure compiler manually for that reason
@@ -46,7 +49,7 @@ SOURCE_FILES = main.c
 INCLUDE_FILES = rng.h util.h data.h sniff.h gourds.h doggo.h patches.h gen.h tinymt64.h
 
 
-.PHONY: clean clean-temps all native win32 wasm test test-code release
+.PHONY: clean clean-temps all native win32 wasm test test-code $(CPPCHECKS) release
 
 ifeq ($(OS),Windows_NT)
 native: win32
@@ -136,10 +139,60 @@ ifeq ($(strip $(ROM)),)
 endif
 	$(PYTHON) test.py "./$(EXE)" "$(ROM)"
 
-test-code: all
 ifneq ($(strip $(CPPCHECK)),)
-	$(CPPCHECK) --force --enable=all --suppress=missingIncludeSystem --suppress=duplicateExpression -q main.c
+# latest cppcheck takes ~5min. make release with -j8 or higher
+cppcheck1:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D__linux__ main.c
+cppcheck2:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D__linux__ -DWITH_ASSERT main.c
+cppcheck3:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D__linux__ -DNO_UI main.c
+cppcheck4:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D__linux__ -DNO_RANDO -DNO_UI main.c
+cppcheck5:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 main.c
+cppcheck6:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -DWITH_ASSERT main.c
+cppcheck7:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -DNO_UI main.c
+cppcheck8:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -DNO_RANDO -DNO_UI main.c
+cppcheck9:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -D_MSC_VER main.c
+cppcheck10:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -D_MSC_VER -DWITH_ASSERT main.c
+cppcheck11:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -D_MSC_VER -DNO_UI main.c
+cppcheck12:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -D_MSC_VER -DNO_RANDO -DNO_UI main.c
+cppcheck13:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D__EMSCRIPTEN__ main.c
+cppcheck14:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D__EMSCRIPTEN__ -DWITH_ASSERT main.c
+cppcheck15:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D__EMSCRIPTEN__ -DNO_UI main.c
+cppcheck16:
+	$(CPPCHECK) $(CPPCHECK_OPT) -D__EMSCRIPTEN__ -DNO_RANDO -DNO_UI main.c
+else
+cppcheck1: ;
+cppcheck2: ;
+cppcheck3: ;
+cppcheck4: ;
+cppcheck5: ;
+cppcheck6: ;
+cppcheck7: ;
+cppcheck8: ;
+cppcheck9: ;
+cppcheck10: ;
+cppcheck11: ;
+cppcheck12: ;
+cppcheck13: ;
+cppcheck14: ;
+cppcheck15: ;
+cppcheck16: ;
 endif
+
+test-code: all $(CPPCHECKS)
 ifeq ($(strip $(ROM)),)
 	$(error ROM is not set. Set it in Makeconfig, environment or make variable)
 endif
