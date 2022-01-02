@@ -814,7 +814,8 @@ int main(int argc, const char** argv)
     printf("Seed: %" PRIx64 "\n", seed);
     srand64(seed);
     bool randomized = alchemizer || ingredienizer || bossdropamizer ||
-                      gourdomizer || sniffamizer || doggomizer || callbeadamizer /*||enemizer*/;
+                      gourdomizer || sniffamizer || doggomizer || callbeadamizer
+                      || placement_file /*||enemizer*/;
     bool randomized_difficulty = alchemizer || ingredienizer || bossdropamizer ||
                       gourdomizer;
     #else
@@ -1702,7 +1703,7 @@ int main(int argc, const char** argv)
     UNUSED(74);
     UNUSED(77);
     #else
-    if (alchemizer) {
+    if (alchemizer || placement_file) {
         printf("Applying alchemizer...\n");
         grow = true;
 
@@ -1747,7 +1748,7 @@ int main(int argc, const char** argv)
             memcpy(buf + rom_off + 0x4601F + id*4, &(ingredients[i]), 4);
         }
     }
-    if (bossdropamizer) {
+    if (bossdropamizer || placement_file) {
         printf("Applying fixes for randomized boss drops...\n");
         APPLY(74); APPLY(78); APPLY(79); APPLY(80);
         // v015:
