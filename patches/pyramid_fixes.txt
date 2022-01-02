@@ -56,6 +56,29 @@ f2 0d // disable dfb
 @0x9ed893 + 4
 // patch 138
 f2 0d // disable dfe
+@
 
+// simplify code that destroys the two walls in pyramid top
+// to make room for wall destroyed |= dog freed
+@0x95981d
+09 85 5e 04 04 00 // if not dog freed skip 4
+0c 54 04 b1       // set wall 0 destroyed = true
+09 85 54 04 03 00 // if not wall 0 destroyed skip 3
+5c b0 b5          // set obj 0 state = 5
+00                // end
+//@0x959831 (original 0x95982e)
+09 85 55 04 03 00 // if not wall 1 destroyed skip 3
+5c b1 b4          // set obj 1 state = 4
+00                // end
+@
+// change rcalls to 0x95982e to 0x959831
+@0x959868
+a5 c9 // RCALL -55 to ..31
+@0x959863
+a5 ce // RCALL -50 to ..31
+@
+// simplyify routine (rcall) when stepping on switch
+@0x959848
+a5 e5 // RCALL -27 to ..2d
+@
 #endif
-

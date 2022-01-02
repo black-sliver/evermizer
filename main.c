@@ -1582,6 +1582,7 @@ int main(int argc, const char** argv)
     // FIXME: test this
     if (placement_file || gourdomizer || bossdropamizer) {
         // v015: Disable collapsing bridges in pyramids
+        // v041: break wall in pyramid upper floor if we have dog already
         APPLY_PYRAMID_FIXES();
     }
     if (!placement_file && bossdropamizer && !gourdomizer && progressive_armor) {
