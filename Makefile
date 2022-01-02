@@ -49,7 +49,7 @@ SOURCE_FILES = main.c
 INCLUDE_FILES = rng.h util.h data.h sniff.h gourds.h doggo.h patches.h gen.h tinymt64.h
 
 
-.PHONY: clean clean-temps all native win32 wasm test test-code $(CPPCHECKS) release
+.PHONY: clean clean-temps all native win32 wasm test test-code $(CPPCHECKS) test-code-run release
 
 ifeq ($(OS),Windows_NT)
 native: win32
@@ -192,12 +192,14 @@ cppcheck15: ;
 cppcheck16: ;
 endif
 
-test-code: all $(CPPCHECKS)
+test-code-run:
 ifeq ($(strip $(ROM)),)
 	$(error ROM is not set. Set it in Makeconfig, environment or make variable)
 endif
 	./test-code.sh "$(ROM)" # this tests code, not your binary. only required for release
 
-release: test test-code
+test-code: $(CPPCHECKS) test-code-run ;
+
+release: all test test-code
 	./release.sh # this creates the zip, not required to run it
 
