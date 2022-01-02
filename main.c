@@ -1582,9 +1582,7 @@ int main(int argc, const char** argv)
     // FIXME: test this
     if (placement_file || gourdomizer || bossdropamizer) {
         // v015: Disable collapsing bridges in pyramids
-        APPLY(126); APPLY(127); APPLY(128); APPLY(129); APPLY(130); APPLY(131);
-        APPLY(132); APPLY(133); APPLY(134); APPLY(135); APPLY(136); APPLY(137);
-        APPLY(138);
+        APPLY_PYRAMID_FIXES();
     }
     if (!placement_file && bossdropamizer && !gourdomizer && progressive_armor) {
         // v030: update vanilla armor gourds to have progressive drops

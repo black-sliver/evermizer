@@ -324,23 +324,6 @@ DEF(105, 0x97a157 - 0x800000, // Mad Monk drop (see also patch 78)
 #endif
 // Ignore "no prior save file" flag during intro
 DEF(106, 0x92e4ab + 4 - 0x800000, "\x00");
-#ifndef NO_RANDO
-// Disable collapsing bridges in pyramids
-// by changing map data triggers' scripts to a df2 (a blank one)
-DEF(126, 0x9ed77f + 4 - 0x800000, "\xf2\x0d"); // disable d98
-DEF(127, 0x9ed785 + 4 - 0x800000, "\xf2\x0d"); // disable d9b
-DEF(128, 0x9ed78b + 4 - 0x800000, "\xf2\x0d"); // disable d9e
-DEF(129, 0x9ed791 + 4 - 0x800000, "\xf2\x0d"); // disable da1
-DEF(130, 0x9ed7c1 + 4 - 0x800000, "\xf2\x0d"); // disable db9
-DEF(131, 0x9ed7c7 + 4 - 0x800000, "\xf2\x0d"); // disable dbc
-DEF(132, 0x9ed7cd + 4 - 0x800000, "\xf2\x0d"); // disable dbf
-DEF(133, 0x9ed7d3 + 4 - 0x800000, "\xf2\x0d"); // disable dc2
-DEF(134, 0x9ed7d9 + 4 - 0x800000, "\xf2\x0d"); // disable dc5
-DEF(135, 0x9ed881 + 4 - 0x800000, "\xf2\x0d"); // disable df5
-DEF(136, 0x9ed887 + 4 - 0x800000, "\xf2\x0d"); // disable df8
-DEF(137, 0x9ed88d + 4 - 0x800000, "\xf2\x0d"); // disable dfb
-DEF(138, 0x9ed893 + 4 - 0x800000, "\xf2\x0d"); // disable dfe
-#endif
 // Enter timber drake from east as if coming from south if he's not dead
 // NOTE: this uses space freed from and has to be applied after patch 35
 DEF(139, 0x928528 - 0x800000, "\x03\xc6\x02"); // point to 0x97c600+3
