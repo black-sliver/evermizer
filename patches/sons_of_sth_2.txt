@@ -1,0 +1,13 @@
+#set
+// change "sons spawned" flag from permanent to temp to avoid them being missable
+// for added flag / randomized drop fixes see patches 97-99
+// 22e4 & 0x01 -> 283e & 0x01
+// 09 ... 05 60 04 ... -> 09 ... 0a 50 00 ...
+@0x958813 + 6
+0a 50 00
+@
+// 0c 60 04 ... -> 0d 50 00 ...
+@0x95885c
+0d 50 00
+@
+

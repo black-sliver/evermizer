@@ -1577,6 +1577,8 @@ int main(int argc, const char** argv)
     // v031: make lance and stop unmissable
     APPLY(ALCHEMY_ACCESSIBLE);
     APPLY(ALCHEMY_ACCESSIBLE2);
+    // v041: make sons of sth unmissable
+    APPLY_SONS_OF_STH_2();
     
     #ifndef NO_RANDO
     // FIXME: test this
