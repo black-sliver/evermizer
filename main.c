@@ -135,9 +135,9 @@ const static struct option options[] = {
     { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
     { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
     { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
-    { 'o', 0, "Mixed Pool Strategy", NULL, "Key item placement strategy for the mixed pool. Requires at least one option on 'pool'\\n"
-                                           "Balanced will keep the original distribution of key items per pool (4 in gourds, 2 in alchemy, rest in boss drops)\\n"
-                                           "Random will randomly distribut key items into any selected pool\\n"
+    { 'o', 0, "Mixed Pool Strategy", NULL, "Key item placement strategy for the mixed pool. Requires at least one option on 'pool'\n"
+                                           "Balanced will keep the original distribution of key items per pool (4 in gourds, 2 in alchemy, rest in boss drops)\n"
+                                           "Random will randomly distribut key items into any selected pool\n"
                                            "Bosses will try to place all key items into boss drops. Requires boss dropamizer on 'pool'", POOL_STRATEGY_VALUES, "General", "Key items" },
     { 'i', 1, "Ingredienizer", NULL,       "Shuffle ('on') or randomize ('full') ingredients required for formulas", OFF_ON_FULL, "General", "Other" },
     { 's', 1, "Sniffamizer", NULL,         "Shuffle ('on') or randomize ('full') ingredient drops", OFF_ON_FULL, "General", "Other"  },
@@ -279,6 +279,21 @@ const static struct preset presets[] = {
 #endif
 
 // The actual program
+static void print_json(const char* str)
+{
+    // escape \n to \\n
+    while (true) {
+        const char* lf = strchr(str, '\n');
+        if (lf) {
+            printf("%.*s\\n", (int)(lf-str), str);
+            str = lf+1;
+        } else {
+            printf("%s", str);
+            break;
+        }
+    }
+}
+
 static void print_usage(const char* appname)
 {
     fprintf(stderr, "Usage: %s " FLAGS "<src file.sfc>" ARGS "\n", appname);
@@ -348,9 +363,11 @@ static void print_settings_json()
         if (! opt->key) continue;
         if (!first_opt) printf(",\n");
         first_opt = false;
-        printf("  [ \"%c\", \"%s%s%s%s\", %d, \"%s\", [", opt->key, opt->text,
+        printf("  [ \"%c\", \"%s%s%s%s\", %d, \"", opt->key, opt->text,
                   opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"",
-                  opt->def, opt->description?opt->description:"");
+                  opt->def);
+        print_json(opt->description?opt->description:"");
+        printf("\", [");
         for (size_t j=0; opt->state_names && opt->state_names[j]; j++) {
             if (j != 0) printf(", ");
             printf("\"%s\"", opt->state_names[j]);
