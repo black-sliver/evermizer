@@ -1,5 +1,5 @@
 # Evermizer Guide
-*Version 2021-11-10 for v040+ and multiworld*
+*Version 2022-01-02 for v040+ and multiworld*
 
 ## Goal
 With default settings (not bingo) the goal is to defeat the final boss.
@@ -52,12 +52,15 @@ See [Boss Strats](#boss-strats) below for strats.
 None missable, all included on normal and hard, some excluded on easy.\
 Always all included in multiworld.
 
-Please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore) if you don't know them all.
+Please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore)
+or [a maptracker](https://github.com/Cyb3RGER/evermizer-tracker-package) if you don't know them all.
 
 ### Alchemists
 **Important:** Strongheart only gives you his second spell. Get the other one from the fish guy in the market.
 
-Please use the [Secret of Evermore Wiki](https://secretofevermore.fandom.com/wiki/Alchemy) or [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore) if you don't know them all.
+Please use the [Secret of Evermore Wiki](https://secretofevermore.fandom.com/wiki/Alchemy)
+or [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore)
+or [a maptracker](https://github.com/Cyb3RGER/evermizer-tracker-package) if you don't know them all.
 
 ### NPCs
 Not randomized, please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore) for now.
