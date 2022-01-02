@@ -1,3 +1,6 @@
+next:
+  Better UI and presets for WebUI by cyb3r
+
 v040:
   Add support for multiworld. See archipelago.gg
   Add options to mix item pools
