@@ -139,7 +139,7 @@ const static struct option options[] = {
     { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
     { 'o', 0, "Mixed Pool Strategy", NULL, "Key item placement strategy for the mixed pool. Requires at least one option on 'pool'\n"
                                            "Balanced will keep the original distribution of key items per pool (4 in gourds, 2 in alchemy, rest in boss drops)\n"
-                                           "Random will randomly distribut key items into any selected pool\n"
+                                           "Random will randomly distribute key items into any selected pool\n"
                                            "Bosses will try to place all key items into boss drops. Requires boss dropamizer on 'pool'", POOL_STRATEGY_VALUES, "General", "Key items" },
     { 'i', 1, "Ingredienizer", NULL,       "Shuffle ('on') or randomize ('full') ingredients required for formulas", OFF_ON_FULL, "General", "Other" },
     { 's', 1, "Sniffamizer", NULL,         "Shuffle ('on') or randomize ('full') ingredient drops", OFF_ON_FULL, "General", "Other"  },
