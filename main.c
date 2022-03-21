@@ -959,12 +959,12 @@ int main(int argc, const char** argv)
             long item_index = (next && *next == ',' && item_type > 0) ? strtol(next+1, &next, 10) : -1;
             if (loc_type >= 0) { // valid line
                 //printf("place: %s\n", placement_line);
-                if (loc_type < CHECK_ALCHEMY || loc_type > CHECK_GOURD || item_type < 0 || item_type > CHECK_GOURD
+                if (loc_type < CHECK_ALCHEMY || loc_type > CHECK_GOURD || item_type < 0 || item_type > CHECK_TRAP
                         || loc_index < 0)
                 {
                     free(buf);
                     free(placement);
-                    die("Invalid placement data!\"");
+                    die("Invalid placement data!");
                 }
                 if (loc_type == CHECK_ALCHEMY && (size_t)loc_index < ARRAY_SIZE(alchemy)) {
                     if (item_type == 0)
@@ -1711,6 +1711,13 @@ int main(int argc, const char** argv)
     UNUSED(74);
     UNUSED(77);
     #else
+    if (placement_file) {
+        // currently traps only exist for AP
+        printf("Adding traps...\n");
+        grow = true;
+        APPLY_TRAPS();
+    }
+
     if (alchemizer || placement_file) {
         printf("Applying alchemizer...\n");
         grow = true;

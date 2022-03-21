@@ -165,6 +165,62 @@ a3 3e 00                            // call loot part1, end
 0c 1e 04 b1                         // set aura bit ($22db |= 0x40)
 0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
 
+
+// Trap #1 Quake
+09 08 39 01 29 04 51 01 a2 0b 00    // IF $2391 != 0x0151 (trap #1) SKIP 11
+b4 01 b0 10 81 15                   // schedule screen shaking script at fd8110 (see below)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+// Trap #2 Poison
+09 08 39 01 29 04 52 01 a2 53 00    // IF $2391 != 0x0152 (trap #2) SKIP 83
+09 08 77 2c 29 4f a2 08 00          // if status effect 1 != empty (-1), skip 8
+17 77 2c 90 00                      // write status effect 1 = 0x0090
+04 34 00                            // skip to status effect count += 1 (52 B)
+09 08 7d 2c 29 4f a2 08 00          // if status effect 1 != empty (-1), skip 8
+17 7d 2c 90 00                      // write status effect 1 = 0x0090
+04 23 00                            // skip to status effect count += 1 (35 B)
+09 08 83 2c 29 4f a2 08 00          // if status effect 1 != empty (-1), skip 8
+17 83 2c 90 00                      // write status effect 1 = 0x0090
+04 12 00                            // skip to status effect count += 1 (18 B)
+09 08 89 2c 29 4f a2 08 00          // if status effect 1 != empty (-1), skip 8
+17 89 2c 90 00                      // write status effect 1 = 0x0090
+04 01 00                            // skip to status effect count += 1 (1 B)
+00                                  // end without loot success
+10 5a ed 07 5a ed 29 31 9a          // write status effect count += 1
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+// Trap #3 Confound
+09 08 39 01 29 04 53 01 a2 53 00    // IF $2391 != 0x0153 (trap #3) SKIP 83
+09 08 77 2c 29 4f a2 08 00          // if status effect 1 != empty (-1), skip 8
+17 77 2c 60 00                      // write status effect 1 = 0x0060
+04 34 00                            // skip to status effect count += 1 (52 B)
+09 08 7d 2c 29 4f a2 08 00          // if status effect 1 != empty (-1), skip 8
+17 7d 2c 60 00                      // write status effect 1 = 0x0060
+04 23 00                            // skip to status effect count += 1 (35 B)
+09 08 83 2c 29 4f a2 08 00          // if status effect 1 != empty (-1), skip 8
+17 83 2c 60 00                      // write status effect 1 = 0x0060
+04 12 00                            // skip to status effect count += 1 (18 B)
+09 08 89 2c 29 4f a2 08 00          // if status effect 1 != empty (-1), skip 8
+17 89 2c 60 00                      // write status effect 1 = 0x0060
+04 01 00                            // skip to status effect count += 1 (1 B)
+00                                  // end without loot success
+10 5a ed 07 5a ed 29 31 9a          // write status effect count += 1
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+// Trap #4 Hide status bar
+09 08 39 01 29 04 54 01 a2 09 00    // IF $2391 != 0x0154 (trap #4) SKIP 9
+29 e7 23 00                         // hide status bar
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+// Trap #5 OHKO
+09 08 39 01 29 04 55 01 a2 0d 00    // IF $2391 != 0x0155 (trap #5) SKIP 13
+92 d0 08 5b 2c 29 31 9b
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
+// Trap #6 Level down
+// TODO
+
+
 09 08 39 01 29 04 12 01 a2 0a 00    // IF $2391 != 0x0112 (gladiator sword) SKIP 10
 17 e9 01 04 00                      // get weapon ($2441) = gladiator sword (0x04)
 0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
@@ -450,6 +506,21 @@ a3 3e 00                            // call loot part1, end
 09 08 39 01 29 04 42 01 a2 04 00    // IF $2391 != 0x0142 (aura) SKIP 4
 52 c4 17 00                         // Show text, end
 
+09 08 39 01 29 04 51 01 a2 04 00    // IF $2391 != 0x0151 (trap #1) SKIP 4
+52 06 00 00                         // Show text, end
+
+09 08 39 01 29 04 52 01 a2 04 00    // IF $2391 != 0x0152 (trap #2) SKIP 4
+52 06 00 00                         // Show text, end
+
+09 08 39 01 29 04 53 01 a2 04 00    // IF $2391 != 0x0153 (trap #3) SKIP 4
+52 06 00 00                         // Show text, end
+
+09 08 39 01 29 04 54 01 a2 04 00    // IF $2391 != 0x0154 (trap #4) SKIP 4
+52 06 00 00                         // Show text, end
+
+09 08 39 01 29 04 55 01 a2 04 00    // IF $2391 != 0x0155 (trap #5) SKIP 4
+52 06 00 00                         // Show text, end
+
 09 08 39 01 29 04 12 01 a2 04 00    // IF $2391 != 0x0112 (gladiator sword) SKIP 4
 52 ec 1c 00                         // Show text, end
 
@@ -586,6 +657,22 @@ a3 3e 00                            // call loot part1, end
 
 // added loot error messages, TODO: move this right behind "loot messages"
 @0xb1d000
+
+09 08 39 01 29 04 51 01 a2 04 00    // IF $2391 != 0x0151 (trap #1) SKIP 4
+52 12 00 00                         // Show text, end
+
+09 08 39 01 29 04 52 01 a2 04 00    // IF $2391 != 0x0152 (trap #2) SKIP 4
+52 12 00 00                         // Show text, end
+
+09 08 39 01 29 04 53 01 a2 04 00    // IF $2391 != 0x0153 (trap #3) SKIP 4
+52 12 00 00                         // Show text, end
+
+09 08 39 01 29 04 54 01 a2 04 00    // IF $2391 != 0x0154 (trap #4) SKIP 4
+52 12 00 00                         // Show text, end
+
+09 08 39 01 29 04 55 01 a2 04 00    // IF $2391 != 0x0155 (trap #5) SKIP 4
+52 12 00 00                         // Show text, end
+
 1c e1 02 88 39 01   // WRITE arg1 ($2539) = prize ($2391)
 52 88 02            // show generic message
 00                  // END
@@ -595,11 +682,35 @@ a3 3e 00                            // call loot part1, end
 @0xb1d200
 17 39 01 ff 01      // WRITE LOOT ITEM = REMOTE (0x01ff)
 00                  // END
-// TODO: traps and what not
+
+// NOTE: traps' setup scripts and texts are in traps.txt
 
 // replace "unknown","item" with "any","more" and remove <arg1> from "Can't carry unknown item <arg1>"
 @0xc00c29+7
 c0 10 00 d8 0f 00 00 00 00 00
+@
+
+// actual screen shake script
+@0xfd8110
+8d 01                               // start screen shaking
+a7 7a                               // sleep 2
+18 b1 01 b5                         // magnitude x
+18 b3 01 b4                         // magnitude y
+a7 7a                               // sleep 2
+18 b1 01 b3                         // magnitude x
+18 b3 01 b4                         // magnitude y
+a7 7a                               // sleep 2
+18 b1 01 b3                         // magnitude x
+18 b3 01 b2                         // magnitude y
+a7 7a                               // sleep 2
+18 b1 01 b2                         // magnitude x
+18 b3 01 b1                         // magnitude y
+a7 7a                               // sleep 2
+18 b1 01 b0                         // magnitude x
+18 b3 01 b1                         // magnitude y
+a7 1f                               // sleep .5
+8d 00                               // stop screen shaking
+00
 @
 
 #endif

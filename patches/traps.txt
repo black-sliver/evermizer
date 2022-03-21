@@ -1,0 +1,51 @@
+#ifndef NO_RANDO
+
+#set // directive to create patch set as APPLY_TRAPS()
+
+// we need a setup script for each trap to be jumped to for local items
+
+@0xb08280
+// Trap 1: Quake
+17 39 01 51 01  // WRITE LOOT ITEM = 0x0151
+00              // END
+
+// Trap 2: Poison
+17 39 01 52 01  // WRITE LOOT ITEM = 0x0152
+00              // END
+
+// Trap 3: Confound
+17 39 01 53 01  // WRITE LOOT ITEM = 0x0153
+00              // END
+
+// Trap 4: HUD
+17 39 01 54 01  // WRITE LOOT ITEM = 0x0154
+00              // END
+
+// Trap 5: OHKO
+17 39 01 55 01  // WRITE LOOT ITEM = 0x0155
+00              // END
+@
+
+// replace debug texts for traps
+
+@0x91d006+2
+// make text 2 ($06) uncompressed
+00
+@
+
+@0x91d012+2
+// make text 6 ($12) uncompressed
+00
+@
+
+@0xc0002a
+// text 2 ($06) data
+46 6F 75 6E 64 20 61 20 54 72 61 70 21 00 // "Found a Trap!"
+@
+
+@0xc00069
+// text 6 ($12) data
+54 72 61 70 20 77 6F 6E 27 74 20 66 69 74 21 00 // "Trap won't fit!"
+@
+
+#endif

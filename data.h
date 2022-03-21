@@ -259,6 +259,17 @@ const static char* boss_drop_names[] = {
 _Static_assert(NOTHING_IDX==0/* && DIAMOND_EYE_DROP_IDX==ARRAY_SIZE(boss_drop_setup_jumps)-1*/, "Bad boss drop indices");
 _Static_assert(ARRAY_SIZE(boss_drop_setup_jumps)==ARRAY_SIZE(boss_drop_jumps), "Bad boss jump list");
 _Static_assert(ARRAY_SIZE(boss_drop_names)==DIAMOND_EYE_DROP_IDX+1, "Bad boss drop name list");
+
+
+// traps are custom items and have a script that sets up receiving them (this is currently required)
+struct trap_item {const char* name; uint16_t item_id; uint32_t setup;};
+const static struct trap_item trap_data[] = {
+    {"Quake Trap",    0x0151, 0xb08280 + 0 * 6 - 0x800000},
+    {"Poison Trap",   0x0152, 0xb08280 + 1 * 6 - 0x800000},
+    {"Confound Trap", 0x0153, 0xb08280 + 2 * 6 - 0x800000},
+    {"HUD Trap",      0x0154, 0xb08280 + 3 * 6 - 0x800000},
+    {"OHKO Trap",     0x0155, 0xb08280 + 4 * 6 - 0x800000},
+};
 #endif
 
 #ifndef NO_RANDO
@@ -344,6 +355,7 @@ enum check_tree_item_type {
     CHECK_ALCHEMY,
     CHECK_BOSS,
     CHECK_GOURD,
+    CHECK_TRAP,
     CHECK_NPC,
     CHECK_RULE,
 };
@@ -521,6 +533,7 @@ const char* drop2str(const drop_tree_item* drop)
     if (drop->type == CHECK_BOSS) return boss_drop_names[drop->index];
     if (drop->type == CHECK_ALCHEMY) return alchemy_locations[drop->index].name;
     if (drop->type == CHECK_GOURD) return gourd_drops_data[drop->index].name;
+    if (drop->type == CHECK_TRAP) return trap_data[drop->index].name;
     return "Unknown";
 }
 bool alchemy_in_act4(uint16_t alchemy_idx) {
@@ -617,7 +630,14 @@ static uint32_t get_drop_setup_target(enum check_tree_item_type type, uint16_t i
         return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
     }
     if (type == CHECK_BOSS && idx<ARRAY_SIZE(boss_drop_names)) {
+        // TODO: use existing table above instead of doing the calculation again?
         uint32_t addr = 0x96c135 + 6 * idx;
+        return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
+    }
+    if (type == CHECK_TRAP) {
+        // while traps replace regular drops and would not need their own script location
+        // currently it's implemented in a way where each item is tied to a script
+        uint32_t addr = trap_data[idx].setup;
         return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
     }
     assert(0);
@@ -635,6 +655,7 @@ static const char* get_drop_name(enum check_tree_item_type type, uint16_t idx)
     if (type == CHECK_GOURD && idx<ARRAY_SIZE(gourd_drops_data)) return gourd_drops_data[idx].name;
     if (type == CHECK_ALCHEMY && idx<ARRAY_SIZE(alchemy_locations)) return alchemy_locations[idx].name;
     if (type == CHECK_BOSS && idx<ARRAY_SIZE(boss_drop_names)) return boss_drop_names[idx];
+    if (type == CHECK_TRAP && idx<ARRAY_SIZE(trap_data)) return trap_data[idx].name;
     assert(0);
     return "";
 }
