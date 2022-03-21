@@ -2,8 +2,9 @@
 #set // directive to create patch set as APPLY_MULTIWORLD()
 
 // we hook into c084a3 after reading controller inputs
-// we put our code to schedule script at fd1000
+// we put our code to schedule script at fd1000, remote effect (death link) at fd1100
 // we put our script at fd8000
+// death link script at fd8100
 // the code checks 7e2577 != 0 to start the script and clears that after
 // the script uses 7e257c..d as item id, 7e257a..b as item amount and
 // 7e2578..9 as item index (to resync) and clears item id after being done
@@ -17,11 +18,15 @@ ea ea           //NOP NOP
 2d 04 01        //AND $0104
 8d 04 01        //STA $0104
 
-// if $7e2577 (8bit) == 0 goto RETURN (JML) below
+// if $7e2577 (8bit) "start transaction" == 0 goto RETURN (JML) below
 af 77 25 7e     //LDA (long) $7e2577
 29 ff 00        //AND #$00ff
-d0 04           //BNE below jml (skips 4 bytes if not 0)
-5c a9 84 c0     //JML $c084a9
+d0 0e           //BNE below jml (skips 14 bytes if not 0)
+// if $a07ffe (16bit) "remote effect" != 0 then JML to fd1100
+af fe 7f a0     //LDA (long) $a07ffe
+f0 04           //BEQ to second jml (skips 4 bytes if effect = 0)
+5c 00 11 fd     //JML $fd1100 (to checking remote effects)
+5c a9 84 c0     //JML $c084a9 (back to main loop)
 
 // if $86 (next active script list index) > 0 goto RETURN (JML) below
 a5 86           //LDA $86
@@ -30,13 +35,6 @@ f0 04           //BEQ below jml (skips 4 bytes if 0)
 //30 04           //BMI below jml (skips 4 bytes)
 // TODO: allow some scripts (like market timer check) in slot 0
 5c a9 84 c0     //JML $c084a9
-
-//// if 'I' (disable interrupts) is set, RETURN (JML) below
-//08 08           //PHP, PHP
-//68              //PLA
-//29 04 00        //AND #$0004
-//f0 04           //BEQ below jml (skips 4 bytes if 0)
-//5c a9 84 c0     //JML $c084a9
 
 // NOTE: in-animation check below is probably not needed anymore, but testing was done with it enabled
 // if in animation ($7e22eb & 0x20) is set, RETURN (JML) below
@@ -75,7 +73,70 @@ e2 20           //SEP #$20: 8bit mode
 e2 00           //SEP #$00: 16bit mode
 
 // return
+5c a9 84 c0     //JML $c084a9 back to main loop
+@
+
+@0xfd1100
+// check for the possibility of scheduling effects (death link)
+// basically the same code as above but schedules different scripts at the end
+// also cleaned up - see above for full commented code
+
+// if $86 (next active script list index) > 0 goto RETURN (JML) below
+a5 86           //LDA $86
+f0 04           //BEQ below jml (skips 4 bytes if 0)
+// TODO: allow some scripts (like market timer check) in slot 0
 5c a9 84 c0     //JML $c084a9
+
+// NOTE: in-animation check below is probably not needed anymore, but testing was done with it enabled
+// if in animation ($7e22eb & 0x20) is set, RETURN (JML) below
+af eb 22 7e     //LDA (long) $7e22eb
+29 20 00        //AND #$0020
+f0 04           //BEQ below jml (skips 4 bytes if 0)
+5c a9 84 c0     //JML $c084a9
+
+// if screen brightness fading ($7e0106 != 0x000f), RETURN (JML) below
+af 06 01 7e     //LDA (long) $7e0106
+c9 0f 00        //CMP #$000f
+f0 04           //BEQ below jml (skips 4 bytes if A-#$0f==#$00)
+5c a9 84 c0     //JML $c084a9
+
+// if $a07ffe (16bit) "remote effect" == 1 then schedule deathlink, otherwise next
+af fe 7f a0     //LDA (long) $a07ffe
+c9 01 00        //CMP #1
+d0 0b           //BNE over setting script (skips 11 bytes if != 1)
+
+// write script address for fd8100 to $26..$28: 00 81 15
+// fd8100 - c00000 + 800000 - 928000 = 2b0100. >>=1: 158100
+9c 26 00        //STZ $26
+a9 81 15        //LDA #$1581
+8d 27 00        //STA $27
+80 0b           //BRA to call below (always skips 11 bytes)
+
+// if we get here, the effect was unknown (not deathlink)
+// clear effect (STZ would be nice but needs bank switching)
+a9 00 00        //LDA 0000
+8f fe 7f a0     //STA (long) $a07ffe
+// return
+5c a9 84 c0     //JML $c084a9 back to main loop
+
+// call "add script"
+22 18 cf 8c     //JSL $8ccf18
+
+// update active script pointer(s), as done in 8cce87
+8a              //TXA: 16bit script list pointer now in A
+a6 86           //LDX $86: get next active-script-list index
+9f 28 2f 7e     //STA $7e2f28,x: store new script there
+e8 e8           //INX INX: increase next active-script-list index
+7b              //TDC: clear A
+9f 28 2f 7e     //STA $7e2f28,x: store 0 to next active-script-list index
+86 86           //STX $86: store back next active-script-list index
+
+// clear effect (STZ would be nice but needs bank switching)
+a9 00 00        //LDA 0000
+8f fe 7f a0     //STA (long) $a07ffe
+// return
+5c a9 84 c0     //JML $c084a9 back to main loop
+@
 
 @0xfd8000
 // bd8000-920000 = 2b0000, erase 8000 bit -> 158000 as script address
@@ -107,6 +168,13 @@ a3 41               // call loot part 3 (failed message)
 18 1d 03 09 20 03 29 31 9a // expected index (2575) = new index (2578) + 1 // (or expected index + 1)
 18 24 03 b0         // clear the item being received ("lock") at 257c
 00                  // end
+@
+
+@0xfd8100
+// death link script
+// TODO: show text
+92 d0 84 e7 03 // damage boy for 999 with animation
+00 // END
 @
 
 #endif

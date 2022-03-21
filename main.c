@@ -268,7 +268,7 @@ const static struct preset presets[] = {
 #define _FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
 #endif
 #ifdef WITH_MULTIWORLD
-#define FLAGS _FLAGS "[--id <128 hex nibbles>] [--placement <placement.txt>] "
+#define FLAGS _FLAGS "[--id <128 hex nibbles>] [--placement <placement.txt>] [--death-link]"
 #else
 #define FLAGS _FLAGS
 #endif
@@ -522,10 +522,13 @@ int main(int argc, const char** argv)
     #ifdef WITH_MULTIWORLD
     uint8_t id_data[64];
     bool id_data_set = false;
+    const size_t flags_loc = 0x3d000c;
     const size_t id_loc = 0x3d0040;
     const char* placement_file = NULL;
+    bool death_link = false;
     #else
     #define placement_file false
+    #define death_link false
     #endif
     
     // parse command line arguments
@@ -599,6 +602,9 @@ int main(int argc, const char** argv)
         } else if (strcmp(argv[1], "--placement") == 0 && argc > 2) {
             placement_file = argv[2];
             argv+=2; argc-=2;
+        } else if (strcmp(argv[1], "--death-link") == 0) {
+            argv++; argc--;
+            death_link = true;
     #endif
         } else {
             break;
@@ -1897,6 +1903,10 @@ int main(int argc, const char** argv)
         // TODO: patch in memcpy to WRAM
         printf("Applying multiworld hook...\n");
         APPLY_MULTIWORLD();
+        if (death_link) {
+            printf("Enabling death link...\n");
+            buf[rom_off + flags_loc] |= 0x80;
+        }
     }
 #endif
 
