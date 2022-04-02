@@ -1,6 +1,22 @@
 #ifndef NO_RANDO
 #set // directive to create patch set as APPLY_MULTIWORLD()
 
+
+// relocates script code at 0x9386b0 to 0xfd8150 (after screen shake script)
+// * clear some memory (multiworld-related)
+// * set is_in_game=true (original code)
+@0x9386b0
+07 50 81 15 // call new code at 0xfd8150
+
+@0xfd8150
+18 1d 03 b0 // clear multiworld expected index at 7e2575+0..1
+18 24 03 b0 // clear multiworld item id at 7e2575+7..8
+10 1f 03 b0 // clear multiworld transaction pending at 7e2575+2 (old/currrent)
+//10 26 03 b0 // clear multiworld transaction pending at 7e2575+9 (new/future)
+0c 9e 02 b1 // $22ab |= 0x40 (is_in_game = true)
+00 // end
+@
+
 // we hook into c084a3 after reading controller inputs
 // we put our code to schedule script at fd1000, remote effect (death link) at fd1100
 // we put our script at fd8000
