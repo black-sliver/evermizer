@@ -1,0 +1,18 @@
+#set // directive to create patch set as APPLY_ACT1_OW()
+
+// ported from patches.h 2, 3, 4, 5 - ventuz
+// patch access to act1 east swamp
+@0x94891a + 5
+30 14 14
+
+@0x94892a
+04 0a 00
+
+@0x948729 + 6
+30 14 14
+@
+
+// patch access to volcano
+@0x949a8e
+04 0a 00
+

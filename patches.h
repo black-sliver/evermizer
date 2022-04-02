@@ -1,16 +1,3 @@
-// make windwalker accessible from start
-DEF(1, 0x92DE4D - 0x800000,
-    "\x18\x84\x00\xb8\x18\xfd\x00\xb1");
-// patch access to act1 east swamp
-DEF(2, 0x94891a + 5 - 0x800000,
-    "\x30\x14\x14");
-DEF(3, 0x94892a - 0x800000,
-    "\x04\x0a\x00");
-DEF(4, 0x948729 + 6 - 0x800000,
-    "\x30\x14\x14");
-// patch access to volcano
-DEF(5, 0x949a8e - 0x800000,
-    "\x04\x0a\x00");
 // lock barrier dialog behind aegis instead of checking a (now broken) flag and windwalker flag
 // NOTE: PATCH6 is useless. See google doc.
 DEF(6, 0x95d422 - 0x800000,

@@ -1497,7 +1497,11 @@ int main(int argc, const char** argv)
     
     if (openworld) {
         printf("Applying open world patch-set...\n");
-        APPLY(1);  APPLY(2);  APPLY(3);  APPLY(4);  APPLY(5);  APPLY(6);
+        // start with windwalker unlocked
+        APPLY_OW_BASE();
+        // allow access to volcano and swamp with windwalker unlocked
+        APPLY_ACT1_OW();
+        APPLY(6);
         APPLY(7);  APPLY(8);  APPLY(9);  APPLY(10); APPLY(11); APPLY(12);
         APPLY(13); APPLY(14); APPLY(15); APPLY(16); APPLY(17); APPLY(18);
         APPLY(19); APPLY(20); APPLY(21); APPLY(22); APPLY(23); APPLY(24);

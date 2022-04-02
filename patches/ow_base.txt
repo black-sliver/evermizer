@@ -1,0 +1,7 @@
+#set // directive to create patch set as APPLY_OW_BASE()
+
+// ported from patches.h 1 - ventuz
+// make windwalker accessible from start, replaces init of last landing spot
+@0x92DE4D
+18 84 00 b8  // $22dc..d = 0x0008 (set windwalker unlocked = true)
+18 fd 00 b1  // $2355..6 = 0x0001 (set flying machine type = 1)
