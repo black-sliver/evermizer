@@ -915,8 +915,10 @@ int main(int argc, const char** argv)
     for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) sniff_drops[i] = sniffs[i].val;
     uint8_t doggo_map[ARRAY_SIZE(doggo_vals)]; // for non-full only
     for (size_t i=0; i<ARRAY_SIZE(doggo_map); i++) doggo_map[i] = doggo_vals[i];
-    uint8_t doggo_changes[ARRAY_SIZE(doggos)]; // preset to vanilla
-    for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) doggo_changes[i] = doggos[i].val;
+    uint8_t doggo_changes[ARRAY_SIZE(doggos)]; // preset to vanilla or pupdunk
+    for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
+        doggo_changes[i] = (pupdunk) ? doggo_vals[0] : doggos[i].val;
+    }
     uint8_t callbead_menus[] = {0,2,4,6};
     uint16_t callbead_spells[] = {
         0x00f8, 0x00fa, 0x00fc, 0x00fe, // fire eyes
@@ -1221,9 +1223,7 @@ int main(int argc, const char** argv)
             }
         }
         if (pupdunk) {
-            for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
-                doggo_changes[i] = doggo_vals[0]; // act0 dog only
-            }
+            /* set up above */
         } else if (doggomizer && doggomizer!=FULL) {
             shuffle_u8(doggo_map+1, ARRAY_SIZE(doggo_map)-2); // keep act0 and act4 dog
             for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
