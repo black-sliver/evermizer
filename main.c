@@ -268,7 +268,7 @@ const static struct preset presets[] = {
 #define _FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
 #endif
 #ifdef WITH_MULTIWORLD
-#define FLAGS _FLAGS "[--id <128 hex nibbles>] [--placement <placement.txt>] [--death-link]"
+#define FLAGS _FLAGS "[--id <128 hex nibbles>] [--placement <placement.txt>] [--death-link] "
 #else
 #define FLAGS _FLAGS
 #endif
