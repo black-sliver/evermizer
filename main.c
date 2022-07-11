@@ -329,13 +329,13 @@ static void print_settings()
     printf("Options:\n");
     for (size_t i=0; i<ARRAY_SIZE(options); i++) {
         const struct option* opt = options+i;
-        if (! opt->key) continue;
+        if (! opt->key || ! opt->state_names) continue;
         const char* defaultTextModifier = opt->def ? "No " :
                                           strcmp(opt->state_names[1],"On")==0 ? "" : opt->state_names[1];
         const char* defaultTextSpace = (defaultTextModifier == opt->state_names[1]) ? " " : "";
         printf("  %c: %s%s%s%s%s%s\n", tolower(opt->key), defaultTextModifier, defaultTextSpace,
                                        opt->text, opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"");
-        if (opt->state_names && opt->state_names[2])
+        if (opt->state_names[2])
             printf("  %c: %s %s\n", toupper(opt->key), opt->state_names[2], opt->text);
         if (opt->description)
             printf("        %s\n", opt->description);
