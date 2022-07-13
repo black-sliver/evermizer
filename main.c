@@ -330,9 +330,10 @@ static void print_settings()
     for (size_t i=0; i<ARRAY_SIZE(options); i++) {
         const struct option* opt = options+i;
         if (! opt->key || ! opt->state_names) continue;
-        const char* defaultTextModifier = opt->def ? "No " :
-                                          strcmp(opt->state_names[1],"On")==0 ? "" : opt->state_names[1];
-        const char* defaultTextSpace = (defaultTextModifier == opt->state_names[1]) ? " " : "";
+        const char* defaultTextModifier = strcmp(opt->state_names[!opt->def],"Off")==0 ? "No " :
+                                          strcmp(opt->state_names[!opt->def],"On")==0 ? "" :
+                                          opt->state_names[!opt->def];
+        const char* defaultTextSpace = (defaultTextModifier == opt->state_names[!opt->def]) ? " " : "";
         printf("  %c: %s%s%s%s%s%s\n", tolower(opt->key), defaultTextModifier, defaultTextSpace,
                                        opt->text, opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"");
         if (opt->state_names[2])
