@@ -129,6 +129,7 @@ prizes = {
     # rando-only:
     0x117:'knight basher', 0x118:'atom smasher', 0x11c:'laser lance',
     0x125:'gauge',
+    0x128:'energy core',
     0x131:'amulet of annihilation',   
     0x141:'regenerate', 0x142:'aura',
     0x1e1:'thunderball', 0x1e2:'particle bomb', 0x1e3:'cryo blast',
@@ -153,6 +154,7 @@ requirements = {
     'revealer': 'P_REVEALER',
     'rocket': 'P_ROCKET',
     'gauge': 'P_GAUGE',
+    'energy core': 'P_ENERGY_CORE',
     'volcano entered': 'P_VOLCANO_ENTERED',
     'act1 weapon': 'P_ACT1_WEAPON',
     'act2 weapon': 'P_ACT2_WEAPON',
