@@ -473,6 +473,7 @@ static const drop_tree_item drops[] = {
     {CHECK_BOSS,BRONZE_SPEAR_IDX,     PVD4(P_WEAPON,P_NON_SWORD,P_BRONZE_SPEAR_PLUS,P_ACT2_WEAPON)},
     {CHECK_BOSS,LANCE_WEAPON_IDX,     PVD4(P_WEAPON,P_NON_SWORD,P_BRONZE_SPEAR_PLUS,P_ACT3_WEAPON)},
     {CHECK_BOSS,DIAMOND_EYE_DROP_IDX, PVD1(P_DE)},
+    {CHECK_BOSS,DINO_DROP_IDX,        PVD1(P_ARMOR),}
     // Gourd drops with progression included from generated gourds.h
     #define DROP_TREE
     #include "gourds.h"
