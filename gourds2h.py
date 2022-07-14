@@ -133,8 +133,8 @@ prizes = {
     0x131:'amulet of annihilation',   
     0x141:'regenerate', 0x142:'aura',
     0x1e1:'thunderball', 0x1e2:'particle bomb', 0x1e3:'cryo blast',
-    0x1f1:'colosseum breast', 0x1f2:'colosseum gloves', 0x1f3:'colosseum helmet',
-    0x1f4:'progressive breast', 0x1f5:'progressive gloves', 0x1f6:'progressive helmet',
+    0x1f1:'colosseum vest', 0x1f2:'colosseum gloves', 0x1f3:'colosseum helmet',
+    0x1f4:'progressive vest', 0x1f5:'progressive gloves', 0x1f6:'progressive helmet',
 }
 
 requirements = {

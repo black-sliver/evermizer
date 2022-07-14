@@ -244,8 +244,7 @@ enum boss_drop_indices { // has to match boss_rando_drops.txt
 const static char* boss_drop_names[] = {
     "Nothing", "Wheel", "Gladiator Sword", "Crusader Sword",
     "Spider Claw", "Bronze Axe", "Horn Spear", "Bronze Spear",
-    "Lance (Weapon)", "Honey", "Progressive breast / Dino Skin / Talons",
-    "Bazooka+Shells / Shining Armor / 5k Gold",
+    "Lance (Weapon)", "Honey", "Progressive vest", "Bazooka",
     "10,000 Gold Coins", "Mud Pepper", "Diamond Eye"
 };
 #define BOSS_DROPS { /* vanilla drops in same boss order as boss_drop_jumps */\
@@ -309,6 +308,7 @@ enum progression {
     P_ARMOR,
     P_AMMO,
     P_GLITCHED_AMMO,
+    P_BAZOOKA,
     P_CALLBEAD,
     P_WINGS,
     P_OFFENSIVE_FORMULA, // >= Lance
@@ -473,7 +473,8 @@ static const drop_tree_item drops[] = {
     {CHECK_BOSS,BRONZE_SPEAR_IDX,     PVD4(P_WEAPON,P_NON_SWORD,P_BRONZE_SPEAR_PLUS,P_ACT2_WEAPON)},
     {CHECK_BOSS,LANCE_WEAPON_IDX,     PVD4(P_WEAPON,P_NON_SWORD,P_BRONZE_SPEAR_PLUS,P_ACT3_WEAPON)},
     {CHECK_BOSS,DIAMOND_EYE_DROP_IDX, PVD1(P_DE)},
-    {CHECK_BOSS,DINO_DROP_IDX,        PVD1(P_ARMOR),}
+    {CHECK_BOSS,DINO_DROP_IDX,        PVD1(P_ARMOR)},
+    {CHECK_BOSS,BAZOOKA_DROP_IDX,     PVD1(P_BAZOOKA)},
     // Gourd drops with progression included from generated gourds.h
     #define DROP_TREE
     #include "gourds.h"
