@@ -259,19 +259,6 @@ _Static_assert(NOTHING_IDX==0/* && DIAMOND_EYE_DROP_IDX==ARRAY_SIZE(boss_drop_se
 _Static_assert(ARRAY_SIZE(boss_drop_setup_jumps)==ARRAY_SIZE(boss_drop_jumps), "Bad boss jump list");
 _Static_assert(ARRAY_SIZE(boss_drop_names)==DIAMOND_EYE_DROP_IDX+1, "Bad boss drop name list");
 
-
-// traps are custom items and have a script that sets up receiving them (this is currently required)
-struct trap_item {const char* name; uint16_t item_id; uint32_t setup;};
-const static struct trap_item trap_data[] = {
-    {"Quake Trap",    0x0151, 0xb08280 + 0 * 6 - 0x800000},
-    {"Poison Trap",   0x0152, 0xb08280 + 1 * 6 - 0x800000},
-    {"Confound Trap", 0x0153, 0xb08280 + 2 * 6 - 0x800000},
-    {"HUD Trap",      0x0154, 0xb08280 + 3 * 6 - 0x800000},
-    {"OHKO Trap",     0x0155, 0xb08280 + 4 * 6 - 0x800000},
-};
-#endif
-
-#ifndef NO_RANDO
 enum progression {
     P_NONE,
     P_WEAPON,
@@ -282,6 +269,7 @@ enum progression {
     P_KNIGHT_BASHER_PLUS,
     P_BRONZE_SPEAR_PLUS,
     P_ENERGY_CORE,
+    P_CORE_FRAGMENT,
     P_FINAL_BOSS,
     P_DE,
     P_GAUGE,
@@ -352,11 +340,32 @@ struct progression_provider {
 #define PVD5N REQ5N
 #define PVD6N REQ6N
 
+// extra items and traps are custom items and have a script that sets up receiving them (this is currently required)
+typedef struct extra_item {
+    const char* name;
+    uint16_t item_id;
+    uint32_t setup;
+    struct progression_provider provides[6];
+} extra_item;
+
+const static extra_item extra_data[] = {
+    {"Energy Core Fragment", 0x012a, 0xb08280 + 6 * 6 - 0x800000, PVD1(P_CORE_FRAGMENT)},
+};
+
+const static extra_item trap_data[] = {
+    {"Quake Trap",    0x0151, 0xb08280 + 0 * 6 - 0x800000, NOTHING_PROVIDED},
+    {"Poison Trap",   0x0152, 0xb08280 + 1 * 6 - 0x800000, NOTHING_PROVIDED},
+    {"Confound Trap", 0x0153, 0xb08280 + 2 * 6 - 0x800000, NOTHING_PROVIDED},
+    {"HUD Trap",      0x0154, 0xb08280 + 3 * 6 - 0x800000, NOTHING_PROVIDED},
+    {"OHKO Trap",     0x0155, 0xb08280 + 4 * 6 - 0x800000, NOTHING_PROVIDED},
+};
+
 enum check_tree_item_type {
     CHECK_NONE,
     CHECK_ALCHEMY,
     CHECK_BOSS,
     CHECK_GOURD,
+    CHECK_EXTRA,
     CHECK_TRAP,
     CHECK_NPC,
     CHECK_RULE,
@@ -549,6 +558,7 @@ const char* drop2str(const drop_tree_item* drop)
     if (drop->type == CHECK_BOSS) return boss_drop_names[drop->index];
     if (drop->type == CHECK_ALCHEMY) return alchemy_locations[drop->index].name;
     if (drop->type == CHECK_GOURD) return gourd_drops_data[drop->index].name;
+    if (drop->type == CHECK_EXTRA) return extra_data[drop->index].name;
     if (drop->type == CHECK_TRAP) return trap_data[drop->index].name;
     return "Unknown";
 }
@@ -650,6 +660,11 @@ static uint32_t get_drop_setup_target(enum check_tree_item_type type, uint16_t i
         uint32_t addr = 0x96c135 + 6 * idx;
         return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
     }
+    if (type == CHECK_EXTRA) {
+        // extra items work the same way as traps; read below
+        uint32_t addr = extra_data[idx].setup;
+        return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
+    }
     if (type == CHECK_TRAP) {
         // while traps replace regular drops and would not need their own script location
         // currently it's implemented in a way where each item is tied to a script
@@ -671,6 +686,7 @@ static const char* get_drop_name(enum check_tree_item_type type, uint16_t idx)
     if (type == CHECK_GOURD && idx<ARRAY_SIZE(gourd_drops_data)) return gourd_drops_data[idx].name;
     if (type == CHECK_ALCHEMY && idx<ARRAY_SIZE(alchemy_locations)) return alchemy_locations[idx].name;
     if (type == CHECK_BOSS && idx<ARRAY_SIZE(boss_drop_names)) return boss_drop_names[idx];
+    if (type == CHECK_EXTRA && idx<ARRAY_SIZE(extra_data)) return extra_data[idx].name;
     if (type == CHECK_TRAP && idx<ARRAY_SIZE(trap_data)) return trap_data[idx].name;
     assert(0);
     return "";

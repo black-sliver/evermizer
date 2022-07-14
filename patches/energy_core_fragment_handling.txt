@@ -1,0 +1,75 @@
+#ifndef NO_RANDO
+
+#set // directive to create patch set as APPLY_ENERGY_CORE_FRAGMENT_HANDLING()
+
+@0xc472d4
+// "Energy Core Fragment" instead of "Ticket for Exhibition"
+45 6E 65 72 67 79 20 43 6F 72 65 20 46 72 61 67 6D 65 6E 74 00
+
+@0xc45a72
+// Energy Core icon instead of Ticket icon
+da 3e cc
+
+@0x98c0c6
+// remove ticket lady "already got ticket"
+04 0c 00
+
+@0xc21cb5
+// change ticket lady text to get rid of the buy option
+29 0d 11 be 08 07 9a 00 d3 a7 89 80 e7 0d 04 0e 1e 8c
+
+@0x98c0da
+04 28 00 // skip 40
+
+@0x9a9442
+04 07 00 // skip 7
+
+@0x9aa679
+04 0a 00 // skip 10
+
+@0x9aa694
+55       // clear text
+04 4f 00 // skip 79
+@
+
+@0x9bcf2f
+// skip 1 byte less in ruffle dialog to allow jump
+04 31 00
+@
+@0x9bcf3e
+// same as above but from 0x9bcf34
+14 00
+@
+
+@0x9bcf54
+// add jump from ruffle dialog to 0xb082aa
+29 aa 02 0f
+@
+
+@0xb082aa
+// this is right after the fragment setup script.
+// NOTE: this will interfere with the next "extra" item
+// need to overwrite value at ...+13 (0xb082b7) as snes word
+09 85 65 00 01 00 // IFNOT (energy core: $2264&0x20) SKIP 1
+00 // end
+09 08 d7 02 29 03 01 00 9e 04 00 // IFNOT (fragments:$252f < required:const) SKIP 4
+51 c5 22 // Show Text 22c5: fragment hint
+00 // end
+17 39 01 28 01 // write prize = energy core (0x0129)
+29 0d 02 0f // call loot script
+00 // end
+@
+
+@0x91f2c5+2
+// make text for energy core fragment hint uncompressed (text 22c5, replacing "Carltron is ...")
+01
+@
+
+@0xc32731
+// "Bring me ?? fragments to rebuild the Energy Core!"
+// need to everwrite value at ...+9..10 (0xc3273a) as 2 ascii chars ("%2d")
+42 72 69 6E 67 20 6D 65 20 3F 3F 20 66 72 61 67 6D 65 6E 74 73 20 74 6F 20
+72 65 62 75 69 6C 64 20 74 68 65 20 45 6E 65 72 67 79 20 43 6F 72 65 21 86 00
+@
+
+#endif

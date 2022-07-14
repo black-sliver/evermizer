@@ -118,6 +118,7 @@ const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard","Random"};
 const char* OFF_ON[] = { "Off", "On", NULL };
 const char* OFF_ON_FULL[] = { "Off", "On", "Full", NULL };
 const char* OFF_ON_POOL[] = { "Off", "On", "Pool", NULL };
+const char* ENERGY_CORE_VALUES[] = { "Vanilla", "Shuffle", "Fragments", NULL };
 const char* POOL_STRATEGY_VALUES[] = { "Balance", "Random", "Bosses", NULL };
 #define ON 1
 #define FULL 2
@@ -125,6 +126,9 @@ const char* POOL_STRATEGY_VALUES[] = { "Balance", "Random", "Bosses", NULL };
 #define STRATEGY_BALANCED 0
 #define STRATEGY_RANDOM 1
 #define STRATEGY_BOSSES 2
+#define ENERGY_CORE_VANILLA 0
+#define ENERGY_CORE_SHUFFLE 1
+#define ENERGY_CORE_FRAGMENTS 2
 
 #define DEFAULT_difficulty 1
 struct option { char key; uint8_t def; const char* text; const char* info; const char* description; const char** state_names; const char* section; const char* subsection;};
@@ -134,6 +138,7 @@ const static struct option options[] = {
     { '3', 1, "Glitchless beatable", NULL, "Never require glitches to finish", OFF_ON, "General", NULL },
     { '4', 0, "All accessible", NULL,      "Make sure all key items are obtainable", OFF_ON, "General", NULL },
     { 'l', 0, "Spoiler Log", NULL,         "Generate a spoiler log file", OFF_ON, "General", NULL },
+    { 'z', 1, "Energy Core", NULL,         "How to obtain the Energy Core", ENERGY_CORE_VALUES, "General", "Key items" },
     { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
     { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
     { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
@@ -164,6 +169,7 @@ enum option_indices {
     glitchless_idx,
     accessible_idx,
     spoilerlog_idx,
+    energy_core_idx,
     alchemizer_idx,
     bossdropamizer_idx,
     gourdomizer_idx,
@@ -213,6 +219,7 @@ enum option_indices {
 #define shortbossrush O(shortbossrush_idx)
 #define turdomode O(turdomode_idx)
 #define spoilerlog O(spoilerlog_idx)
+#define energy_core O(energy_core_idx)
 
 #define DEFAULT_OW() do {\
     for (size_t i=0; i<ARRAY_SIZE(options); i++)\
@@ -263,9 +270,11 @@ const static struct preset presets[] = {
 };
 #endif
 #ifdef NO_UI
-#define _FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
+#define _FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] " \
+               "[--available-fragments <n>] [--required-fragments <n>] "
 #else
-#define _FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "
+#define _FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "\
+               "[--available-fragments <n>] [--required-fragments <n>] "
 #endif
 #ifdef WITH_MULTIWORLD
 #define FLAGS _FLAGS "[--id <128 hex nibbles>] [--placement <placement.txt>] [--death-link] "
@@ -519,6 +528,8 @@ int main(int argc, const char** argv)
     uint8_t money_den = 0;
     uint8_t exp_num = 0;
     uint8_t exp_den = 0;
+    uint8_t available_fragments = 0;
+    uint8_t required_fragments = 0;
 
     #ifdef WITH_MULTIWORLD
     uint8_t id_data[64];
@@ -530,6 +541,8 @@ int main(int argc, const char** argv)
     #else
     #define placement_file false
     #define death_link false
+    (void)available_fragments; // TODO: implement for solo
+    (void)required_fragments;
     #endif
     
     // parse command line arguments
@@ -592,6 +605,25 @@ int main(int argc, const char** argv)
             if (exp>2500) exp=2500; // limit to 25x
             if (exp>0) percent_to_u8_fraction(exp, &exp_num, &exp_den);
             argv+=2; argc-=2;
+        } else if (strcmp(argv[1], "--required-fragments") == 0 && argc > 2) {
+            // TODO: validate energy core mode when fragments are set
+            int val = atoi(argv[2]);
+            if (val<1 || val>99) {
+                fprintf(stderr, "Required fragments has to be in 1..99\n");
+                break;
+            } else {
+                required_fragments = (uint8_t)val;
+            }
+            argv+=2; argc-=2;
+        } else if (strcmp(argv[1], "--available-fragments") == 0 && argc > 2) {
+            int val = atoi(argv[2]);
+            if (val<1 || val>99) {
+                fprintf(stderr, "Available fragments has to be in 1..99\n");
+                break;
+            } else {
+                available_fragments = (uint8_t)val;
+            }
+            argv+=2; argc-=2;
     #ifdef WITH_MULTIWORLD
         } else if (strcmp(argv[1], "--id") == 0 && argc > 2) {
             id_data_set = parse_id(id_data, sizeof(id_data), argv[2]);
@@ -611,7 +643,7 @@ int main(int argc, const char** argv)
             break;
         }
     }
-    
+
     if (!modeforced) {
         #if defined NO_RANDO && !defined NO_UI
         //interactive = argc<3; // NO_RANDO has no UI (yet)
@@ -1721,6 +1753,22 @@ int main(int argc, const char** argv)
         printf("Adding traps...\n");
         grow = true;
         APPLY_TRAPS();
+    }
+    if (placement_file) {
+        // currently energy core fragment only exists for AP
+        printf("Adding energy core fragment...\n");
+        grow = true;
+        APPLY_ENERGY_CORE_FRAGMENT();
+        if (energy_core == ENERGY_CORE_FRAGMENTS) {
+            APPLY_ENERGY_CORE_FRAGMENT_HANDLING();
+            (void)available_fragments;
+            buf[rom_off + 0x3082b7] = required_fragments;
+            buf[rom_off + 0x03273a] = required_fragments > 9 ? ('0' + (required_fragments / 10)) : ' ';
+            buf[rom_off + 0x03273b] = '0' + (required_fragments % 10);
+        }
+    } else if (energy_core != ENERGY_CORE_SHUFFLE) {
+        printf("Only shuffled energy core supported at the moment!\n");
+        return 1;
     }
 
     if (alchemizer || placement_file) {

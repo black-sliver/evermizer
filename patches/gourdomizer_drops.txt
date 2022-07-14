@@ -157,6 +157,10 @@ a3 3e 00                            // call loot part1, end
 7c b6 10 27 00                      // give 10k gold coins
 0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
 
+09 08 39 01 29 04 2a 01 a2 0e 00    // IF $2391 != 0x012a (Energy Core Fragment) SKIP 14
+14 d7 02 07 d7 02 29 31 9a          // energy core fragment += 1 ($252f = $252f + 1)
+0c 90 04 b1 00                      // loot success ($22ea) |= yes (0x01), end
+
 09 08 39 01 29 04 41 01 a2 09 00    // IF $2391 != 0x0141 (regenerate) SKIP 9
 // 09 ... 00                        // TODO: test if horace is unlocked?
 0c 1f 04 b1                         // set regenerate bit ($22db |= 0x80)
@@ -504,6 +508,9 @@ b4 01 b0 10 81 15                   // schedule screen shaking script at fd8110 
 
 09 08 39 01 29 04 29 01 a2 04 00    // IF $2391 != 0x0129 (10k gold) SKIP 4
 52 a0 1d 00                         // Show text, end
+
+09 08 39 01 29 04 2a 01 a2 04 00    // IF $2391 != 0x012a (Energy Core Fragment) SKIP 4
+52 c2 22 00                         // Show text, end
 
 09 08 39 01 29 04 41 01 a2 04 00    // IF $2391 != 0x0141 (regenerate) SKIP 4
 52 6b 0a 00                         // Show text, end

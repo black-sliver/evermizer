@@ -1,0 +1,32 @@
+#ifndef NO_RANDO
+
+#set // directive to create patch set as APPLY_ENERGY_CORE_FRAGMENT()
+
+// NOTE: we may have to always apply this with AP for the text, so add a separate energy_core_fragment_handling.txt ?
+
+@0xb082a4
+// This is right after the 6th trap
+// Energy Core Fragment setup script for local drop
+17 39 01 2a 01  // WRITE LOOT ITEM = 0x012a
+00              // END
+@
+
+// replace prof. energize text by fragment popup text
+
+@0x91f2c2+2
+// make text $22c2 uncompressed
+01
+@
+
+@0xc326f1
+// "Received Energy Core Fragment"
+52 65 63 65 69 76 65 64 20 45 6E 65 72 67 79 20 43 6F 72 65 20 46 72 61 67 6D 65 6E 74 00
+@
+
+@0x9bcf4f
+// remove text from prof.
+04 0b 00 // SKIP 11 (this frees the SKIP below)
+00 00 00
+@
+
+#endif
