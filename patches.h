@@ -229,7 +229,10 @@ DEF(80, 0x95ea22 + 1 - 0x800000, "\x05\x61\x00\x29\x05\x0d\x04\x27");
 // Added/enhanced boss drops for boss drop rando
 DEF(81, 0x96c113 - 0x800000,
     "\x29\x25\x41\x02" "\x29\x33\x3F\x00" "\x00"   // Magmar
-    "\x29\x25\x41\x02" "\x0c\x25\x00\xb1" "\x00"); // Monk
+    "\x29\x25\x41\x02" "\x0c\x25\x00\xb1" "\x00"   // Monk
+    "\x29\x25\x41\x02" "\x0c\x70\x04\xb1" "\x00" // Footknight
+    // 18 free bytes here
+);
 // Actual boss drops for boss drop rando, right after added drops (TODO: assert that)
 #if 0 // this has been replaced by new boss drops
 DEF(82, 0x96c125 - 0x800000,
@@ -308,6 +311,8 @@ DEF(104, 0x97a397 + 1 - 0x800000, // Mad Monk spawn condition (new flag)
     "\x85\x25\x00");
 DEF(105, 0x97a157 - 0x800000, // Mad Monk drop (see also patch 78)
     "\xa3\x00" "\x33\x78" "\xa3\x01" "\x29\x1c\x41\x02" "\x04\x00\x00");
+DEF(105b, 0x99d46e - 0x800000, // Footknight (see also patch 78)
+    "\x29\x25\x41\x02");
 #endif
 // Ignore "no prior save file" flag during intro
 DEF(106, 0x92e4ab + 4 - 0x800000, "\x00");

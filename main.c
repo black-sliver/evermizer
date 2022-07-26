@@ -1788,7 +1788,7 @@ int main(int argc, const char** argv)
         APPLY(87);  APPLY(88);  APPLY(89);  APPLY(90);  APPLY(91);  APPLY(92);
         APPLY(93);  APPLY(94);  APPLY(95);  APPLY(96);  APPLY(97);  APPLY(98);
         APPLY(99);  APPLY(100); APPLY(101); APPLY(102); APPLY(103); APPLY(104);
-        APPLY(105);
+        APPLY(105); APPLY(105b);
         // actually apply boss drop randomization
         for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++) {
             uint32_t drop_dst = boss_drop_setup_jumps[i] - 1;

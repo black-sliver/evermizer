@@ -195,43 +195,45 @@ const static size_t boss_drop_jumps[] = { // has to match PATCH 81,83-105
     0x949321 + 1 - 0x800000, // Volcano Viper
     0x96c113 + 1 - 0x800000, // Magmar
     0x96c11c + 1 - 0x800000, // Mad Monk
+    0x96c125 + 1 - 0x800000, // Footknight
 };
 // boss_drop_setup_jumps is where we have to set the address of the drop setup
 // (in the relocated code mentioned above)
 // setup jump target we put there is calculated in get_drop_setup_target
 const static uint32_t boss_drop_setup_jumps[] = { // has to match boss_rando_drops.txt
-    0x96C18F +  0 * 9 + 1 - 0x800000, // Thraxx
-    0x96C18F +  1 * 9 + 1 - 0x800000, // Coleoptera
-    0x96C18F +  2 * 9 + 1 - 0x800000, // Mammoth Viper
-    0x96C18F +  3 * 9 + 1 - 0x800000, // Cave Raptors
-    0x96C18F +  4 * 9 + 1 - 0x800000, // Salabog
-    0x96C18F +  5 * 9 + 1 - 0x800000, // Vigor
-    0x96C18F +  6 * 9 + 1 - 0x800000, // Megataur
-    0x96C18F +  7 * 9 + 1 - 0x800000, // Rimsala
-    0x96C18F +  8 * 9 + 1 - 0x800000, // Aquagoth
-    0x96C18F +  9 * 9 + 1 - 0x800000, // Bad Boys
-    0x96C18F + 10 * 9 + 1 - 0x800000, // Timberdrake
-    0x96C18F + 11 * 9 + 1 - 0x800000, // Verminator
-    0x96C18F + 12 * 9 + 1 - 0x800000, // Tiny
-    0x96C18F + 13 * 9 + 1 - 0x800000, // Mungola
-    0x96C18F + 14 * 9 + 1 - 0x800000, // Sons of Sth.
-    0x96C18F + 15 * 9 + 1 - 0x800000, // Volcano Viper
-    0x96C18F + 16 * 9 + 1 - 0x800000, // Magmar
-    0x96C18F + 17 * 9 + 1 - 0x800000, // Mad Monk
+    0x96C1AA +  0 * 9 + 1 - 0x800000, // Thraxx
+    0x96C1AA +  1 * 9 + 1 - 0x800000, // Coleoptera
+    0x96C1AA +  2 * 9 + 1 - 0x800000, // Mammoth Viper
+    0x96C1AA +  3 * 9 + 1 - 0x800000, // Cave Raptors
+    0x96C1AA +  4 * 9 + 1 - 0x800000, // Salabog
+    0x96C1AA +  5 * 9 + 1 - 0x800000, // Vigor
+    0x96C1AA +  6 * 9 + 1 - 0x800000, // Megataur
+    0x96C1AA +  7 * 9 + 1 - 0x800000, // Rimsala
+    0x96C1AA +  8 * 9 + 1 - 0x800000, // Aquagoth
+    0x96C1AA +  9 * 9 + 1 - 0x800000, // Bad Boys
+    0x96C1AA + 10 * 9 + 1 - 0x800000, // Timberdrake
+    0x96C1AA + 11 * 9 + 1 - 0x800000, // Verminator
+    0x96C1AA + 12 * 9 + 1 - 0x800000, // Tiny
+    0x96C1AA + 13 * 9 + 1 - 0x800000, // Mungola
+    0x96C1AA + 14 * 9 + 1 - 0x800000, // Sons of Sth.
+    0x96C1AA + 15 * 9 + 1 - 0x800000, // Volcano Viper
+    0x96C1AA + 16 * 9 + 1 - 0x800000, // Magmar
+    0x96C1AA + 17 * 9 + 1 - 0x800000, // Mad Monk
+    0x96C1AA + 18 * 9 + 1 - 0x800000, // Footknight
 };
 enum boss_indices { // has to match boss_drop_jumps
     THRAXX_IDX, COLEOPTERA_IDX, MAMMOTH_VIPER_IDX, CAVE_RAPTORS_IDX,
     SALABOG_IDX, VIGOR_IDX, MEGATAUR_IDX, RIMSALA_IDX, AQUAGOTH_IDX,
     BAD_BOYS_IDX, TIMBERDRAKE_IDX, VERMINATOR_IDX, TINY_IDX, MUNGOLA_IDX,
-    SONS_IDX, VOLCANO_VIPER_IDX, MAGMAR_IDX, MONK_IDX
+    SONS_IDX, VOLCANO_VIPER_IDX, MAGMAR_IDX, MONK_IDX, FOOTKNIGHT_IDX
 };
 const static char* boss_names[] = {
     "Thraxx", "Coleoptera", "Mammoth Viper", "Cave Raptors",
     "Salabog", "Vigor", "Megataur", "Rimsala", "Aquagoth",
     "Bad Boys", "Timberdrake", "Verminator", "Tiny", "Mungola",
-    "Sons of Sth.", "Volcano Viper", "Magmar", "Mad Monk"    
+    "Sons of Sth.", "Volcano Viper", "Magmar", "Mad Monk", "Footknight",
 };
-_Static_assert(THRAXX_IDX==0 && MONK_IDX==ARRAY_SIZE(boss_drop_jumps)-1, "Bad boss indices");
+_Static_assert(THRAXX_IDX==0 && FOOTKNIGHT_IDX==ARRAY_SIZE(boss_drop_jumps)-1, "Bad boss indices");
 _Static_assert(ARRAY_SIZE(boss_names)==ARRAY_SIZE(boss_drop_jumps), "Bad boss name list");
 
 
@@ -254,7 +256,8 @@ const static char* boss_drop_names[] = {
     DIAMOND_EYE_DROP_IDX, DIAMOND_EYE_DROP_IDX, HONEY_DROP_IDX,\
     CRUSADER_SWORD_IDX,   LANCE_WEAPON_IDX,     BAZOOKA_DROP_IDX,\
     DIAMOND_EYE_DROP_IDX, GOLD_10K_IDX,         BRONZE_AXE_IDX,\
-    MUD_PEPPER_DROP_IDX,  NOTHING_IDX,          BRONZE_SPEAR_IDX\
+    MUD_PEPPER_DROP_IDX,  NOTHING_IDX,          BRONZE_SPEAR_IDX,\
+    NOTHING_IDX,\
 };
 _Static_assert(NOTHING_IDX==0/* && DIAMOND_EYE_DROP_IDX==ARRAY_SIZE(boss_drop_setup_jumps)-1*/, "Bad boss drop indices");
 _Static_assert(ARRAY_SIZE(boss_drop_setup_jumps)==ARRAY_SIZE(boss_drop_jumps), "Bad boss jump list");
@@ -426,6 +429,7 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_BOSS,RIMSALA_IDX,       0, 0, REQ2(P_BRONZE_AXE,P_PYRAMID_ACCESSIBLE), PVD1(P_PYRAMID_OR_RUINS)},
     {0, CHECK_RULE,P_AEGIS_DEAD,      0, 0, REQ2N(1,P_WEAPON,2,P_DE),                PVD2(P_AEGIS_DEAD,P_PYRAMID_ACCESSIBLE)},
     {0, CHECK_BOSS,AQUAGOTH_IDX,      0, 0, REQ2(P_WEAPON,P_AEGIS_DEAD),             NOTHING_PROVIDED},
+    {0, CHECK_BOSS,FOOTKNIGHT_IDX,    0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
     {0, CHECK_BOSS,BAD_BOYS_IDX,      0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
     {0, CHECK_BOSS,TIMBERDRAKE_IDX,   0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
     {0, CHECK_BOSS,VERMINATOR_IDX,    0, 0, REQ1(P_WEAPON),                          NOTHING_PROVIDED},
@@ -646,7 +650,7 @@ static uint32_t get_drop_setup_target(enum check_tree_item_type type, uint16_t i
     }
     if (type == CHECK_BOSS && idx<ARRAY_SIZE(boss_drop_names)) {
         // TODO: use existing table above instead of doing the calculation again?
-        uint32_t addr = 0x96c135 + 6 * idx;
+        uint32_t addr = 0x96c150 + 6 * idx;
         return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
     }
     if (type == CHECK_TRAP) {
