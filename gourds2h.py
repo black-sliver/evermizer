@@ -274,19 +274,27 @@ def main(dst_filename, src_filename, rom_filename=None):
                 except: pass # used for cyberscore
                 if startaddr<1 or endaddr<1:
                     print('Bad address in row %d' % (rownr,))
+                    exit(1)
                 #elif endaddr-startaddr<4 or (mapref>=0 and endaddr-startaddr<9) or (hasv239x and endaddr-startaddr<19): # <- call loot script in drop
                 elif endaddr-startaddr<6 or (mapref>=0 and endaddr-startaddr<11) or (hasv239x and endaddr-startaddr<21): # <- call loot script in trigger
                     print('Bad address span in row %d' % (rownr,))
+                    exit(1)
                 elif rom and rom[endaddr] != 0x0c and rom[endaddr] != 0x00: # note 00 is only valid if "needs IF" is set
                     print('End address is not INSTR 0c or 00 in row %d' % (rownr,))
-                elif rom and rom[startaddr] not in (0x17,0x18,0x08,0x09,0xbc):
-                    print('Start address is not WRITE or bc in row %d' % (rownr,)) # note bc is only valid if "needs IF" is set
+                    exit(1)
+                elif rom and rom[startaddr] not in (0x17,0x18,0x08,0x09,0xbc) and itemname != 'Energy Core':
+                    # NOTE: energy core is not a valid chest
+                    print('Start address is not WRITE or bc for %s in row %d' % (itemname, rownr,)) # note bc is only valid if "needs IF" is set
+                    exit(1)
                 #elif rom and rom[startaddr] in (0x08,0x09) and rom[startaddr+1] == flagval&0xff and rom[startaddr+2] == flagval>>8:
                 #    print('Start address is flag test in row %d' % (rownr,))
+                #    exit(1)
                 elif flagval<0:
                     print('No such flag "%s" in row %d' % (row[5], rownr))
+                    exit(1)
                 elif flagval in flagvals:
                     print('Duplicate flag "%s" in row %d' % (row[5], rownr))
+                    exit(1)
                 else: # ok, add to list
                     flagvals.append(flagval)
                     locations.append([mapref,v2397,v2399,lootscript,startaddr,endaddr,missable,requires,locname,flagval,special,difficulty])
