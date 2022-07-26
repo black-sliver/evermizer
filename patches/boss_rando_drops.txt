@@ -2,7 +2,7 @@
 
 #set
 
-@0x96c125
+@0x96c140
 // BOSS_DROP func to give boss reward
 a3 3e               // call loot part 1
 09 85 90 04 05 00   // if not loot successfull skip 5
@@ -11,7 +11,7 @@ a3 3f               // call loot part 2 (looted message)
 a3 41               // call loot part 3 (failed message)
 00                  // end
 
-// Nothing setup @ 0x96c135
+// Nothing setup @ 0x96c150
 17 39 01 00 00 00   // write item = Nothing, end
 // Wheel setup
 17 39 01 27 01 00   // write item = Wheel, end
@@ -44,77 +44,81 @@ a3 41               // call loot part 3 (failed message)
 // Diamond eye setup
 17 39 01 26 01 00   // write item = Diamond eye, end
 
-// Thraxx drop @ 0x96C18F
+// Thraxx drop @ 0x96C1AA
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Coleoptera drop @ Thraxx + 9
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Mammoth Viper drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Cave Raptors drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Salabog drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Vigor drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Megataur drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Rimsala drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Aquagoth drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Bad Boys drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Timberdrake drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Verminator drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Tiny drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Mungola drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Sons of Sth. drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Volcano Viper drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 // Magmar drop
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
-// Mad Monk drop
+// Mad Monk drop // at 96c247
 29 00 00 00     // CALL BOSS_SETUP
-29 25 41 02     // CALL BOSS_DROP
+29 40 41 02     // CALL BOSS_DROP
+00              // END
+// Footknight drop // at 96c24c
+29 00 00 00     // CALL BOSS_SETUP
+29 40 41 02     // CALL BOSS_DROP
 00              // END
 @
 
