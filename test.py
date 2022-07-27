@@ -49,13 +49,13 @@ SPELLS = [
 BOSS_DROPS = [
 'Diamond Eye','Wheel','Crusader Sword','Spider Claw','Bronze Axe','Horn Spear',
 'Bronze Spear','Lance (Weapon)','Mud Pepper','Honey','Nothing',
-'10,000 Gold Coins','Progressive breast / Dino Skin / Talons',
-'Gladiator Sword','Bazooka+Shells / Shining Armor / 5k Gold'
+'10,000 Gold Coins','Progressive vest',
+'Gladiator Sword','Bazooka'
 ]
 GOURD_DROPS = [
 'Gauge','Knight Basher','Atom Smasher','Laser Lance',
 #'30 Thunderballs','30 Particle Bombs or Nectar?','30 Cryo Blast',
-'Progressive gloves','Progressive helmet','Progressive breast',
+'Progressive gloves','Progressive helmet','Progressive vest',
 'Aura','Regenerate'
 ]
 PRE_ACT4_DROPS = [ 'Gauge', 'Wheel' ]
