@@ -1031,7 +1031,12 @@ int main(int argc, const char** argv)
         free(placement);
     }
 #endif
-    
+
+    if (!placement_file && energy_core == ENERGY_CORE_FRAGMENTS) {
+        printf("Energy core fragments only in multiworld at the moment!\n");
+        return 1;
+    }
+
     int treedepth=0;
     int cyberlogicscore=0;
     int cybergameplayscore=0;
@@ -1058,19 +1063,21 @@ int main(int argc, const char** argv)
             for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++) boss_drops[i] = (CHECK_BOSS<<10) + tmp[i];
             for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (CHECK_GOURD<<10) + (uint16_t)i;
             // shuffle pools
+            // vanilla energy core feature requires energy core to be the last gourd
+            size_t gourd_shuffle_count = ARRAY_SIZE(gourd_drops) - ((energy_core == ENERGY_CORE_VANILLA) ? 1 : 0);
             if (alchemizer) shuffle_u16(alchemy, ARRAY_SIZE(alchemy));
-            if (gourdomizer) shuffle_u16(gourd_drops, ARRAY_SIZE(gourd_drops));
+            if (gourdomizer) shuffle_u16(gourd_drops, gourd_shuffle_count);
             if (bossdropamizer) shuffle_u16(boss_drops, ARRAY_SIZE(boss_drops));
             // mix pools
             if (alchemizer == POOL && gourdomizer == POOL) {
-                shuffle_pools(alchemy, ARRAY_SIZE(alchemy), gourd_drops, ARRAY_SIZE(gourd_drops),
+                shuffle_pools(alchemy, ARRAY_SIZE(alchemy), gourd_drops, gourd_shuffle_count,
                               (mixedpool==STRATEGY_BOSSES) ? STRATEGY_RANDOM : mixedpool);
             }
             if (alchemizer == POOL && bossdropamizer == POOL) {
                 shuffle_pools(boss_drops, ARRAY_SIZE(boss_drops), alchemy, ARRAY_SIZE(alchemy), mixedpool);
             }
             if (gourdomizer == POOL && bossdropamizer == POOL) {
-                shuffle_pools(boss_drops, ARRAY_SIZE(boss_drops), gourd_drops, ARRAY_SIZE(gourd_drops), mixedpool);
+                shuffle_pools(boss_drops, ARRAY_SIZE(boss_drops), gourd_drops, gourd_shuffle_count, mixedpool);
             }
         }
 
@@ -1767,9 +1774,6 @@ int main(int argc, const char** argv)
             buf[rom_off + 0x03273a] = required_fragments > 9 ? ('0' + (required_fragments / 10)) : ' ';
             buf[rom_off + 0x03273b] = '0' + (required_fragments % 10);
         }
-    } else if (energy_core != ENERGY_CORE_SHUFFLE) {
-        printf("Only shuffled energy core supported at the moment!\n");
-        return 1;
     }
 
     if (alchemizer || placement_file) {

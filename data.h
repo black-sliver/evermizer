@@ -712,7 +712,8 @@ static bool is_real_progression(const drop_tree_item* drop)
         return (drop->index == REVEALER_IDX || drop->index == LEVITATE_IDX);
     }
     if (drop->type == CHECK_GOURD) {
-        return (drop->provides[0].progress == P_GAUGE || drop->provides[0].progress == P_WEAPON);
+        return (drop->provides[0].progress == P_GAUGE || drop->provides[0].progress == P_WEAPON ||
+                drop->provides[0].progress == P_ENERGY_CORE);
     }
     return false;
 }
