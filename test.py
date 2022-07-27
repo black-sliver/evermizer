@@ -441,7 +441,8 @@ if __name__ == '__main__':
         tests = [ [ 'Drops '+difficulty+settings, DropTest(exe,rom,wdir,difficulty,settings ) ]
                     for difficulty in difficulties for settings in variations ]
         tests+= [ [ 'Exec Money%', ExecTest(exe,rom,wdir,['--money','200'],'e','','1') ],
-                  [ 'Exec Exep%', ExecTest(exe,rom,wdir,['--exp','200'],'e','','1') ] ]
+                  [ 'Exec Exep%', ExecTest(exe,rom,wdir,['--exp','200'],'e','','1') ],
+                  [ 'Exec Fragments', ExecTest(exe,rom,wdir,['--required-fragments','99'],'e','','1') ] ]
         for i, [ name, test ] in enumerate(tests):
             print('%sTEST%3d%s:' % (Colors.BOLD, i, Colors.END), end=' ')
             stdout.flush()
