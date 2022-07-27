@@ -56,13 +56,13 @@ GOURD_DROPS = [
 'Gauge','Knight Basher','Atom Smasher','Laser Lance',
 #'30 Thunderballs','30 Particle Bombs or Nectar?','30 Cryo Blast',
 'Progressive gloves','Progressive helmet','Progressive vest',
-'Aura','Regenerate'
+'Aura','Regenerate','Energy Core'
 ]
 PRE_ACT4_DROPS = [ 'Gauge', 'Wheel' ]
 SPELL_IDS = { name.encode('ascii'):index for (index,name) in enumerate(SPELLS) }
 BOSS_DROP_IDS = { name.encode('ascii'):index for (index,name) in enumerate(BOSS_DROPS) }
 GOURD_DROP_IDS = { name.encode('ascii'):index for (index,name) in enumerate(GOURD_DROPS) }
-ACT4_GOURDS = range(274,284+1)
+ACT4_GOURDS = range(274,285+1)
 ACT4_ALCHEMY = [ SPELL_IDS[b'Call Up'], SPELL_IDS[b'Energize'],
                  SPELL_IDS[b'Force Field'], SPELL_IDS[b'Nitro'],
                  SPELL_IDS[b'Reflect'], SPELL_IDS[b'Stop']]
