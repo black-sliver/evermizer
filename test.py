@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 import os
-from sys import argv, stderr
+from sys import argv, stderr, stdout
 import time
 import binascii
 import multiprocessing
@@ -96,6 +96,14 @@ UNREACHABLE_ALCHEMY_DROPS = [[ 'Knight Baser', KNIGHT_BASHER_REQUIRED_ALCHEMY ],
                              [ 'Levitate', LEVITATE_REQUIRED_ALCHEMY ],
                              [ 'Revealer', REVEALER_REQUIRED_ALCHEMY ]]
 
+
+class Colors:
+    PASS = '\033[92m'
+    FAIL = '\033[91m'
+    BOLD = '\033[1m'
+    END  = '\033[0m'
+
+
 class SeedGenerator(object):
     def __init__(self, cmdline, limit=100):
         self.limit = limit
@@ -114,6 +122,7 @@ class SeedGenerator(object):
         seed = binascii.b2a_hex(os.urandom(8)).decode('ascii')
         return self.cmdline + [seed]
 
+
 class PopenTest(object):
     capture_stderr = False
     
@@ -124,7 +133,8 @@ class PopenTest(object):
         self.checks = checks
         self.completed = False
         self.result = False
-    
+        self.did_throw = False
+
     def run(self):
         self.completed = False
         max_workers = multiprocessing.cpu_count() #+ 1
@@ -144,7 +154,15 @@ class PopenTest(object):
                     if self.capture_stderr:
                         stderrbuf = p.stderr.read(-1)
                         if stderrbuf: print(stderrbuf)
-                    if self.process_done: self.process_done(res, output)
+                    try:
+                        if self.process_done: self.process_done(res, output)
+                    except Exception as ex:
+                        self.result = False
+                        self.completed = True
+                        self.did_throw = True
+                        print(str(ex), end=' ')
+                        stdout.flush()
+                        break
                     self.result = all(check(res, output) for check in self.checks)
                     self.completed = self.result
                     if self.process_cleanup: self.process_cleanup(res, output)
@@ -164,6 +182,11 @@ class PopenTest(object):
         self.completed = True
         return self.result
 
+
+class LogicError(Exception):
+    pass
+
+
 class EvermizerTest(PopenTest):
     def __init__(self, exe, args, checks, limit=1000):
         self.popen_count = 0
@@ -176,10 +199,13 @@ class EvermizerTest(PopenTest):
         self.popen_count += 1
         if r != 0:
             self.popen_failed += 1
+            if self.popen_failed > 2 and self.popen_count < 2*self.popen_failed:
+                raise LogicError('(settings seem unbeatable)')
             return False
     
     def proc_cleanup(self, r, o):
         pass
+
 
 class DropTest(EvermizerTest):
     '''Test if all checks get all drops for given settings and difficulty'''
@@ -355,6 +381,7 @@ class DropTest(EvermizerTest):
                     
         return res
 
+
 class ExecTest(object):
     '''Test if execution succeeds for given settings'''
     def __init__(self, exe, rom, wdir, args=[], difficulty='', settings='', seed=None):
@@ -407,7 +434,7 @@ if __name__ == '__main__':
     
     done = 0
     failed = 0
-    difficulties = ['e','n','h','x' ] if more else ['e','n','x' ]
+    difficulties = ['e','n','h','x'] if more else ['e','n','x']
     variations = ['','4','13']
     # FIXME: speed up hard seed generation so we don't have to skip it
     with TemporaryDirectory() as wdir:
@@ -416,6 +443,8 @@ if __name__ == '__main__':
         tests+= [ [ 'Exec Money%', ExecTest(exe,rom,wdir,['--money','200'],'e','','1') ],
                   [ 'Exec Exep%', ExecTest(exe,rom,wdir,['--exp','200'],'e','','1') ] ]
         for i, [ name, test ] in enumerate(tests):
+            print('%sTEST%3d%s:' % (Colors.BOLD, i, Colors.END), end=' ')
+            stdout.flush()
             teststart = time.time()
             passed = test.run()
             testend = time.time()
@@ -423,10 +452,11 @@ if __name__ == '__main__':
             if not passed: failed += 1
             if not silent:
                 result = 'PASSED' if passed else 'FAILED'
-                print('TEST %d %s: %s' % (i, result, name))
+                result_color = Colors.PASS if passed else Colors.FAIL
+                print('%s%s%s: %s' % (result_color, result, Colors.END, name))
                 if not passed:
                     for check in test.checks:
-                        if not check():
+                        if not check() and not test.did_throw:
                             check(report=True)
             
             if verbose:
@@ -435,9 +465,9 @@ if __name__ == '__main__':
                         testend-teststart,))
     
     if done>0 and failed==0 and not silent:
-        print('ALL %d TESTS PASSED' % (done,))
+        print('%sALL %d TESTS PASSED%s' % (Colors.BOLD, done, Colors.END))
     elif not silent:
-        print('%d/%d TESTS FAILED' % (failed,done,))
+        print('%s%d/%d TESTS FAILED%s' % (Colors.BOLD, failed, done, Colors.END))
     
     if failed>0: exit(1)
 
