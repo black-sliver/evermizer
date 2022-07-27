@@ -1475,7 +1475,8 @@ int main(int argc, const char** argv)
             if (accessible && milestone==1) {
                 bool not_accessible = false;
                 for (size_t i=P_NONE+1; i<P_END-1; i++) {
-                    if (i == P_DE || i == P_GAUGE || i == P_WHEEL || i == P_ORACLE_BONE || i == P_ROCK_SKIP) continue;
+                    if (i == P_DE || i == P_GAUGE || i == P_WHEEL || i == P_ORACLE_BONE || i == P_ROCK_SKIP ||
+                        i == P_CORE_FRAGMENT) continue;
                     if (progress[i]==0) { not_accessible = true; break; }
                 }
                 if (not_accessible) REROLL();
