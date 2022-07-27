@@ -814,9 +814,9 @@ int main(int argc, const char** argv)
                 u8_fraction_to_percent(exp_num,exp_den),
                 u8_fraction_to_percent(money_num,money_den));
             SETTINGS2STR(settings);
-            printf("Settings: %-18s(Press R to reset)\n", settings);
+            printf("Settings: %-20s(Press R to reset)\n", settings);
             printf("\n");
-            printf("Difficulty:          %-6s (%c",
+            printf("Difficulty:          %-9s(%c",
                     DIFFICULTY_NAME[difficulty], toupper(DIFFICULTY_CHAR[0]));
             for (size_t i=1; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++)
                 printf("/%c", toupper(DIFFICULTY_CHAR[i]));
@@ -824,7 +824,7 @@ int main(int argc, const char** argv)
             for (size_t i=0; i<ARRAY_SIZE(options); i++) {
                 const struct option* opt = options+i;
                 char col1[32]; snprintf(col1, sizeof(col1), "%s:", opt->text);
-                printf("%-20s %-7s %c%c%s%s%s%s\n", col1, opt->state_names[O(i)],
+                printf("%-20s %-9s%c%c%s%s%s%s\n", col1, opt->state_names[O(i)],
                         opt->key?'(':' ', opt->key?toupper(opt->key):' ', opt->key?" to toggle)":"",
                         opt->info?" [":"", opt->info?opt->info:"", opt->info?"]":"");
             }
