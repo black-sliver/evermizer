@@ -415,14 +415,16 @@ if __name__ == '__main__':
     n = 1
     verbose = False
     silent = False
+    less = False
     more = False
     while True:
         if   len(argv)-n>0 and argv[n] == '--verbose': verbose = True
         elif len(argv)-n>0 and argv[n] == '--silent': silent = True
         elif len(argv)-n>0 and argv[n] == '--more': more = True
+        elif len(argv)-n>0 and argv[n] == '--less': less = True
         else: break
         n += 1
-    if len(argv)-n != 2 or (silent and verbose):
+    if len(argv)-n != 2 or (silent and verbose) or (more and less):
         print_usage(argv[0])
         exit(1)
     
@@ -438,7 +440,7 @@ if __name__ == '__main__':
     
     done = 0
     failed = 0
-    difficulties = ['e','n','h','x'] if more else ['e','n','x']
+    difficulties = ['e','n','h','x'] if more else ['x'] if less else ['e','n','x']
     variations = ['','4','13']
     # FIXME: speed up hard seed generation so we don't have to skip it
     with TemporaryDirectory() as wdir:
