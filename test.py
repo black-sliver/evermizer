@@ -10,8 +10,10 @@ from itertools import islice
 from subprocess import Popen, PIPE
 try: # python3
     from subprocess import DEVNULL
+    proc_wait_has_timeout = True
 except: # python2
     DEVNULL = open(os.devnull, 'w')
+    proc_wait_has_timeout = False
 try: # python3
     from tempfile import TemporaryDirectory
 except: # python2
@@ -395,8 +397,10 @@ class ExecTest(object):
         proc = Popen(self.cmd, stdout=DEVNULL, stderr=DEVNULL)
         self.popen_count = 1
         try:
-            res = proc.wait(10000)
-        except:
+            res = proc.wait(*[10000] if proc_wait_has_timeout else [])
+        except Exception as ex:
+            import traceback
+            traceback.print_exc(ex)
             self.popen_failed = 1
             return False
         if res != 0:
