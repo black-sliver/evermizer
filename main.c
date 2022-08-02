@@ -1429,6 +1429,8 @@ int main(int argc, const char** argv)
                 for (size_t i=0; i<ARRAY_SIZE(checks); i++) {
                     if (checks[i].reached) continue;
                     if (check_requires(checks+i, goal)) continue; // don't iterate past goal
+                    // TODO: don't update scores if goal was already reached to avoid bogus scores
+                    //       this may require rebalancing
                     if (check_reached(checks+i, progress)) {
                         uint16_t drop_id = checks[i].type==CHECK_ALCHEMY ? alchemy[checks[i].index] :
                                            checks[i].type==CHECK_BOSS ? boss_drops[checks[i].index] :
