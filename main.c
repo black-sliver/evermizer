@@ -1849,8 +1849,7 @@ int main(int argc, const char** argv)
         grow = true;
         APPLY_TRAPS();
     }
-    if (placement_file) {
-        // currently energy core fragment only exists for AP
+    if (placement_file || energy_core == ENERGY_CORE_FRAGMENTS) {
         printf("Adding energy core fragment...\n");
         grow = true;
         APPLY_ENERGY_CORE_FRAGMENT();
