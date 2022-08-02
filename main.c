@@ -1055,12 +1055,15 @@ int main(int argc, const char** argv)
     if (randomized)
         printf("Rolling");
     fflush(stdout);
+    int rolllimit = (difficulty == 2) ? 100000 : 50000;
     do {
         // FIXME: limit generation instead of rerolling too often
-        if (rollcount>49998) {
+        if (rollcount>rolllimit-2) {
             free(buf);
             fclose(fsrc);
-            die("\nCould not satisfy logic in 50k tries. Giving up.\n");
+            char msg[256];
+            snprintf(msg, sizeof(msg), "\nCould not satisfy logic in %dk tries. Giving up.\n", rolllimit/1000);
+            die(msg);
         }
         if (rollcount>0) printf(".");
         if ((rollcount+strlen("Rolling"))%79 == 0) printf("\n"); else fflush(stdout); // 79 chars per line
