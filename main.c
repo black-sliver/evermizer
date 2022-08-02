@@ -765,7 +765,7 @@ int main(int argc, const char** argv)
     }
 
     if (verify) {
-        printf("OK");
+        printf("OK\n");
         free(buf);
         fclose(fsrc);
         return 0;
