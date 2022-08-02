@@ -453,12 +453,16 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_RULE,P_FINAL_BOSS,      0, 0, REQ2(P_ROCKET,P_ENERGY_CORE), PVD1(P_FINAL_BOSS)},
     {0, CHECK_RULE,P_VOLCANO_ENTERED, 0, 0, REQ2(P_WEAPON,P_LEVITATE),  PVD1(P_VOLCANO_ENTERED)},
     {0, CHECK_RULE,P_ROCK_SKIP,       0, 0, REQ2(P_WEAPON,P_ROCK_SKIP), PVD1(P_VOLCANO_ENTERED)},
+    // Energy core fragments conversion; will be updated in main
+    {0, CHECK_RULE,P_ENERGY_CORE,     0, 0, REQ1N(-1, P_CORE_FRAGMENT), NOTHING_PROVIDED},
     // Gourd checks included from generated gourds.h
     #define CHECK_TREE
     #include "gourds.h"
     #undef CHECK_TREE
 };
 static const drop_tree_item drops[] = {
+    // Extra drops
+    {CHECK_EXTRA, 0, PVD1(P_CORE_FRAGMENT)},
     // Alchemy drops with progression
     {CHECK_ALCHEMY,ATLAS_IDX,    PVD1(P_ATLAS)},
     {CHECK_ALCHEMY,REVEALER_IDX, PVD2(P_REVEALER, P_PYRAMID_ACCESSIBLE)},
@@ -525,6 +529,7 @@ static inline void drop_progress(const drop_tree_item* drop, int* progress)
 }
 static inline const drop_tree_item* get_drop(enum check_tree_item_type type, uint16_t idx)
 {
+    // NOTE: since we only have progression in drops, always iterating over everything is fast
     for (size_t i=0; i<ARRAY_SIZE(drops); i++)
         if (drops[i].type == type && drops[i].index == idx) return drops+i;
     return NULL;

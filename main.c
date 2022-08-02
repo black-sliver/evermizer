@@ -394,7 +394,13 @@ static void print_settings_json()
     printf("\n ],\n");
     printf(" \"Args\": [\n");
     printf("  [ \"exp\", \"Exp%%\", \"int\", \"100\", \"Character, alchemy and weapon experience modifier in percent. (1-2500)\",  \"Accessibility\", \"\", 1, 2500 ],\n");
-    printf("  [ \"money\", \"Money%%\", \"int\", \"100\", \"Enemy money modifier in percent. (1-2500)\", \"Accessibility\", \"\", 1, 2500 ]\n");
+    printf("  [ \"money\", \"Money%%\", \"int\", \"100\", \"Enemy money modifier in percent. (1-2500)\", \"Accessibility\", \"\", 1, 2500 ],\n");
+    printf("  [ \"required-fragments\",  \"Required fragments\",  \"int\", \"10\","
+                "\"Number of fragments required to get Energy Core in 'Fragment' mode. (1-99)\","
+                "\"General\", \"Key items\", 1, 99 ],\n");
+    printf("  [ \"available-fragments\", \"Available fragments\", \"int\", \"11\","
+                "\"Number of fragments placed in the world in 'Fragment' mode. (1-99)\","
+                "\"General\", \"Key items\", 1, 99 ]\n");
     printf(" ]\n}\n\n");
 }
 #ifdef __EMSCRIPTEN__
@@ -538,8 +544,10 @@ int main(int argc, const char** argv)
     uint8_t money_den = 0;
     uint8_t exp_num = 0;
     uint8_t exp_den = 0;
-    uint8_t available_fragments = 0;
-    uint8_t required_fragments = 0;
+#ifndef NO_RANDO
+    uint8_t available_fragments = 11;
+    uint8_t required_fragments = 10;
+#endif
 
     #ifdef WITH_MULTIWORLD
     uint8_t id_data[64];
@@ -551,8 +559,6 @@ int main(int argc, const char** argv)
     #else
     #define placement_file false
     #define death_link false
-    (void)available_fragments; // TODO: implement for solo
-    (void)required_fragments;
     #endif
     
     // parse command line arguments
@@ -615,8 +621,9 @@ int main(int argc, const char** argv)
             if (exp>2500) exp=2500; // limit to 25x
             if (exp>0) percent_to_u8_fraction(exp, &exp_num, &exp_den);
             argv+=2; argc-=2;
+    #ifndef NO_RANDO
         } else if (strcmp(argv[1], "--required-fragments") == 0 && argc > 2) {
-            // TODO: validate energy core mode when fragments are set
+            // NOTE: fragment count will be checked but ignored for normal core
             int val = atoi(argv[2]);
             if (val<1 || val>99) {
                 fprintf(stderr, "Required fragments has to be in 1..99\n");
@@ -626,6 +633,7 @@ int main(int argc, const char** argv)
             }
             argv+=2; argc-=2;
         } else if (strcmp(argv[1], "--available-fragments") == 0 && argc > 2) {
+            // NOTE: fragment count will be checked but ignored for normal core
             int val = atoi(argv[2]);
             if (val<1 || val>99) {
                 fprintf(stderr, "Available fragments has to be in 1..99\n");
@@ -634,6 +642,7 @@ int main(int argc, const char** argv)
                 available_fragments = (uint8_t)val;
             }
             argv+=2; argc-=2;
+    #endif
     #ifdef WITH_MULTIWORLD
         } else if (strcmp(argv[1], "--id") == 0 && argc > 2) {
             id_data_set = parse_id(id_data, sizeof(id_data), argv[2]);
@@ -876,6 +885,28 @@ int main(int argc, const char** argv)
     #endif
     printf("Settings: %-10s\n\n", settings);
     
+    #ifndef NO_RANDO
+    if (placement_file) {
+        available_fragments = required_fragments;
+    } else if (energy_core == ENERGY_CORE_FRAGMENTS) {
+        // validate and fix up values for core fragments
+        // NOTE: with rising number of required fragments, difficulty balancing becomes near impossible
+        if (required_fragments > 40 && difficulty < 1) {
+            free(buf);
+            die("Easy only supports 40 fragments.\n");
+        }
+        if (required_fragments > 55 && difficulty < 2) {
+            free(buf);
+            die("Normal only supports 55 fragments.\n");
+        } else if (available_fragments < required_fragments) {
+            available_fragments = required_fragments;
+            fprintf(stderr, "Warning: Available fragments too low.\n"
+                    "Changing required/available to %hhu/%hhu\n",
+                    required_fragments, available_fragments);
+        }
+    }
+    #endif
+
     // define patches
     #define DEF_LOC(n, location)\
         const size_t PATCH_LOC##n = location
@@ -1042,11 +1073,6 @@ int main(int argc, const char** argv)
     }
 #endif
 
-    if (!placement_file && energy_core == ENERGY_CORE_FRAGMENTS) {
-        printf("Energy core fragments only in multiworld at the moment!\n");
-        return 1;
-    }
-
     int treedepth=0;
     int cyberlogicscore=0;
     int cybergameplayscore=0;
@@ -1055,7 +1081,9 @@ int main(int argc, const char** argv)
     if (randomized)
         printf("Rolling");
     fflush(stdout);
-    int rolllimit = (difficulty == 2) ? 100000 : 50000;
+    int rolllimit = 50000;
+    if (difficulty == 2) rolllimit *= 2;
+    if (energy_core == ENERGY_CORE_FRAGMENTS && required_fragments>=30) rolllimit *= 2;
     do {
         // FIXME: limit generation instead of rerolling too often
         if (rollcount>rolllimit-2) {
@@ -1075,6 +1103,39 @@ int main(int argc, const char** argv)
             for (size_t i=0; i<ALCHEMY_COUNT; i++) alchemy[i] = (CHECK_ALCHEMY<<10) + (uint16_t)i;
             for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++) boss_drops[i] = (CHECK_BOSS<<10) + tmp[i];
             for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (CHECK_GOURD<<10) + (uint16_t)i;
+            // assert that last gourd is energy core. required for vanilla and fragments
+            assert(get_drop_from_packed(gourd_drops[ARRAY_SIZE(gourd_drops)-1])->provides[0].progress == P_ENERGY_CORE);
+            // add energy core fragments; rule update is in milestone loop
+            if (energy_core == ENERGY_CORE_FRAGMENTS) {
+                // replace energy core with fragment
+                gourd_drops[ARRAY_SIZE(gourd_drops)-1] = (CHECK_EXTRA<<10) + 0;
+                // place all other fragments by replacing ingredients
+                // skipping mud peppers, gun powder, grease, dry ice or meteorite to not impact logic
+                int n = available_fragments - 1;
+                while (n>0) {
+                    uint16_t i = rand_u16(0, sizeof(gourd_drops)-1);
+                    if (gourd_drops[i] != (CHECK_GOURD<<10) + (uint16_t)i)
+                        continue; // already replaced
+                    const struct gourd_drop_item* item = gourd_drops_data+i;
+                    bool ok = false;
+                    for (size_t j=0; j<ARRAY_SIZE(ingredient_names); j++) {
+                        if (j == MUD_PEPPER || j == GUNPOWDER || j == GREASE || j == DRY_ICE || j == METEORITE)
+                            continue;
+                        if (strcmp(item->name, ingredient_names[j]) == 0) {
+                            ok = true;
+                            break;
+                        }
+                        if (strcmp(item->name+2, ingredient_names[j]) == 0) {
+                            ok = true;
+                            break;
+                        }
+                    }
+                    if (ok) {
+                        gourd_drops[i] = (CHECK_EXTRA<<10) + 0;
+                        n--;
+                    }
+                }
+            }
             // shuffle pools
             // vanilla energy core feature requires energy core to be the last gourd
             size_t gourd_shuffle_count = ARRAY_SIZE(gourd_drops) - ((energy_core == ENERGY_CORE_VANILLA) ? 1 : 0);
@@ -1403,11 +1464,23 @@ int main(int argc, const char** argv)
         #define REROLL() { reroll = true; break; }
         for (int milestone=0; milestone<2; milestone++)
         {
+            // init state
             enum progression goal = milestone==0 ? P_ROCKET : P_FINAL_BOSS;
             bool allow_rockskip=!fixsequence && !glitchless;
             bool allow_saturnskip=!fixsequence && !glitchless;
             check_tree_item checks[ARRAY_SIZE(blank_check_tree)];
             memcpy(checks, blank_check_tree, sizeof(blank_check_tree));
+            // update energy core fragment rule
+            for (size_t i=0; i<ARRAY_SIZE(checks); i++) {
+                if (checks[i].type == CHECK_RULE &&
+                        checks[i].requires[0].progress == P_CORE_FRAGMENT)
+                {
+                    checks[i].requires[0].pieces = required_fragments;
+                    checks[i].provides[0].pieces = 1;
+                    checks[i].provides[0].progress = P_ENERGY_CORE;
+                    break;
+                }
+            }
             int progress[P_END]; memset(progress, 0, sizeof(progress));
             int nextprogress[P_END]; memset(nextprogress, 0, sizeof(nextprogress));
             if (allow_rockskip) progress[P_ROCK_SKIP]++;
