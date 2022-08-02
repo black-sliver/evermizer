@@ -901,8 +901,7 @@ int main(int argc, const char** argv)
         } else if (available_fragments < required_fragments) {
             available_fragments = required_fragments;
             fprintf(stderr, "Warning: Available fragments too low.\n"
-                    "Changing required/available to %hhu/%hhu\n",
-                    required_fragments, available_fragments);
+                    "Changing available to required\n");
         }
     }
     #endif
