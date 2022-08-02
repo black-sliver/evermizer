@@ -125,17 +125,27 @@ class SeedGenerator(object):
         return self.cmdline + [seed]
 
 
-class PopenTest(object):
+class Test(object):
+    did_throw = False
+    completed = False
+    result = False
+
+    def __init__(self):
+        self.checks = []
+
+    def run(self):
+        raise NotImplementedError("class Test used without subclass")
+
+
+class PopenTest(Test):
     capture_stderr = False
     
     def __init__(self, generator, process_done, checks, process_cleanup=None):
+        super(PopenTest, self).__init__()
         self.generator = generator
         self.process_done = process_done
         self.process_cleanup = process_cleanup
         self.checks = checks
-        self.completed = False
-        self.result = False
-        self.did_throw = False
 
     def run(self):
         self.completed = False
@@ -210,7 +220,7 @@ class EvermizerTest(PopenTest):
 
 
 class DropTest(EvermizerTest):
-    '''Test if all checks get all drops for given settings and difficulty'''
+    """Test if all checks get all drops for given settings and difficulty"""
     def __init__(self, exe, rom, wdir, difficulty, settings='', limit=10000):
         self.difficulty = difficulty
         self.settings = settings+'l'
@@ -384,17 +394,23 @@ class DropTest(EvermizerTest):
         return res
 
 
-class ExecTest(object):
-    '''Test if execution succeeds for given settings'''
-    def __init__(self, exe, rom, wdir, args=[], difficulty='', settings='', seed=None):
+class ExecTest(Test):
+    """Test if execution succeeds for given settings"""
+
+    def __init__(self, exe, rom, wdir, args=[], difficulty='', settings='', seed=None, expect=True):
+        super(ExecTest, self).__init__()
+        self.expect = expect
         self.popen_count = 0
         self.popen_failed = 0
         self.checks = []
         self.cmd = [exe, '-b', '-d', wdir, '--dry-run',] + args + [
                     rom, difficulty + settings]
         if seed is not None: self.cmd.append(seed)
-    def run(self):
-        proc = Popen(self.cmd, stdout=DEVNULL, stderr=DEVNULL)
+
+    def run(self, stdout=DEVNULL, stderr=DEVNULL, save_proc=False):
+        proc = Popen(self.cmd, stdout=stdout, stderr=stderr)
+        if save_proc:
+            self.proc = proc
         self.popen_count = 1
         try:
             res = proc.wait(*[10000] if proc_wait_has_timeout else [])
@@ -405,11 +421,33 @@ class ExecTest(object):
             return False
         if res != 0:
             self.popen_failed = 1
-            return False
-        return True
+            return not self.expect
+        return self.expect
+
+
+class JsonExecTest(ExecTest):
+    """Test if output of an exec is valid json"""
+
+    def run(self):
+        res = super(JsonExecTest, self).run(stdout=PIPE, save_proc=True)
+        if res != self.expect:
+            return res
+        try:
+            output = self.proc.stdout.read(-1)
+            import json
+            json.loads(output)
+        except Exception as ex:
+            if ex.__class__.__name__ in ('JSONDecodeError', 'TypeError'):
+                return not self.expect  # bad json
+            import traceback
+            traceback.print_exc(ex)
+            return False  # other problem
+        return self.expect
+
 
 def print_usage(exe):
     print('Usage: %s [--verbose|--silent] [--more] <path/to/evermizer.exe> <path/to/soe.sfc>' % (exe,))
+
 
 if __name__ == '__main__':
     n = 1
@@ -443,13 +481,25 @@ if __name__ == '__main__':
     difficulties = ['e','n','h','x'] if more else ['x'] if less else ['e','n','x']
     variations = ['','4','13']
     # FIXME: speed up hard seed generation so we don't have to skip it
+
     with TemporaryDirectory() as wdir:
-        tests = [ [ 'Drops '+difficulty+settings, DropTest(exe,rom,wdir,difficulty,settings ) ]
-                    for difficulty in difficulties for settings in variations ]
-        tests+= [ [ 'Exec Money%', ExecTest(exe,rom,wdir,['--money','200'],'e','','1') ],
-                  [ 'Exec Exep%', ExecTest(exe,rom,wdir,['--exp','200'],'e','','1') ],
-                  [ 'Exec Fragments', ExecTest(exe,rom,wdir,['--required-fragments','99'],'e','','1') ] ]
-        for i, [ name, test ] in enumerate(tests):
+        def make_exec_test(args, difficulty='e', settings='', seed='1', expect=True, cls=ExecTest):
+            return cls(exe, rom, wdir, args, difficulty, settings, seed, expect)
+
+        tests = []
+        tests += [
+            ['Exec Invalid', make_exec_test(['--invalid'], expect=False)],
+            ['Exec Money%', make_exec_test(['--money','200'])],
+            ['Exec Exep%', make_exec_test(['--exp','200'])],
+            ['Exec Required Fragments', make_exec_test(['--required-fragments','99'], 'x', 'Z')],
+            ['Exec Available Fragments', make_exec_test(['--available-fragments','99'], 'x', 'Z')],
+            ['Exec settings.json', make_exec_test(['--settings.json'], cls=JsonExecTest)],
+        ]
+        tests += [
+            ['Drops %s%s' % (difficulty, settings), DropTest(exe, rom, wdir, difficulty, settings)]
+            for difficulty in difficulties for settings in variations
+        ]
+        for i, [name, test] in enumerate(tests):
             print('%sTEST%3d%s:' % (Colors.BOLD, i, Colors.END), end=' ')
             stdout.flush()
             teststart = time.time()
@@ -472,9 +522,9 @@ if __name__ == '__main__':
                         testend-teststart,))
     
     if done>0 and failed==0 and not silent:
-        print('%sALL %d TESTS PASSED%s' % (Colors.BOLD, done, Colors.END))
+        print('%sALL %d TESTS PASSED%s' % (Colors.BOLD + Colors.PASS, done, Colors.END))
     elif not silent:
-        print('%s%d/%d TESTS FAILED%s' % (Colors.BOLD, failed, done, Colors.END))
+        print('%s%d/%d TESTS FAILED%s' % (Colors.BOLD + Colors.FAIL, failed, done, Colors.END))
     
     if failed>0: exit(1)
 
