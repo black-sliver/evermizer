@@ -426,24 +426,34 @@ static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t 
 
     if (strategy == STRATEGY_BALANCED) {
         // iterate over shorter pool1. 50:50 chance to swap with an item from pool2 of the same type (key / non-key)
-        size_t key2 = count_real_progression_from_packed(pool2, len2);
-        size_t nonkey2 = len2-key2;
-        assert(key2>0 && nonkey2>0);
+        size_t key2_count = count_real_progression_from_packed(pool2, len2);
+        size_t nonkey2_count = len2-key2_count;
+        assert(key2_count>0 && nonkey2_count>0);
+        // cache key and non-key item indizes from pool2
+        size_t* key2_indizes = malloc(sizeof(size_t) * key2_count);
+        size_t* nonkey2_indizes = malloc(sizeof(size_t) * nonkey2_count);
+        for (size_t i=0, j=0, k=0; i<len2; i++) {
+            if (is_real_progression_from_packed(pool2[i]))
+                key2_indizes[j++] = i;
+            else
+                nonkey2_indizes[k++] = i;
+        }
         for (size_t i=0; i<len1; i++) {
             if (rand_u8(0,1)) {
-                bool key1 = is_real_progression_from_packed(pool1[i]);
-                size_t n = rand_u16(0, (uint16_t)(key1?key2:nonkey2)-1);
-                size_t j=0;
-                while (true) {
-                    if (is_real_progression_from_packed(pool2[j]) == key1) {
-                        if (n == 0) break;
-                        else n--;
-                    }
-                    j++;
+                if (is_real_progression_from_packed(pool1[i])) {
+                    // swap with key item from pool2
+                    size_t n = rand_u16(0, key2_count-1);
+                    SWAP(pool1[i], pool2[key2_indizes[n]], uint16_t);
+                } else {
+                    // swap with non-key item from pool2
+                    size_t n = rand_u16(0, nonkey2_count-1);
+                    SWAP(pool1[i], pool2[nonkey2_indizes[n]], uint16_t);
                 }
-                SWAP(pool1[i], pool2[j], uint16_t);
             }
         }
+        // cleanup
+        free(key2_indizes);
+        free(nonkey2_indizes);
     }
     else if (strategy == STRATEGY_RANDOM) {
         // iterate over shorter pool1. 50:50 chance to swap with *any* item from pool2
