@@ -1289,7 +1289,8 @@ int main(int argc, const char** argv)
                         amuletNo--;
                     }
                 }
-                assert(amuletSrc && ivorGourdIdx<ARRAY_SIZE(gourd_drops));
+                assert(amuletSrc);
+                assert(ivorGourdIdx<ARRAY_SIZE(gourd_drops));
                 SWAP(gourd_drops[ivorGourdIdx],*amuletSrc,uint16_t);
             }
             // make sure wings are available in halls NE room
@@ -1331,7 +1332,8 @@ int main(int argc, const char** argv)
                         wingsNo--;
                     }
                 }
-                assert(wingsSrc && hallsNEGourdIdx<ARRAY_SIZE(gourd_drops));
+                assert(wingsSrc);
+                assert(hallsNEGourdIdx<ARRAY_SIZE(gourd_drops));
                 SWAP(gourd_drops[hallsNEGourdIdx],*wingsSrc,uint16_t);
             }
         }
