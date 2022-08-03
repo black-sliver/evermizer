@@ -1,13 +1,15 @@
 # Evermizer Guide
-*Version 2022-01-02 for v040+ and multiworld*
+*Version 2022-08-03 for v042+ and multiworld*
 
 ## Goal
 With default settings (not bingo) the goal is to defeat the final boss.
 
 Required items are rocket parts (2 Diamond Eyes, Wheel, Gauge) and Energy Core, with
 * 3 Diamond Eyes, Wheel and Gauge in random locations
-* Energy core not shuffled yet. Draw bridge opens after defeating Mungola, which is accessible after defeating Sterling. Dark Forest being an alternative route to chess board.
-* Distribution of key items depends on settings (Pooling, Gourdomizer, Alchemizer, Boss dropamizer)
+* Energy core depends on settings (vanilla, shuffled or fragments).
+* Draw bridge to vanilla energy core opens after defeating Mungola, which is accessible after defeating Sterling. Dark Forest being an alternative route to chess board. Use wings to go through dark forest in reverse.
+* With energy core fragments, alchemy ingredients from chests are replaced by fragments. Exchange at Prof. Ruffleberg.
+* Distribution of key items depends on settings (Pooling, Gourdomizer, Alchemizer, Boss dropamizer).
 
 **Possibly** required drops along the path:
 * Levitate and Revealer alchemy
@@ -16,9 +18,16 @@ Required items are rocket parts (2 Diamond Eyes, Wheel, Gauge) and Energy Core, 
 See [General Strats](#general-strats) below for strats, see [FAQ](#faq) below if you are stuck.
 
 ## Drop locations
-With default settings
-* Gourd/pot/chest, boss and alchemy drops are shuffled to random locations
-* NPC drops (Jaguar Ring, Cecil's bazooka, Call Beads, Collars, ...) are not randomized.
+NPC drops (Jaguar Ring, Cecil's bazooka, Call Beads, Collars, ...) are not randomized.
+
+Multiworld
+* All items that can be randomized are placed in completely random locations.
+
+Evermizer with default settings
+* Gourd/pot/chest, boss and alchemy drops are shuffled to random locations of the same type.
+
+Evermizer with pooling
+* Drops set to "Pool" will be mixed with each other.
 
 ### Bosses
 See [Boss Strats](#boss-strats) below for strats.
@@ -39,7 +48,7 @@ See [Boss Strats](#boss-strats) below for strats.
 14. __Aegis__: **No drop.** accessible after getting two Diamond Eyes
 15. __Tiny__: accessible after beating Aegis, Levitate required to reach him
 16. __Aquagoth__: accessible after beating Aegis
-17. __Foot Knight__: **No drop.** accessible with Windwalker after getting a slashing weapon
+17. __Foot Knight__: **No drop before v042.** accessible with Windwalker after getting a slashing weapon
 18. __Bad Boys__: accessible with Windwalker after getting a slashing weapon
 19. __Timberdrake__: accessible with Windwalker after getting a slashing weapon
 20. __Verminator__: accessible with Windwalker after getting a slashing weapon
@@ -87,7 +96,7 @@ Not randomized, please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#
 * Use Energize to get zero cool down on (charged) attacks
 * Use Aura or Barrier to become invincible without glitches
 
-### Short Cuts
+### Shortcuts
 * Enter the Big Bug from the top (Thraxx exit) to get to the bottom (Big Bug entrance)
 * Talk to the guy at the well in Act3 to travel back to Horace's camp
 
