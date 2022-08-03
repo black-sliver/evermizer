@@ -9,8 +9,8 @@ HOWTO:
    and print out the complete filename.
 4. Checksum is wrong, but neither FXPAK nor tested emulators seem to care
 5. You can skip the intro by pressing start (even without a prior save)
-6. You have to loot gourds/chests or kill Thraxx to get a weapon that can cut
-   grass to get access to the Windwalker.
+6. You have to loot gourds/chests, check alchemists or kill Thraxx to get a
+   weapon that can cut grass to get access to the Windwalker.
 7. If you have questions or need help, continue reading below, check the guide
    at https://github.com/black-sliver/evermizer/blob/master/guide.md
    or join the discord.
@@ -25,7 +25,13 @@ CHANGES SO FAR:
     Allow to specify complete output filename with -o
     Allow to specify output directory with -d
     Run the program without any file/arguments to see possible arguments
-    Run the program in UI mode to see possible settings
+    Run the program in UI mode or with --settings to see possible settings
+  Energy Core:
+    Vanilla places it in its original location under the chessboard
+    Shuffle converts the vanilla Energy Core to be a chest
+    Fragment converts it to a chest and places multiple fragments into
+      random chests. Use pool (see below) to shuffle them to other places.
+      Trade for the real Energy Core at Prof. Ruffleberg.
   Ingredienizer:
     Randomize ingredient requirements
     Scales with difficulty
