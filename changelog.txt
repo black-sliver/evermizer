@@ -1,3 +1,11 @@
+v042:
+  Optionally convert Energy Core location to a gourd and shuffle Core
+  Optionally add Energy Core Fragments
+  Include Footknight in boss drops
+  Rename some items
+  Mark Storage room chest #284 as far
+  Features for multiworld: traps, deathlink, support for "useful" flag
+
 v041:
   Better UI and presets for WebUI by cyb3r
   Make sons of sth. unmissable
