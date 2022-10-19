@@ -17,9 +17,9 @@
     {"bit": ["0x7e225c", "0x10"], "drop": true,  "name": "volcano viper commander"},
     {"bit": ["0x7e2260", "0x40"], "drop": true,  "name": "magmar"},
     {"bit": ["0x7e225c", "0x20"], "drop": true,  "name": "mad monk"},
+    {"bit": ["0x7e22e6", "0x01"], "drop": true,  "name": "footknight"},
     {"bit": ["0x7e22e9", "0x40"], "drop": false, "name": "mini taur"},
     {"bit": ["0x7e22d9", "0x08"], "drop": false, "name": "aegis"},
-    {"bit": ["0x7e22e6", "0x01"], "drop": true,  "name": "footknight"},
     {"bit": ["0x7e22dd", "0x02"], "drop": false, "name": "sterling"},
     {"bit": ["0x7e22e6", "0x80"], "drop": false, "name": "wall face"},
     {"bit": ["0x7e22f1", "0x40"], "drop": false, "name": "carltron's robot"}
