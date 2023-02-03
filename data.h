@@ -710,8 +710,8 @@ static const char* get_drop_name_from_packed(uint16_t packed)
 static bool is_real_progression(const drop_tree_item* drop)
 {
     if (drop->type == CHECK_BOSS) {
-        // all defined boss drops are progression
-        return true;
+        // all other defined boss drops are progression
+        return !(drop->index == DINO_DROP_IDX || drop->index == BAZOOKA_DROP_IDX);
     }
     if (drop->type == CHECK_ALCHEMY) {
         return (drop->index == REVEALER_IDX || drop->index == LEVITATE_IDX);

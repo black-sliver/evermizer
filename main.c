@@ -475,7 +475,12 @@ static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t 
         // iterate over pool2. swap all key items with non-key from pool2
         size_t nonkey1 = len1-count_real_progression_from_packed(pool1,len1);
         for (size_t i=0; i<len2; i++) {
-            if (nonkey1 == 0) break;
+            if (nonkey1 == 0) {
+                int tmp1 = count_real_progression_from_packed(pool1, len1);
+                int tmp2 = count_real_progression_from_packed(pool2, len2);
+                printf("no more spots to fill (%d, %d)\n", tmp1, tmp2);
+                break;
+            }
             if (is_real_progression_from_packed(pool2[i])) {
                 size_t n = rand_u16(0, (uint16_t)nonkey1-1);
                 size_t j = 0;
@@ -485,6 +490,7 @@ static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t 
                         else n--;
                     }
                     j++;
+                    assert(j < len1); // otherwise we miscounted somewhere
                 }
                 SWAP(pool1[j], pool2[i], uint16_t);
                 nonkey1--;
@@ -495,6 +501,7 @@ static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t 
             if (!is_real_progression_from_packed(pool1[i])) {
                 if (rand_u8(0,1)) {
                     size_t j = rand_u16(0, (uint16_t)len2-1);
+                    assert(!is_real_progression_from_packed(pool2[j])); // pool2 should not have any more key items
                     SWAP(pool1[i], pool2[j], uint16_t);
                 }
             }

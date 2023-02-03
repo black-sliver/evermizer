@@ -60,6 +60,13 @@ GOURD_DROPS = [
 'Progressive gloves','Progressive helmet','Progressive vest',
 'Aura','Regenerate','Energy Core'
 ]
+ALL_KEY_ITEMS_B = [
+b'Wheel', b'Gauge', b'Diamond Eye', b'Energy Core',
+b'Levitate', b'Revealer',
+b'Gladiator Sword', b'Crusader Sword',
+b'Spider Claw', b'Bronze Axe', b'Knight Basher', b'Atom Smasher',
+b'Horn Spear', b'Bronze Spear', b'Lance (Weapon)', b'Laser Lance'
+]
 PRE_ACT4_DROPS = [ 'Gauge', 'Wheel' ]
 SPELL_IDS = { name.encode('ascii'):index for (index,name) in enumerate(SPELLS) }
 BOSS_DROP_IDS = { name.encode('ascii'):index for (index,name) in enumerate(BOSS_DROPS) }
@@ -221,6 +228,7 @@ class EvermizerTest(PopenTest):
 
 class DropTest(EvermizerTest):
     """Test if all checks get all drops for given settings and difficulty"""
+
     def __init__(self, exe, rom, wdir, difficulty, settings='', limit=10000):
         self.difficulty = difficulty
         self.settings = settings+'l'
@@ -235,9 +243,9 @@ class DropTest(EvermizerTest):
         # create empty arrays for boss drops and gourds
         self.boss_drops = []
         self.gourd_drops = []
-        super(DropTest,self).__init__(exe, ['-b', '-d', wdir, '--dry-run', rom,
-                          self.difficulty + self.settings],
-                         self.checks, limit=limit)
+        super(DropTest, self).__init__(exe, ['-b', '-d', wdir, '--dry-run', rom,
+                                       self.difficulty + self.settings],
+                                       self.checks, limit=limit)
     
     def log_and_rom(self, o):
         log = None
@@ -296,12 +304,12 @@ class DropTest(EvermizerTest):
                     self.gourd_drops[n_loc][n_drop] += 1
     
     def proc_done(self, r, o):
-        super(DropTest,self).proc_done(r,o)
+        super(DropTest, self).proc_done(r, o)
         log,rom = self.log_and_rom(o)
         if log: self.parse_log(log)
         
     def proc_cleanup(self, r, o):
-        super(DropTest,self).proc_cleanup(r,o)
+        super(DropTest, self).proc_cleanup(r, o)
         for fn in self.log_and_rom(o):
             if fn:
                 os.unlink(fn)
@@ -394,6 +402,83 @@ class DropTest(EvermizerTest):
         return res
 
 
+class BossOnlyTest(EvermizerTest):
+    """Test if all key items are on bosses for given difficulty"""
+
+    def __init__(self, exe, rom, wdir, difficulty, limit=10000):
+        self.difficulty = difficulty
+        self.settings = 'lABGO'
+        self.checks = []  # we check while parsing logs
+        super(BossOnlyTest, self).__init__(exe, ['-b', '-d', wdir, '--dry-run', rom,
+                                           self.difficulty + self.settings],
+                                           self.checks, limit=limit)
+
+    def parse_log(self, fn):
+        BLOCK_NONE, BLOCK_ALCHEMIST, BLOCK_BOSS, BLOCK_GOURD = 0,1,2,3
+        block = BLOCK_NONE
+        p = 0
+        boss_drops = []
+        with open(fn,'rb') as f:
+            for line in f:
+                s = line.lstrip()
+                if s.startswith(b'Spell '):
+                    block = BLOCK_NONE
+                elif s.startswith(b'Alchemist '):
+                    block = BLOCK_ALCHEMIST
+                    tmp = s.split(b'Alchemist',1)[1]
+                    p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Alchemist')  # left of 'Alchemist' + right of 'Alchemist' + len('Alchemist')
+                elif s.startswith(b'Boss '):
+                    block = BLOCK_BOSS
+                    tmp = s.split(b'Boss',1)[1]
+                    p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Boss')  # left of 'Boss' + right of 'Boss' + len('Boss')
+                elif s.startswith(b'Gourd '):
+                    block = BLOCK_GOURD
+                    tmp = s.split(b'Gourd',1)[1]
+                    p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Gourd')  # left of 'Gourd' + right of 'Gourd' + len('Gourd')
+                elif not s.startswith(b'('):
+                    continue # drops start with (id)
+                elif block == BLOCK_ALCHEMIST:
+                    s_loc = line[:p].rstrip()
+                    s_drop = line[p:].rstrip()
+                    if s_drop in ALL_KEY_ITEMS_B:
+                        raise Exception('Encountered %s at %s in %s' % (s_drop, s_loc, fn))
+                elif block == BLOCK_BOSS:
+                    s_drop = line[p:].rstrip()
+                    boss_drops.append(s_drop)
+                elif block == BLOCK_GOURD:
+                    s_loc = line[:p].rstrip()
+                    s_drop = line[p:].rstrip()
+                    if s_drop in ALL_KEY_ITEMS_B:
+                        raise Exception('Encountered %s at %s in %s' % (s_drop, s_loc, fn))
+
+        for item in ALL_KEY_ITEMS_B:
+            if item not in boss_drops:
+                raise Exception('%s missing from bosses (%s) in %s' % (item, b', '.join(boss_drops), fn))
+
+    def log_and_rom(self, o):
+        log = None
+        rom = None
+        for line in o.split(b'\n'):
+            s = line.lstrip()
+            if s.startswith(b'Rom saved as '):
+                rom = s.rstrip()[13:-1]
+            elif s.startswith(b'Spoiler log saved as '):
+                log = s.rstrip()[21:-1]
+            if log and rom: break
+        return log,rom
+
+    def proc_done(self, r, o):
+        super(BossOnlyTest, self).proc_done(r, o)
+        log,rom = self.log_and_rom(o)
+        if log: self.parse_log(log)
+
+    def proc_cleanup(self, r, o):
+        super(BossOnlyTest, self).proc_cleanup(r, o)
+        for fn in self.log_and_rom(o):
+            if fn:
+                os.unlink(fn)
+
+
 class ExecTest(Test):
     """Test if execution succeeds for given settings"""
 
@@ -446,7 +531,7 @@ class JsonExecTest(ExecTest):
 
 
 def print_usage(exe):
-    print('Usage: %s [--verbose|--silent] [--more] <path/to/evermizer.exe> <path/to/soe.sfc>' % (exe,))
+    print('Usage: %s [--verbose|--silent] [--more|--less] <path/to/evermizer.exe> <path/to/soe.sfc>' % (exe,))
 
 
 if __name__ == '__main__':
@@ -498,6 +583,10 @@ if __name__ == '__main__':
         tests += [
             ['Drops %s%s' % (difficulty, settings), DropTest(exe, rom, wdir, difficulty, settings)]
             for difficulty in difficulties for settings in variations
+        ]
+        tests += [
+            ['Boss-only %s' % (difficulty,), BossOnlyTest(exe, rom, wdir, difficulty)]
+            for difficulty in ['e', 'h']
         ]
         for i, [name, test] in enumerate(tests):
             print('%sTEST%3d%s:' % (Colors.BOLD, i, Colors.END), end=' ')

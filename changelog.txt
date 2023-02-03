@@ -1,3 +1,6 @@
+v043:
+  Fix not all key items being on bosses with mixed pool strategy = Bosses
+
 v042:
   Optionally convert Energy Core location to a gourd and shuffle Core
   Optionally add Energy Core Fragments
