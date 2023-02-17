@@ -1,3 +1,7 @@
+v044:
+  Fix energy core despawning when looting failed
+  Fix fish guy dialog when cure was already obtained
+
 v043:
   Fix not all key items being on bosses with mixed pool strategy = Bosses
 
