@@ -31,7 +31,7 @@ const static size_t corrosion_locations[] = {
 const static size_t crush_locations[] = {
     0x15ba42 +1, LOC_END };
 const static size_t cure_locations[] = {
-    0x1683b2 +2, 0x16843d +1, 0x14e756 +1, 0x14c726 +2, 0x14c81c +2, LOC_END };
+    0x1683b2 +2, 0x16843d +1, 0x14e756 +1, 0x14c726 +2, 0x14c81c +2, 0x168401 +2, LOC_END };
 const static size_t defend_locations[] = {
     0x14e506 +1, LOC_END };
 const static size_t doubledrain_locations[] = {
