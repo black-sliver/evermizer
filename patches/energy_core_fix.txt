@@ -1,0 +1,20 @@
+#ifndef NO_RANDO
+#set // directive to create patch set as APPLY_ENERGY_CORE_FIX()
+
+// fix energy core behavior - it's not a real chest after applying gourdomizer :(
+
+// relocate energy core despawn
+@0x99dad3
+09 85 90 04 04 00 // if not loot successfull skip 4
+29 00 82 15 // call 0xbd8200 (relocated code)
+00 // end
+@
+
+// relocated energy core success
+@0xbd8200
+0c 7e 04 b1 // set flag
+9b 8d 00 00 // destroy entity
+00 // return
+@
+
+#endif

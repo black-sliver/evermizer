@@ -1982,6 +1982,7 @@ int main(int argc, const char** argv)
             buf[rom_off + g->call_target_addr+1] = (setup_addr>> 8) & 0xff;
             buf[rom_off + g->call_target_addr+2] = (setup_addr>>16) & 0xff;
         }
+        APPLY_ENERGY_CORE_FIX();
     }
     if (musicmizer) {
         printf("Applying musicmizer...\n");
