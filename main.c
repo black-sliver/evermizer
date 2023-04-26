@@ -220,6 +220,7 @@ enum option_indices {
 #define turdomode O(turdomode_idx)
 #define spoilerlog O(spoilerlog_idx)
 #define energy_core O(energy_core_idx)
+#define fixoob (1) // always fixed for now
 
 #define DEFAULT_OW() do {\
     for (size_t i=0; i<ARRAY_SIZE(options); i++)\
@@ -1796,6 +1797,11 @@ int main(int argc, const char** argv)
     if (fixwings) {
         printf("Fixing wings glitch...\n");
         APPLY(WINGS_FIX_U);
+    }
+    
+    if (fixoob) {
+        printf("Fixing OOB...\n");
+        APPLY_OOB_FIX();
     }
     
     if ((money_num != money_den) || (exp_num != exp_den)) {
