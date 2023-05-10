@@ -169,6 +169,7 @@ requirements = {
     'wings': 'P_WINGS',
     'queen\'s key chests access': 'P_QUEENS_KEY_CHESTS_ACCESS',
     'east crustacia chests access': 'P_ECRUSTACIA_CHESTS_ACCESS',
+    'oglin cave access': 'P_OGLIN_CAVE_ACCESS',
     'energy core access': 'P_ENERGY_CORE_ACCESS',
 }
 
