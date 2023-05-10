@@ -118,11 +118,13 @@ const char* const DIFFICULTY_NAME[] = {"Easy","Normal","Hard","Random"};
 const char* OFF_ON[] = { "Off", "On", NULL };
 const char* OFF_ON_FULL[] = { "Off", "On", "Full", NULL };
 const char* OFF_ON_POOL[] = { "Off", "On", "Pool", NULL };
+const char* OFF_ON_LOGIC[] = { "Off", "On", "In Logic", NULL };
 const char* ENERGY_CORE_VALUES[] = { "Vanilla", "Shuffle", "Fragments", NULL };
 const char* POOL_STRATEGY_VALUES[] = { "Balance", "Random", "Bosses", NULL };
 #define ON 1
 #define FULL 2
 #define POOL 2
+#define LOGIC 2
 #define STRATEGY_BALANCED 0
 #define STRATEGY_RANDOM 1
 #define STRATEGY_BOSSES 2
@@ -135,7 +137,6 @@ struct option { char key; uint8_t def; const char* text; const char* info; const
 const static struct option options[] = {
     { 0,   1, "Open World", NULL,          "Make windwalker available in every firepit", OFF_ON, NULL, NULL },    
 #ifndef NO_RANDO
-    { '3', 1, "Glitchless beatable", NULL, "Never require glitches to finish", OFF_ON, "General", NULL },
     { '4', 0, "All accessible", NULL,      "Make sure all key items are obtainable", OFF_ON, "General", NULL },
     { 'l', 0, "Spoiler Log", NULL,         "Generate a spoiler log file", OFF_ON, "General", NULL },
     { 'z', 1, "Energy Core", NULL,         "How to obtain the Energy Core", ENERGY_CORE_VALUES, "General", "Key items" },
@@ -148,17 +149,18 @@ const static struct option options[] = {
                                            "Bosses will try to place all key items into boss drops. Requires boss dropamizer on 'pool'", POOL_STRATEGY_VALUES, "General", "Key items" },
     { 'i', 1, "Ingredienizer", NULL,       "Shuffle ('on') or randomize ('full') ingredients required for formulas", OFF_ON_FULL, "General", "Other" },
     { 's', 1, "Sniffamizer", NULL,         "Shuffle ('on') or randomize ('full') ingredient drops", OFF_ON_FULL, "General", "Other"  },
-    { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead characters ('on') or shuffle individual spells ('full')", OFF_ON_FULL, "General", "Other"  },
-    { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act ('on') or per room ('full')", OFF_ON_FULL, "General", "Other"  },
+    { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead characters ('on') or shuffle individual spells ('full')", OFF_ON_FULL, "General", "Other" },
+    { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act ('on') or per room ('full')", OFF_ON_FULL, "General", "Other" },
     { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere! Overrides Doggomizer", OFF_ON, "General", "Other" },
     { 'm', 0, "Musicmizer", "Demo",        "Random music for some rooms", OFF_ON, "General", "Cosmetic" },
 #endif
-    { '1', 1, "Fix sequence", NULL,        "Fix some sequence breaks: Volcano rock, final boss hatch", OFF_ON, "Accessibility", NULL },
+    { 'j', 0, "Sequence breaks", NULL,     "Fix some sequence breaks: Volcano rock, final boss hatch (not out of bounds)", OFF_ON_LOGIC, "Accessibility", NULL },
+    { 'u', 0, "Out of bounds", NULL,       "Fix dog collision when leaving West of Crustacia", OFF_ON_LOGIC, "Accessibility", NULL },
     { '2', 1, "Fix cheats", NULL,          "Fix vanilla cheats: Infinite call beads", OFF_ON, "Accessibility", NULL },
-    { '5', 0, "Fix infinite ammo", NULL,   "Fix bug that would have bazooka ammo not drain", OFF_ON, "Accessibility", NULL  },
-    { '6', 0, "Fix atlas glitch", NULL,    "Fix status effects cancelling with pixie dust", OFF_ON, "Accessibility", NULL  },
-    { '7', 0, "Fix wings glitch", NULL,    "Fix wings granting invincibility if they 'did not work'", OFF_ON, "Accessibility", NULL  },
-    { 'f', 1, "Short boss rush", NULL,     "Start boss rush at Metal Magmar, cut HP in half", OFF_ON, "Accessibility", NULL  },
+    { '5', 0, "Fix infinite ammo", NULL,   "Fix bug that would have bazooka ammo not drain", OFF_ON, "Accessibility", NULL },
+    { '6', 0, "Fix atlas glitch", NULL,    "Fix status effects cancelling with pixie dust", OFF_ON, "Accessibility", NULL },
+    { '7', 0, "Fix wings glitch", NULL,    "Fix wings granting invincibility if they 'did not work'", OFF_ON, "Accessibility", NULL },
+    { 'f', 1, "Short boss rush", NULL,     "Start boss rush at Metal Magmar, cut HP in half", OFF_ON, "Accessibility", NULL },
     { 'k', 1, "Keep dog", NULL,            "Keep dog in some places to avoid softlocks", OFF_ON, "Quality of Life", NULL },
     { '9', 1, "Shorter dialogs", "Few",    "Shorten some dialogs/cutscenes. Ongoing effort.", OFF_ON, "Quality of Life", NULL },
     { 't', 0, "Turdo Mode", NULL,          "Replaces all offensive spells with \\\"turd balls\\\", weakens weapons, reduces enemies' Magic Def.", OFF_ON, "\\\"Fun\\\"", NULL },
@@ -166,7 +168,6 @@ const static struct option options[] = {
 enum option_indices {
     openworld_idx,
 #ifndef NO_RANDO
-    glitchless_idx,
     accessible_idx,
     spoilerlog_idx,
     energy_core_idx,
@@ -182,7 +183,8 @@ enum option_indices {
     /*enemizer_idx,*/
     musicmizer_idx,
 #endif
-    fixsequence_idx,
+    sequencebreaks_idx,
+    oob_idx,
     fixcheats_idx,
     fixammo_idx,
     fixatlas_idx,
@@ -197,9 +199,9 @@ enum option_indices {
 #define C(IDX) ( O(IDX) != D(IDX) )
 #define openworld O(openworld_idx)
 #define keepdog O(keepdog_idx)
-#define fixsequence O(fixsequence_idx)
+#define sequencebreaks O(sequencebreaks_idx)
+#define oob O(oob_idx)
 #define fixcheats O(fixcheats_idx)
-#define glitchless O(glitchless_idx)
 #define accessible O(accessible_idx)
 #define fixammo O(fixammo_idx)
 #define fixatlas O(fixatlas_idx)
@@ -220,7 +222,6 @@ enum option_indices {
 #define turdomode O(turdomode_idx)
 #define spoilerlog O(spoilerlog_idx)
 #define energy_core O(energy_core_idx)
-#define fixoob (1) // always fixed for now
 
 #define DEFAULT_OW() do {\
     for (size_t i=0; i<ARRAY_SIZE(options); i++)\
@@ -1475,8 +1476,9 @@ int main(int argc, const char** argv)
         {
             // init state
             enum progression goal = milestone==0 ? P_ROCKET : P_FINAL_BOSS;
-            bool allow_rockskip=!fixsequence && !glitchless;
-            bool allow_saturnskip=!fixsequence && !glitchless;
+            bool allow_rockskip = sequencebreaks == LOGIC;
+            bool allow_saturnskip = sequencebreaks == LOGIC;
+            bool allow_oob = oob == LOGIC;
             check_tree_item checks[ARRAY_SIZE(blank_check_tree)];
             memcpy(checks, blank_check_tree, sizeof(blank_check_tree));
             // update energy core fragment rule
@@ -1493,6 +1495,7 @@ int main(int argc, const char** argv)
             int progress[P_END]; memset(progress, 0, sizeof(progress));
             int nextprogress[P_END]; memset(nextprogress, 0, sizeof(nextprogress));
             if (allow_rockskip) progress[P_ROCK_SKIP]++;
+            if (allow_oob) progress[P_ALLOW_OOB]++;
             bool complete=false;
             treedepth=0;
             cyberlogicscore = 0;
@@ -1580,7 +1583,7 @@ int main(int argc, const char** argv)
                 bool not_accessible = false;
                 for (size_t i=P_NONE+1; i<P_END-1; i++) {
                     if (i == P_DE || i == P_GAUGE || i == P_WHEEL || i == P_ORACLE_BONE || i == P_ROCK_SKIP ||
-                        i == P_CORE_FRAGMENT) continue;
+                        i == P_CORE_FRAGMENT || i == P_ALLOW_OOB) continue;
                     if (progress[i]==0) { not_accessible = true; break; }
                 }
                 if (not_accessible) REROLL();
@@ -1619,7 +1622,7 @@ int main(int argc, const char** argv)
     // apply patches
     #define APPLY(n) APPLY_PATCH(buf, PATCH##n, rom_off + PATCH_LOC##n)
     
-    if (fixsequence && !openworld) {
+    if (!sequencebreaks && !openworld) {
         free(buf);
         fclose(fsrc);
         die("Cannot fix glitches without applying open world patch-set!\n");
@@ -1769,7 +1772,7 @@ int main(int argc, const char** argv)
     // v033: fix save+restore of wrong stats
     APPLY(STASAV_U); APPLY(STASAV_U2);
     
-    if (fixsequence) {
+    if (!sequencebreaks) {
         printf("Applying desolarify patch-set...\n");
         APPLY(48);
         APPLY(49);
@@ -1799,8 +1802,9 @@ int main(int argc, const char** argv)
         APPLY(WINGS_FIX_U);
     }
     
-    if (fixoob) {
+    if (!oob) {
         printf("Fixing OOB...\n");
+        grow = true;
         APPLY_OOB_FIX();
     }
     

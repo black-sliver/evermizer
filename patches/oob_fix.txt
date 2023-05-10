@@ -1,0 +1,26 @@
+#set // directive to create patch set as APPLY_OOB_FIX()
+
+@0xb28000
+// new code to disable oob
+0c 9d 04 b0 // clear animation bit (removed from the snippets below)
+a9 d1 82 22 // enable dog collision
+00 // END
+@
+
+@0x958452
+// Crustacia exterior
+04 00 00 // don't skip
+29 00 00 10 // call 0xb28000
+@
+
+@0x94a7ad
+// Drain Cave
+04 00 00 // don't skip
+29 00 00 10 // call 0xb28000
+@
+
+@0x96c413
+// Between 'mids and halls
+04 00 00 // don't skip
+29 00 00 10 // call 0xb28000
+@

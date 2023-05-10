@@ -288,6 +288,10 @@ enum progression {
     P_AEGIS_DEAD,
     P_PYRAMID_ACCESSIBLE,
     P_ROCK_SKIP,
+    P_ALLOW_OOB,
+    P_QUEENS_KEY_CHESTS_ACCESS,
+    P_ENERGY_CORE_ACCESS,
+    P_ECRUSTACIA_CHESTS_ACCESS,
     P_VOLCANO_ENTERED,
     P_VOLCANO_EXPLODED,
     P_STERLING_DEAD,
@@ -315,33 +319,29 @@ struct progression_provider {
     enum progression progress;
 };
 #define NO_REQ {0,P_NONE}
-#define NOTHING_REQUIRED { NO_REQ,NO_REQ,NO_REQ,NO_REQ,NO_REQ,NO_REQ }
+#define NOTHING_REQUIRED { NO_REQ,NO_REQ,NO_REQ,NO_REQ }
 #define NO_PVD {0,P_NONE}
 #define NOTHING_PROVIDED { NO_PVD,NO_PVD,NO_PVD,NO_PVD,NO_PVD,NO_PVD }
-#define REQ1(p) { {1,p},NO_REQ,NO_REQ,NO_REQ,NO_REQ,NO_REQ }
-#define REQ2(p,q) { {1,p},{1,q},NO_REQ,NO_REQ,NO_REQ,NO_REQ }
-#define REQ3(p,q,r) { {1,p},{1,q},{1,r},NO_REQ,NO_REQ,NO_REQ }
-#define REQ4(p,q,r,s) { {1,p},{1,q},{1,r},{1,s},NO_REQ,NO_REQ }
-#define REQ5(p,q,r,s,t) { {1,p},{1,q},{1,r},{1,s},{1,t},NO_REQ }
-#define REQ6(p,q,r,s,t,u) { {1,p},{1,q},{1,r},{1,s},{1,t},{1,u} }
-#define REQ1N(n,p) { {n,p},NO_REQ,NO_REQ,NO_REQ,NO_REQ,NO_REQ }
-#define REQ2N(n,p,m,q) { {n,p},{m,q},NO_REQ,NO_REQ,NO_REQ,NO_REQ }
-#define REQ3N(j,p,k,q,l,r) { {j,p},{k,q},{l,r},NO_REQ,NO_REQ,NO_REQ }
-#define REQ4N(j,p,k,q,l,r,m,s) { {j,p},{k,q},{l,r},{m,s},NO_REQ,NO_REQ }
-#define REQ5N(j,p,k,q,l,r,m,s,n,t) { {j,p},{k,q},{l,r},{m,s},{n,t},NO_REQ }
-#define REQ6N(j,p,k,q,l,r,m,s,n,t,o,u) { {j,p},{k,q},{l,r},{m,s},{n,t},{o,u} }
-#define PVD1 REQ1
-#define PVD2 REQ2
-#define PVD3 REQ3
-#define PVD4 REQ4
-#define PVD5 REQ5
-#define PVD6 REQ6
-#define PVD1N REQ1N
-#define PVD2N REQ2N
-#define PVD3N REQ3N
-#define PVD4N REQ4N
-#define PVD5N REQ5N
-#define PVD6N REQ6N
+#define REQ1(p) { {1,p},NO_REQ,NO_REQ,NO_REQ }
+#define REQ2(p,q) { {1,p},{1,q},NO_REQ,NO_REQ }
+#define REQ3(p,q,r) { {1,p},{1,q},{1,r},NO_REQ }
+#define REQ4(p,q,r,s) { {1,p},{1,q},{1,r},{1,s} }
+#define REQ1N(n,p) { {n,p},NO_REQ,NO_REQ,NO_REQ }
+#define REQ2N(n,p,m,q) { {n,p},{m,q},NO_REQ,NO_REQ }
+#define REQ3N(j,p,k,q,l,r) { {j,p},{k,q},{l,r},NO_REQ }
+#define REQ4N(j,p,k,q,l,r,m,s) { {j,p},{k,q},{l,r},{m,s} }
+#define PVD1(p) { {1,p},NO_PVD,NO_PVD,NO_PVD,NO_PVD,NO_PVD }
+#define PVD2(p,q) { {1,p},{1,q},NO_PVD,NO_PVD,NO_PVD,NO_PVD }
+#define PVD3(p,q,r) { {1,p},{1,q},{1,r},NO_PVD,NO_PVD,NO_PVD }
+#define PVD4(p,q,r,s) { {1,p},{1,q},{1,r},{1,s},NO_PVD,NO_PVD }
+#define PVD5(p,q,r,s,t) { {1,p},{1,q},{1,r},{1,s},{1,t},NO_PVD }
+#define PVD6(p,q,r,s,t,u) { {1,p},{1,q},{1,r},{1,s},{1,t},{1,u} }
+#define PVD1N(n,p) { {n,p},NO_PVD,NO_PVD,NO_PVD,NO_PVD,NO_PVD }
+#define PVD2N(n,p,m,q) { {n,p},{m,q},NO_PVD,NO_PVD,NO_PVD,NO_PVD }
+#define PVD3N(j,p,k,q,l,r) { {j,p},{k,q},{l,r},NO_PVD,NO_PVD,NO_PVD }
+#define PVD4N(j,p,k,q,l,r,m,s) { {j,p},{k,q},{l,r},{m,s},NO_PVD,NO_PVD }
+#define PVD5N(j,p,k,q,l,r,m,s,n,t) { {j,p},{k,q},{l,r},{m,s},{n,t},NO_PVD }
+#define PVD6N(j,p,k,q,l,r,m,s,n,t,o,u) { {j,p},{k,q},{l,r},{m,s},{n,t},{o,u} }
 
 // extra items and traps are custom items and have a script that sets up receiving them (this is currently required)
 typedef struct extra_item {
@@ -379,7 +379,7 @@ typedef struct check_tree_item {
     uint16_t index; // which spell, boss or gourd
     bool missable;
     int8_t difficulty;
-    struct progression_requirement requires[6];
+    struct progression_requirement requires[4];
     struct progression_provider provides[6];
 } check_tree_item;
 typedef struct drop_tree_item {
@@ -447,12 +447,16 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_BOSS,TINY_IDX,          0, 0, REQ3(P_WEAPON,P_AEGIS_DEAD,P_LEVITATE),  NOTHING_PROVIDED},
     // Required checks that are not randomized (yet)
     {0, CHECK_RULE,P_JAGUAR_RING,     0, 0, NOTHING_REQUIRED,           PVD1(P_JAGUAR_RING)},
-    {0, CHECK_RULE,P_QUEENS_KEY,      0, 0, REQ1(P_WEAPON),             PVD1(P_QUEENS_KEY)},
+    {0, CHECK_RULE,P_QUEENS_KEY,      0, 0, REQ1(P_WEAPON),             PVD2(P_QUEENS_KEY, P_QUEENS_KEY_CHESTS_ACCESS)},
     {0, CHECK_RULE,P_ORACLE_BONE,     0, 0, REQ1(P_WEAPON),             PVD1(P_ORACLE_BONE)},
-    {0, CHECK_RULE,P_ROCKET,          0, 0, REQ4N(1,P_GAUGE,1,P_WHEEL,2,P_DE,1,P_WEAPON), PVD2N(1,P_ROCKET,-2,P_DE)},
+    {0, CHECK_RULE,P_ROCKET,          0, 0, REQ4N(1,P_GAUGE,1,P_WHEEL,2,P_DE,1,P_WEAPON), PVD3N(1,P_ROCKET,-2,P_DE,1,P_ENERGY_CORE_ACCESS)},
     {0, CHECK_RULE,P_FINAL_BOSS,      0, 0, REQ2(P_ROCKET,P_ENERGY_CORE), PVD1(P_FINAL_BOSS)},
     {0, CHECK_RULE,P_VOLCANO_ENTERED, 0, 0, REQ2(P_WEAPON,P_LEVITATE),  PVD1(P_VOLCANO_ENTERED)},
     {0, CHECK_RULE,P_ROCK_SKIP,       0, 0, REQ2(P_WEAPON,P_ROCK_SKIP), PVD1(P_VOLCANO_ENTERED)},
+    {0, CHECK_RULE,P_ALLOW_OOB,       0, 0, REQ2(P_WEAPON,P_ALLOW_OOB),
+            PVD6(P_NON_SWORD,P_BRONZE_AXE_PLUS,P_KNIGHT_BASHER,P_KNIGHT_BASHER_PLUS,P_REVEALER,P_ROCK_SKIP)},
+    {0, CHECK_RULE,P_ALLOW_OOB,       0, 0, REQ2(P_WEAPON,P_ALLOW_OOB),
+            PVD3(P_QUEENS_KEY_CHESTS_ACCESS,P_ENERGY_CORE_ACCESS,P_ECRUSTACIA_CHESTS_ACCESS)},
     // Energy core fragments conversion; will be updated in main
     {0, CHECK_RULE,P_ENERGY_CORE,     0, 0, REQ1N(-1, P_CORE_FRAGMENT), NOTHING_PROVIDED},
     // Gourd checks included from generated gourds.h
@@ -466,7 +470,7 @@ static const drop_tree_item drops[] = {
     // Alchemy drops with progression
     {CHECK_ALCHEMY,ATLAS_IDX,    PVD1(P_ATLAS)},
     {CHECK_ALCHEMY,REVEALER_IDX, PVD2(P_REVEALER, P_PYRAMID_ACCESSIBLE)},
-    {CHECK_ALCHEMY,LEVITATE_IDX, PVD1(P_LEVITATE)},
+    {CHECK_ALCHEMY,LEVITATE_IDX, PVD2(P_LEVITATE,P_ECRUSTACIA_CHESTS_ACCESS)},
     // Alchemy drops with difficulty-based progression
     {CHECK_ALCHEMY,CRUSH_IDX,           PVD1(P_OFFENSIVE_FORMULA)},
     {CHECK_ALCHEMY,DOUBLE_DRAIN_IDX,    PVD1(P_OFFENSIVE_FORMULA)},

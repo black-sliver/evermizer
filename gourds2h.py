@@ -150,7 +150,7 @@ requirements = {
     'knight basher': 'P_KNIGHT_BASHER',
     'knight basher+': 'P_KNIGHT_BASHER_PLUS',
     'jaguar ring': 'P_JAGUAR_RING',
-    'queen\'s key': 'P_QUEENS_KEY',
+    # 'queen\'s key': 'P_QUEENS_KEY',  # replaced for OoB
     'revealer': 'P_REVEALER',
     'rocket': 'P_ROCKET',
     'gauge': 'P_GAUGE',
@@ -167,6 +167,9 @@ requirements = {
     '2x call bead': '2*P_CALLBEAD',
     '3x call bead': '3*P_CALLBEAD',
     'wings': 'P_WINGS',
+    'queen\'s key chests access': 'P_QUEENS_KEY_CHESTS_ACCESS',
+    'east crustacia chests access': 'P_ECRUSTACIA_CHESTS_ACCESS',
+    'energy core access': 'P_ENERGY_CORE_ACCESS',
 }
 
 difficulty_modifiers = {

@@ -564,7 +564,7 @@ if __name__ == '__main__':
     done = 0
     failed = 0
     difficulties = ['e','n','h','x'] if more else ['x'] if less else ['e','n','x']
-    variations = ['','4','13']
+    variations = ['','4','J','U']
     # FIXME: speed up hard seed generation so we don't have to skip it
 
     with TemporaryDirectory() as wdir:
