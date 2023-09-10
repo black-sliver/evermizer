@@ -1300,8 +1300,9 @@ int main(int argc, const char** argv)
                     }
                 }
                 assert(amuletSrc);
-                assert(ivorGourdIdx<ARRAY_SIZE(gourd_drops));
-                SWAP(gourd_drops[ivorGourdIdx],*amuletSrc,uint16_t);
+                assert(ivorGourdIdx < ARRAY_SIZE(gourd_drops));
+                // cppcheck-suppress[nullPointerRedundantCheck,unmatchedSuppression]
+                SWAP(gourd_drops[ivorGourdIdx], *amuletSrc, uint16_t);
             }
             // make sure wings are available in halls NE room
             {
@@ -1343,8 +1344,9 @@ int main(int argc, const char** argv)
                     }
                 }
                 assert(wingsSrc);
-                assert(hallsNEGourdIdx<ARRAY_SIZE(gourd_drops));
-                SWAP(gourd_drops[hallsNEGourdIdx],*wingsSrc,uint16_t);
+                assert(hallsNEGourdIdx < ARRAY_SIZE(gourd_drops));
+                // cppcheck-suppress[nullPointerRedundantCheck,unmatchedSuppression]
+                SWAP(gourd_drops[hallsNEGourdIdx], *wingsSrc, uint16_t);
             }
         }
         if (pupdunk) {
@@ -1608,9 +1610,9 @@ int main(int argc, const char** argv)
         }
         if (spellmodifier == 0) cybergameplayscore += 10;
         else cybergameplayscore += spellmodifier;
-        int gameplayscore = cybergameplayscore;
         if (randomized_difficulty) {
             // FIXME: vanilla gameplay score gives -25 for some reason
+            int gameplayscore = cybergameplayscore;
             if (difficulty>1 && difficulty!=3 && gameplayscore<-9) continue;
             if (difficulty<1 && gameplayscore>-2) continue;
             if (difficulty==1 && (gameplayscore<-15 || gameplayscore>1)) continue; // TODO: review seeds

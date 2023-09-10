@@ -36,7 +36,7 @@ CLOSURECOMPILER:=$(shell which closure-compiler)
 SED:=$(shell which sed)
 endif
 
-CPPCHECK_OPT=--enable=all --suppress=missingIncludeSystem --suppress=duplicateExpression -q
+CPPCHECK_OPT=--enable=all --check-level=exhaustive --suppress=missingIncludeSystem --suppress=duplicateExpression:patches.h --inline-suppr -q
 CPPCHECKS=cppcheck1 cppcheck2 cppcheck3 cppcheck4 cppcheck5 cppcheck6 cppcheck7 cppcheck8 cppcheck9 cppcheck10 cppcheck11 cppcheck12 cppcheck13 cppcheck14 cppcheck15 cppcheck16
 
 EMCC?=emcc
