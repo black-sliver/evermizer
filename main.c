@@ -1381,9 +1381,9 @@ int main(int argc, const char** argv)
         // general logic checking
         #define REROLL() continue;
         
-        struct formula* levitate_formula = &ingredients[LEVITATE_IDX];
-        struct formula* revealer_formula = &ingredients[REVEALER_IDX];
-        struct formula* atlas_formula = &ingredients[ATLAS_IDX];
+        const struct formula* levitate_formula = &ingredients[LEVITATE_IDX];
+        const struct formula* revealer_formula = &ingredients[REVEALER_IDX];
+        const struct formula* atlas_formula = &ingredients[ATLAS_IDX];
         {
             if (levitate_formula->type1 == METEORITE ||
                 levitate_formula->type2 == METEORITE)
@@ -2197,7 +2197,7 @@ int main(int argc, const char** argv)
     fprintf(flog,"     %-15s  %-15s   %-15s  %s" ENDL, "Spell", "Ingredient 1", "Ingredient 2", "Location"); 
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     for (size_t i=0; i<ALCHEMY_COUNT; i++) {
-        struct formula* f = &(ingredients[i]);
+        const struct formula* f = &(ingredients[i]);
 
         const char* location = NULL;
         for (size_t j=0; j<ALCHEMY_COUNT; j++) {

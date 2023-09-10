@@ -52,19 +52,19 @@
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]) + ZERO_IF_ARRAY(a))
 
 
-static uint8_t read8(void* buf, size_t pos) {
-    uint8_t* data = (uint8_t*)buf + pos;
+static uint8_t read8(const void* buf, size_t pos) {
+    const uint8_t* data = (const uint8_t*)buf + pos;
     return data[0];
 }
-static uint16_t read16(void* buf, size_t pos) {
-    uint8_t* data = (uint8_t*)buf + pos;
+static uint16_t read16(const void* buf, size_t pos) {
+    const uint8_t* data = (const uint8_t*)buf + pos;
     uint16_t res = 0;
     res |= data[1]; res<<=8;
     res |= data[0];
     return res;
 }
-static uint32_t read32(void* buf, size_t pos) {
-    uint8_t* data = (uint8_t*)buf + pos;
+static uint32_t read32(const void* buf, size_t pos) {
+    const uint8_t* data = (const uint8_t*)buf + pos;
     uint32_t res = 0;
     res |= data[3]; res<<=8;
     res |= data[2]; res<<=8;

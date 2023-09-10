@@ -811,7 +811,7 @@ static bool is_real_progression_from_packed(uint16_t packed)
     return false;
 }
 
-static size_t count_real_progression_from_packed(uint16_t* packed, size_t count)
+static size_t count_real_progression_from_packed(const uint16_t* packed, size_t count)
 {
     size_t n = 0;
     for (size_t i=0; i<count; i++) {
