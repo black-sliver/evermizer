@@ -143,6 +143,7 @@ requirements = {
     'non-sword': 'P_NON_SWORD',
     'levitate': 'P_LEVITATE',
     'bronze axe+': 'P_BRONZE_AXE_PLUS',
+    'real bronze axe+': 'P_REAL_BRONZE_AXE_PLUS',  # not circumvented by OoB
     'bronze axe': 'P_BRONZE_AXE',
     'bronze spear+': 'P_BRONZE_SPEAR_PLUS',
     'aegis': 'P_AEGIS_DEAD',
