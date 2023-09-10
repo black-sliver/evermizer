@@ -86,7 +86,14 @@ const static size_t stop_locations[] = {
     0x19da2d +1, LOC_END };
 const static size_t superheal_locations[] = {
     0x1abb91 +2, 0x1abc18 +1, LOC_END };
-struct alchemy_data {const char* name; uint16_t id; const size_t* locations; const size_t preselects[2];};
+
+struct alchemy_data {
+    const char* name;
+    uint16_t id;
+    const size_t* locations;
+    const size_t preselects[2];
+};
+
 // NOTE: ingredient data is at 0x4601F + id*4 with ingredient ID1, 2, amount 1, 2
 const static struct alchemy_data alchemy_locations[] = {
     {"Acid Rain",       0x00, acidrain_locations,       {0xb08000 +4 -0x800000,LOC_END}},
@@ -125,6 +132,7 @@ const static struct alchemy_data alchemy_locations[] = {
     {"Stop",            0x21, stop_locations,           {0xb0806a +4 -0x800000,LOC_END}},
     {"Super Heal",      0x22, superheal_locations,      {0x9abc1c +4 -0x800000,LOC_END}}
 };
+
 enum alchemy_indices { // has to match alchemy_locations
     ACID_RAIN_IDX, ATLAS_IDX, BARRIER_IDX, CALL_UP_IDX,
     CORROSION_IDX, CRUSH_IDX, CURE_IDX, DEFEND_IDX, DOUBLE_DRAIN_IDX,
@@ -140,18 +148,26 @@ _Static_assert(ACID_RAIN_IDX==0 && SUPER_HEAL_IDX==ALCHEMY_COUNT-1, "Bad alchemy
 
 #pragma pack(push)
 #pragma pack(1)
-struct formula {uint8_t type1; uint8_t type2; uint8_t amount1; uint8_t amount2;};
+struct formula {
+    uint8_t type1;
+    uint8_t type2;
+    uint8_t amount1;
+    uint8_t amount2;
+};
 #pragma pack(pop)
+
 enum ingredient_numbers { // has to match ingame-numbers
     WAX, WATER, VINEGAR, ROOT, OIL, MUSHROOM, MUD_PEPPER, METEORITE,
     LIMESTONE, IRON, GUNPOWDER, GREASE, FEATHER, ETHANOL, DRY_ICE,
     CRYSTAL, CLAY, BRIMSTONE, BONE, ATLAS_AMULET, ASH, ACORN
 };
+
 const char* ingredient_names[] = { // has to match ingame-numbers/order
     "Wax", "Water", "Vinegar", "Root", "Oil", "Mushroom", "Mud Pepper", "Meteorite",
     "Limestone", "Iron", "Gunpowder", "Grease", "Feather", "Ethanol", "Dry Ice",
     "Crystal", "Clay", "Brimstone", "Bone", "Atlas Amulet", "Ash", "Acorn"
 };
+
 #define INGREDIENT_TYPES { /* vanilla formula ingredients, incl. Laser */\
     0x14,0x01, 0x14,0x13, 0x08,0x12, 0x07,0x0e, 0x05,0x01,\
     0x08,0x00, 0x03,0x04, 0x10,0x14, 0x0d,0x02, 0x0d,0x03,\
@@ -161,6 +177,7 @@ const char* ingredient_names[] = { // has to match ingame-numbers/order
     0x0c,0x03, 0x0b,0x09, 0x15,0x01, 0x14,0x00, 0x03,0x12,\
     0x09,0x11, 0x00,0x01, 0x01,0x02, 0x00,0x0f, 0x0d,0x15\
 };
+
 #define INGREDIENT_AMOUNTS { /* vanilla formula ingredient count, incl. Laser */\
     1,3, 1,1, 1,2, 1,1, 1,3,\
     1,1, 2,1, 1,1, 2,2, 1,2,\
@@ -173,6 +190,7 @@ const char* ingredient_names[] = { // has to match ingame-numbers/order
 
 _Static_assert(WAX==0x00 && ACORN==0x15, "Bad ingredient numbering");
 _Static_assert(ARRAY_SIZE(ingredient_names)==ACORN+1, "Bad ingredient names");
+
 #ifndef NO_RANDO
 // boss_drop_jumps is where we put the relocation of drops.
 // This jumps to a fixed address in v040+
@@ -197,6 +215,7 @@ const static size_t boss_drop_jumps[] = { // has to match PATCH 81,83-105
     0x96c11c + 1 - 0x800000, // Mad Monk
     0x96c125 + 1 - 0x800000, // Footknight
 };
+
 // boss_drop_setup_jumps is where we have to set the address of the drop setup
 // (in the relocated code mentioned above)
 // setup jump target we put there is calculated in get_drop_setup_target
@@ -221,18 +240,21 @@ const static uint32_t boss_drop_setup_jumps[] = { // has to match boss_rando_dro
     0x96C1AA + 17 * 9 + 1 - 0x800000, // Mad Monk
     0x96C1AA + 18 * 9 + 1 - 0x800000, // Footknight
 };
+
 enum boss_indices { // has to match boss_drop_jumps
     THRAXX_IDX, COLEOPTERA_IDX, MAMMOTH_VIPER_IDX, CAVE_RAPTORS_IDX,
     SALABOG_IDX, VIGOR_IDX, MEGATAUR_IDX, RIMSALA_IDX, AQUAGOTH_IDX,
     BAD_BOYS_IDX, TIMBERDRAKE_IDX, VERMINATOR_IDX, TINY_IDX, MUNGOLA_IDX,
     SONS_IDX, VOLCANO_VIPER_IDX, MAGMAR_IDX, MONK_IDX, FOOTKNIGHT_IDX
 };
+
 const static char* boss_names[] = {
     "Thraxx", "Coleoptera", "Mammoth Viper", "Cave Raptors",
     "Salabog", "Vigor", "Megataur", "Rimsala", "Aquagoth",
     "Bad Boys", "Timberdrake", "Verminator", "Tiny", "Mungola",
     "Sons of Sth.", "Volcano Viper", "Magmar", "Mad Monk", "Footknight",
 };
+
 _Static_assert(THRAXX_IDX==0 && FOOTKNIGHT_IDX==ARRAY_SIZE(boss_drop_jumps)-1, "Bad boss indices");
 _Static_assert(ARRAY_SIZE(boss_names)==ARRAY_SIZE(boss_drop_jumps), "Bad boss name list");
 
@@ -243,12 +265,14 @@ enum boss_drop_indices { // has to match boss_rando_drops.txt
     LANCE_WEAPON_IDX, HONEY_DROP_IDX, DINO_DROP_IDX, BAZOOKA_DROP_IDX,
     GOLD_10K_IDX, MUD_PEPPER_DROP_IDX, DIAMOND_EYE_DROP_IDX
 };
+
 const static char* boss_drop_names[] = {
     "Nothing", "Wheel", "Gladiator Sword", "Crusader Sword",
     "Spider Claw", "Bronze Axe", "Horn Spear", "Bronze Spear",
     "Lance (Weapon)", "Honey", "Progressive vest", "Bazooka",
     "10,000 Gold Coins", "Mud Pepper", "Diamond Eye"
 };
+
 #define BOSS_DROPS { /* vanilla drops in same boss order as boss_drop_jumps */\
     SPIDER_CLAW_IDX,      WHEEL_IDX,            HORN_SPEAR_IDX,\
     DINO_DROP_IDX,        MUD_PEPPER_DROP_IDX,  GLADIATOR_SWORD_IDX,\
@@ -258,6 +282,7 @@ const static char* boss_drop_names[] = {
     MUD_PEPPER_DROP_IDX,  NOTHING_IDX,          BRONZE_SPEAR_IDX,\
     NOTHING_IDX,\
 };
+
 _Static_assert(NOTHING_IDX==0/* && DIAMOND_EYE_DROP_IDX==ARRAY_SIZE(boss_drop_setup_jumps)-1*/, "Bad boss drop indices");
 _Static_assert(ARRAY_SIZE(boss_drop_setup_jumps)==ARRAY_SIZE(boss_drop_jumps), "Bad boss jump list");
 _Static_assert(ARRAY_SIZE(boss_drop_names)==DIAMOND_EYE_DROP_IDX+1, "Bad boss drop name list");
@@ -312,14 +337,17 @@ enum progression {
     P_PASSIVE_FORMULA, // used to mark "useful" items
     P_END
 };
+
 struct progression_requirement {
     int8_t pieces;
     enum progression progress;
 };
+
 struct progression_provider {
     int8_t pieces;
     enum progression progress;
 };
+
 #define NO_REQ {0,P_NONE}
 #define NOTHING_REQUIRED { NO_REQ,NO_REQ,NO_REQ,NO_REQ }
 #define NO_PVD {0,P_NONE}
@@ -375,6 +403,7 @@ enum check_tree_item_type {
     CHECK_NPC,
     CHECK_RULE,
 };
+
 typedef struct check_tree_item {
     bool reached;
     enum check_tree_item_type type; // spell, boss or gourd
@@ -384,11 +413,13 @@ typedef struct check_tree_item {
     struct progression_requirement requires[4];
     struct progression_provider provides[6];
 } check_tree_item;
+
 typedef struct drop_tree_item {
     enum check_tree_item_type type; // spell, boss or gourd
     uint16_t index; // which spell, boss or gourd
     struct progression_provider provides[6];
 } drop_tree_item;
+
 static const check_tree_item blank_check_tree[] = {
     // Alchemy checks               missable  d. requires                            provided by the check itself
     {0, CHECK_ALCHEMY,ACID_RAIN_IDX,       0, 0, NOTHING_REQUIRED,                              NOTHING_PROVIDED},
@@ -468,6 +499,7 @@ static const check_tree_item blank_check_tree[] = {
     #include "gourds.h"
     #undef CHECK_TREE
 };
+
 static const drop_tree_item drops[] = {
     // Extra drops
     {CHECK_EXTRA, 0, PVD1(P_CORE_FRAGMENT)},
@@ -515,6 +547,7 @@ static inline bool check_requires(check_tree_item* check, enum progression progr
             return true;
     return false;
 }
+
 static inline bool check_reached(check_tree_item* check, const int* progress)
 {
     for (size_t i=0; i<ARRAY_SIZE(check->requires); i++)
@@ -522,6 +555,7 @@ static inline bool check_reached(check_tree_item* check, const int* progress)
             return false;
     return true;
 }
+
 static inline void check_progress(check_tree_item* check, int* progress)
 {
     check->reached = true;
@@ -529,12 +563,14 @@ static inline void check_progress(check_tree_item* check, int* progress)
     for (size_t i=0; i<ARRAY_SIZE(check->provides); i++)
         progress[check->provides[i].progress] += check->provides[i].pieces;
 }
+
 static inline void drop_progress(const drop_tree_item* drop, int* progress)
 {
     if (!drop) return; // get_drop may return NULL
     for (size_t i=0; i<ARRAY_SIZE(drop->provides); i++)
         progress[drop->provides[i].progress] += drop->provides[i].pieces;
 }
+
 static inline const drop_tree_item* get_drop(enum check_tree_item_type type, uint16_t idx)
 {
     // NOTE: since we only have progression in drops, always iterating over everything is fast
@@ -542,12 +578,14 @@ static inline const drop_tree_item* get_drop(enum check_tree_item_type type, uin
         if (drops[i].type == type && drops[i].index == idx) return drops+i;
     return NULL;
 }
+
 static inline const drop_tree_item* get_drop_from_packed(uint16_t packed)
 {
     enum check_tree_item_type type = (enum check_tree_item_type)(packed>>10);
     uint16_t idx = packed&0x3ff;
     return get_drop(type, idx);
 }
+
 static int drop_provides(const drop_tree_item* drop, uint16_t progress)
 {
     if (!drop) return 0;
@@ -555,6 +593,7 @@ static int drop_provides(const drop_tree_item* drop, uint16_t progress)
         if (drop->provides[i].progress == progress) return drop->provides[i].pieces;
     return 0;
 }
+
 const char* check2str(const check_tree_item* check)
 {
     if (check->type == CHECK_BOSS) return boss_names[check->index];
@@ -569,6 +608,7 @@ const char* check2str(const check_tree_item* check)
     if (check->index == P_ROCK_SKIP) return "Rock skip";
     return "Unknown";
 }
+
 const char* drop2str(const drop_tree_item* drop)
 {
     if (!drop) return ""; // get_drop may return NULL
@@ -579,12 +619,16 @@ const char* drop2str(const drop_tree_item* drop)
     if (drop->type == CHECK_TRAP) return trap_data[drop->index].name;
     return "Unknown";
 }
-bool alchemy_in_act4(uint16_t alchemy_idx) {
+
+bool alchemy_in_act4(uint16_t alchemy_idx)
+{
     return (alchemy_idx==CALL_UP_IDX || alchemy_idx==ENERGIZE_IDX ||
             alchemy_idx==FORCE_FIELD_IDX || alchemy_idx==NITRO_IDX ||
             alchemy_idx==REFLECT_IDX || alchemy_idx==STOP_IDX);
 }
-bool alchemy_is_good(uint16_t alchemy_idx) {
+
+bool alchemy_is_good(uint16_t alchemy_idx)
+{
     switch (alchemy_idx) {
         case CRUSH_IDX:
         case EXPLOSION_IDX:
@@ -599,7 +643,9 @@ bool alchemy_is_good(uint16_t alchemy_idx) {
             return false;
     }
 }
-bool alchemy_is_healing(uint16_t alchemy_idx) {
+
+bool alchemy_is_healing(uint16_t alchemy_idx)
+{
     switch (alchemy_idx) {
         case BARRIER_IDX:
         case CALL_UP_IDX:
@@ -612,31 +658,48 @@ bool alchemy_is_healing(uint16_t alchemy_idx) {
             return false;
     }
 }
-bool ingredient_is_cheap(uint8_t i) {
+
+bool ingredient_is_cheap(uint8_t i)
+{
     return (i==WAX || i==WATER || i==VINEGAR || i==ROOT || i==OIL || i==LIMESTONE || i==ETHANOL || i==CRYSTAL || i==CLAY || i==BONE || i==ASH);
 }
-bool alchemy_is_cheap(const struct formula* f) {
+
+bool alchemy_is_cheap(const struct formula* f)
+{
     return ingredient_is_cheap(f->type1) && ingredient_is_cheap(f->type2);
 }
-static bool can_buy_ingredient(uint8_t i) {
+
+static bool can_buy_ingredient(uint8_t i)
+{
     // technically we CAN buy meteorite, but we don't want to use that
     return (i!=DRY_ICE && i!=METEORITE);
 }
-static bool can_buy_ingredients(const struct formula* f) {
+
+static bool can_buy_ingredients(const struct formula* f)
+{
     return (can_buy_ingredient(f->type1) && can_buy_ingredient(f->type1));
 }
-static bool can_buy_ingredient_in_act3(uint8_t i) {
+
+static bool can_buy_ingredient_in_act3(uint8_t i)
+{
     return (i!=DRY_ICE && i!=METEORITE && i!=GREASE && i!=GUNPOWDER);
 }
-static bool can_buy_in_act3(const struct formula* f) {
+
+static bool can_buy_in_act3(const struct formula* f)
+{
     return (can_buy_ingredient_in_act3(f->type1) &&
             can_buy_ingredient_in_act3(f->type2));
 }
-static const uint8_t pre_thraxx_ingredients[] = {ASH,CRYSTAL,OIL,WATER,WAX};
-static bool can_buy_ingredient_pre_thraxx(uint8_t i) {
+
+static const uint8_t pre_thraxx_ingredients[] = {ASH, CRYSTAL, OIL, WATER, WAX};
+
+static bool can_buy_ingredient_pre_thraxx(uint8_t i)
+{
     return (i==ASH || i==CRYSTAL || i==OIL || i==WATER || i==WAX);
 }
-static bool can_buy_pre_thraxx(const struct formula* f) {
+
+static bool can_buy_pre_thraxx(const struct formula* f)
+{
     return (can_buy_ingredient_pre_thraxx(f->type1) &&
             can_buy_ingredient_pre_thraxx(f->type2));
 }
@@ -655,6 +718,7 @@ const size_t callbead_menu_action_addrs[] = {
     // points to the action ids of the main ring
     0x0e85b4+6, 0x0e85bc+6, 0x0e85c4+6, 0x0e85cc+6
 };
+
 const size_t callbead_spell_item_addrs[] = {
     // points to the item ids that are loaded per ring
     0x0e9ceb+1, 0x0e9cf1+1, 0x0e9cf7+1, 0x0e9cfd+1, // fire eyes
@@ -691,12 +755,14 @@ static uint32_t get_drop_setup_target(enum check_tree_item_type type, uint16_t i
     assert(0);
     return 0;
 }
+
 static uint32_t get_drop_setup_target_from_packed(uint16_t packed)
 {
     enum check_tree_item_type type = (enum check_tree_item_type)(packed>>10);
     uint16_t idx = packed&0x3ff;
     return get_drop_setup_target(type, idx);
 }
+
 static const char* get_drop_name(enum check_tree_item_type type, uint16_t idx)
 {
     if (type == CHECK_NONE) return "Remote";
@@ -708,6 +774,7 @@ static const char* get_drop_name(enum check_tree_item_type type, uint16_t idx)
     assert(0);
     return "";
 }
+
 static const char* get_drop_name_from_packed(uint16_t packed)
 {
     enum check_tree_item_type type = (enum check_tree_item_type)(packed>>10);

@@ -886,8 +886,8 @@ int main(int argc, const char** argv)
     printf("Seed: %" PRIx64 "\n", seed);
     srand64(seed);
     bool randomized = alchemizer || ingredienizer || bossdropamizer ||
-                      gourdomizer || sniffamizer || doggomizer || callbeadamizer
-                      || placement_file /*||enemizer*/;
+                      gourdomizer || sniffamizer || doggomizer || callbeadamizer ||
+                      placement_file /*||enemizer*/;
     bool randomized_difficulty = alchemizer || ingredienizer || bossdropamizer ||
                       gourdomizer;
     #else
