@@ -1737,7 +1737,7 @@ int main(int argc, const char** argv)
     
     #ifndef NO_RANDO
     // FIXME: test this
-    if (placement_file || gourdomizer || bossdropamizer) {
+    if (placement_file || gourdomizer || bossdropamizer || energy_core == ENERGY_CORE_FRAGMENTS) {
         // v015: Disable collapsing bridges in pyramids
         // v041: break wall in pyramid upper floor if we have dog already
         APPLY_PYRAMID_FIXES();
@@ -1918,7 +1918,11 @@ int main(int argc, const char** argv)
         // Make alchemy become items
         APPLY_ALCHEMY_TEXTS();
         APPLY_ALCHEMY_RANDO_DROPS(); // this has to be applied after changing the alchemy flags
+    } else if (energy_core == ENERGY_CORE_FRAGMENTS) {
+        grow = true;
+        APPLY(ALCHEMY_RANDO_DROPS57); // this is required for the energy core drop
     }
+
     if (ingredienizer) {
         _Static_assert(sizeof(*ingredients)==4, "Bad padding"); // required for memcpy
         printf("Applying ingredienizer...\n");
@@ -1963,12 +1967,12 @@ int main(int argc, const char** argv)
             buf[rom_off + boss_drop_setup_jumps[i] + 2] = (uint8_t)(setup_dst>>16)&0xff;
         }
     }
-    if (randomized) {
+    if (randomized || energy_core == ENERGY_CORE_FRAGMENTS) {
         printf("Adding new item IDs...\n");
         grow = true;
         APPLY_GOURDOMIZER_DROPS();
     }
-    if (placement_file || gourdomizer) {
+    if (placement_file || gourdomizer || energy_core == ENERGY_CORE_FRAGMENTS) {
         // v023:
         printf("Applying fixes for randomized gourds...\n");
         APPLY(REVERSE_BBM); APPLY(REVERSE_BBM2); APPLY(REVERSE_BBM3);
