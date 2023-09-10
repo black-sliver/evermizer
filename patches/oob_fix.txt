@@ -2,25 +2,29 @@
 
 @0xb28000
 // new code to disable oob
+// NOTE: this uses the same space as oob_keep_dog, so they are mutually exclusive
 0c 9d 04 b0 // clear animation bit (removed from the snippets below)
 a9 d1 82 22 // enable dog collision
 00 // END
+00 00 00 00 // padding to match oob_keep_dog
+00 00 00 00
+00
 @
 
 @0x958452
 // Crustacia exterior
-04 00 00 // don't skip
-29 00 00 10 // call 0xb28000
+04 00 00 // don't skip (remove useless not-in-animation branch)
+29 00 00 10 // call 0xb28000 (instead of clearing in-animation flag)
 @
 
 @0x94a7ad
 // Drain Cave
-04 00 00 // don't skip
+04 00 00 // don't skip (as above)
 29 00 00 10 // call 0xb28000
 @
 
 @0x96c413
-// Between 'mids and halls
-04 00 00 // don't skip
+// Between 'mids and halls. This collides with oob_keep_dog
+04 00 00 // don't skip (as above)
 29 00 00 10 // call 0xb28000
 @

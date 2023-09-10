@@ -1,0 +1,28 @@
+#set // directive to create patch set as APPLY_OOB_KEEP_DOG()
+
+@0xb28000
+// new code to fix dog with oob
+// NOTE: this uses the same space as oob_fix, so they are mutually exclusive
+0c 9d 04 b0 // clear animation bit (removed from the snippets below)
+0c 49 00 b0 // $2261 &= 0xfd - mark boy as available
+0c 48 00 b0 // $2261 &= 0xfe - mark dog as available
+14 00 01 b0 // WRITE $2358 = 0x0000 - clear modified AI?
+c1          // make both characters player-controlled
+00 // END
+@
+
+@0x96df70
+// Horace camp
+04 00 00 // don't skip (remove useless not-in-animation branch)
+29 00 00 10 // call 0xb28000 (instead of clearing in-animation flag)
+
+@0x96c413
+// Between 'mids and halls. This collides with oob_fix
+04 00 00 // don't skip (as above)
+29 00 00 10 // call 0xb28000
+
+@0x97de56
+// Cave entrance under 'mids
+04 00 00 // don't skip (as above)
+29 00 00 10 // call 0xb28000
+@

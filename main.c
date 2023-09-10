@@ -1808,7 +1808,12 @@ int main(int argc, const char** argv)
         grow = true;
         APPLY_OOB_FIX();
     }
-    
+    else if (keepdog) {
+        printf("Applying more patches to keep the dog...\n");
+        grow = true;
+        APPLY_OOB_KEEP_DOG(); // colliding with oob_fix
+    }
+
     if ((money_num != money_den) || (exp_num != exp_den)) {
         printf("Patching enemy data...\n");
         for (uint32_t p=CHARACTER_DATA_START; p<CHARACTER_DATA_END; p+=CHARACTER_DATA_SIZE) {
