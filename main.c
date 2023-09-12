@@ -2244,7 +2244,7 @@ int main(int argc, const char** argv)
         fprintf(flog,"(%02d) %-15s  %s" ENDL, (int)i, alchemy_locations[i].name, get_drop_name_from_packed(alchemy[i]));
     }
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
-    if (placement_file || gourdomizer) {
+    if (placement_file || gourdomizer || energy_core == ENERGY_CORE_FRAGMENTS) {
     fprintf(flog, ENDL);
     fprintf(flog,"      %-19s  %s" ENDL, "Gourd", "Drop");
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
