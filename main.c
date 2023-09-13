@@ -1474,7 +1474,10 @@ int main(int argc, const char** argv)
         if (placement_file) break; // can't reroll on pre-defined logic
         // tree-based milestone logic checking
         bool reroll = false;
-        #define REROLL() { reroll = true; break; }
+        #define REROLL() { \
+            reroll = true; \
+            break; \
+        }
         for (int milestone=0; milestone<2; milestone++)
         {
             // init state
@@ -1495,10 +1498,12 @@ int main(int argc, const char** argv)
                     break;
                 }
             }
-            int progress[P_END]; memset(progress, 0, sizeof(progress));
-            int nextprogress[P_END]; memset(nextprogress, 0, sizeof(nextprogress));
-            if (allow_rockskip) progress[P_ROCK_SKIP]++;
-            if (allow_oob) progress[P_ALLOW_OOB]++;
+            int progress[P_END];
+            memset(progress, 0, sizeof(progress));
+            int nextprogress[P_END];
+            memset(nextprogress, 0, sizeof(nextprogress));
+            if (allow_rockskip) nextprogress[P_ROCK_SKIP]++;
+            if (allow_oob) nextprogress[P_ALLOW_OOB]++;
             bool complete=false;
             treedepth=0;
             cyberlogicscore = 0;
@@ -1507,7 +1512,7 @@ int main(int argc, const char** argv)
                 int ammopenalty=0;
                 int wingspenalty=0;
                 if (progress[goal]<1) treedepth++;
-                memcpy(progress,nextprogress,sizeof(progress));
+                memcpy(progress, nextprogress, sizeof(progress));
                 if (treedepth == 3) {
                     if (progress[P_ARMOR]==0)
                         cybergameplayscore += 5;
@@ -1580,14 +1585,15 @@ int main(int argc, const char** argv)
             else if (progress[goal]<1) REROLL();
             // make sure atlas is reachable if it should be
             if (difficulty==milestone && progress[P_ATLAS]<1) REROLL();
-            // FIXME: add ingredients to check-table, so we don't have to do this?
-            // NOTE: ingredient requirements always active now and moved to pre-check
             if (accessible && milestone==1) {
                 bool not_accessible = false;
                 for (size_t i=P_NONE+1; i<P_END-1; i++) {
                     if (i == P_DE || i == P_GAUGE || i == P_WHEEL || i == P_ORACLE_BONE || i == P_ROCK_SKIP ||
                         i == P_CORE_FRAGMENT || i == P_ALLOW_OOB) continue;
-                    if (progress[i]==0) { not_accessible = true; break; }
+                    if (progress[i]==0) {
+                        not_accessible = true;
+                        break;
+                    }
                 }
                 if (not_accessible) REROLL();
             }
