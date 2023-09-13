@@ -68,9 +68,9 @@ b'Spider Claw', b'Bronze Axe', b'Knight Basher', b'Atom Smasher',
 b'Horn Spear', b'Bronze Spear', b'Lance (Weapon)', b'Laser Lance'
 ]
 PRE_ACT4_DROPS = [ 'Gauge', 'Wheel' ]
-SPELL_IDS = { name.encode('ascii'):index for (index,name) in enumerate(SPELLS) }
-BOSS_DROP_IDS = { name.encode('ascii'):index for (index,name) in enumerate(BOSS_DROPS) }
-GOURD_DROP_IDS = { name.encode('ascii'):index for (index,name) in enumerate(GOURD_DROPS) }
+SPELL_IDS = { name.encode('ascii'): index for (index,name) in enumerate(SPELLS) }
+BOSS_DROP_IDS = { name.encode('ascii'): index for (index,name) in enumerate(BOSS_DROPS) }
+GOURD_DROP_IDS = { name.encode('ascii'): index for (index,name) in enumerate(GOURD_DROPS) }
 ACT4_GOURDS = range(274,285+1)
 ACT4_ALCHEMY = [ SPELL_IDS[b'Call Up'], SPELL_IDS[b'Energize'],
                  SPELL_IDS[b'Force Field'], SPELL_IDS[b'Nitro'],
@@ -213,6 +213,19 @@ class EvermizerTest(PopenTest):
         cmdline = [exe] + args
         super(EvermizerTest,self).__init__(SeedGenerator(cmdline, limit),
                 self.proc_done, checks, self.proc_cleanup)
+
+    @staticmethod
+    def log_and_rom(o):
+        log = None
+        rom = None
+        for line in o.split(b'\n'):
+            s = line.lstrip()
+            if s.startswith(b'Rom saved as '):
+                rom = s.rstrip()[13:-1]
+            elif s.startswith(b'Spoiler log saved as '):
+                log = s.rstrip()[21:-1]
+            if log and rom: break
+        return log,rom
         
     def proc_done(self, r, o):
         self.popen_count += 1
@@ -223,7 +236,9 @@ class EvermizerTest(PopenTest):
             return False
     
     def proc_cleanup(self, r, o):
-        pass
+        for fn in self.log_and_rom(o):
+            if fn:
+                os.unlink(fn)
 
 
 class DropTest(EvermizerTest):
@@ -247,24 +262,12 @@ class DropTest(EvermizerTest):
                                        self.difficulty + self.settings],
                                        self.checks, limit=limit)
     
-    def log_and_rom(self, o):
-        log = None
-        rom = None
-        for line in o.split(b'\n'):
-            s = line.lstrip()
-            if s.startswith(b'Rom saved as '):
-                rom = s.rstrip()[13:-1]
-            elif s.startswith(b'Spoiler log saved as '):
-                log = s.rstrip()[21:-1]
-            if log and rom: break
-        return log,rom
-    
     def parse_log(self, fn):
-        BLOCK_NONE, BLOCK_SPELL, BLOCK_BOSS, BLOCK_GOURD = 0,1,2,3
+        BLOCK_NONE, BLOCK_SPELL, BLOCK_BOSS, BLOCK_GOURD = 0, 1, 2, 3
         block = BLOCK_NONE
         p_boss_drop = 0
         p_gourd_drop = 0
-        with open(fn,'rb') as f:
+        with open(fn, 'rb') as f:
             for line in f:
                 s = line.lstrip()
                 if s.startswith(b'Spell '):
@@ -273,29 +276,29 @@ class DropTest(EvermizerTest):
                     block = BLOCK_NONE
                 elif s.startswith(b'Boss '):
                     block = BLOCK_BOSS
-                    tmp = s.split(b'Boss',1)[1]
+                    tmp = s.split(b'Boss', 1)[1]
                     p_boss_drop = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Boss')  # left of 'Boss' + right of 'Boss' + len('Boss')
                 elif s.startswith(b'Gourd '):
                     block = BLOCK_GOURD
-                    tmp = s.split(b'Gourd',1)[1]
+                    tmp = s.split(b'Gourd', 1)[1]
                     p_gourd_drop = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Gourd')  # left of 'Gourd' + right of 'Gourd' + len('Gourd')
                 elif not s.startswith(b'('):
                     continue # drops start with (id)
                 elif block == BLOCK_SPELL:
-                    s = s.split(b' ',1)[1]
+                    s = s.split(b' ', 1)[1]
                     spell = s[:17].rstrip()
                     loc = s[52:].rstrip()
                     n_spell = SPELL_IDS[spell]
                     n_loc = SPELL_IDS[loc]
                     self.spells[n_loc][n_spell] += 1
                 elif block == BLOCK_BOSS:
-                    n_loc = int(s.split(b' ',1)[0][1:-1])
+                    n_loc = int(s.split(b' ', 1)[0][1:-1])
                     n_drop = BOSS_DROP_IDS[line[p_boss_drop:].rstrip()]
                     while len(self.boss_drops)<=n_loc:
                         self.boss_drops.append( [0 for _ in BOSS_DROPS ] )
                     self.boss_drops[n_loc][n_drop] += 1
                 elif block == BLOCK_GOURD:
-                    n_loc = int(s.split(b' ',1)[0][1:-1])
+                    n_loc = int(s.split(b' ', 1)[0][1:-1])
                     s_drop = line[p_gourd_drop:].rstrip()
                     if s_drop not in GOURD_DROP_IDS: continue
                     n_drop = GOURD_DROP_IDS[s_drop]
@@ -305,17 +308,13 @@ class DropTest(EvermizerTest):
     
     def proc_done(self, r, o):
         super(DropTest, self).proc_done(r, o)
-        log,rom = self.log_and_rom(o)
-        if log: self.parse_log(log)
-        
-    def proc_cleanup(self, r, o):
-        super(DropTest, self).proc_cleanup(r, o)
-        for fn in self.log_and_rom(o):
-            if fn:
-                os.unlink(fn)
+        log, rom = self.log_and_rom(o)
+        if log:
+            self.parse_log(log)
     
     def check_spells(self, r=0, o=None, report=False):
-        if r != 0: return False
+        if r != 0:
+            return False
         res = True
         for loc,loc_name in enumerate(SPELLS):
             for drop,drop_name in enumerate(SPELLS):
@@ -345,7 +344,8 @@ class DropTest(EvermizerTest):
         return res
         
     def check_boss_drops(self, r=0, o=None, report=False):
-        if r != 0: return False
+        if r != 0:
+            return False
         res = True
         for loc,drops in enumerate(self.boss_drops):
             for drop,n in enumerate(drops):
@@ -365,7 +365,8 @@ class DropTest(EvermizerTest):
         return res
     
     def check_gourd_drops(self, r=0, o=None, report=False):
-        if r != 0: return False
+        if r != 0:
+            return False
         res = True
         for drop,drop_name in enumerate(GOURD_DROPS):
             for loc,drops in enumerate(self.gourd_drops):
@@ -414,26 +415,26 @@ class BossOnlyTest(EvermizerTest):
                                            self.checks, limit=limit)
 
     def parse_log(self, fn):
-        BLOCK_NONE, BLOCK_ALCHEMIST, BLOCK_BOSS, BLOCK_GOURD = 0,1,2,3
+        BLOCK_NONE, BLOCK_ALCHEMIST, BLOCK_BOSS, BLOCK_GOURD = 0, 1, 2, 3
         block = BLOCK_NONE
         p = 0
         boss_drops = []
-        with open(fn,'rb') as f:
+        with open(fn, 'rb') as f:
             for line in f:
                 s = line.lstrip()
                 if s.startswith(b'Spell '):
                     block = BLOCK_NONE
                 elif s.startswith(b'Alchemist '):
                     block = BLOCK_ALCHEMIST
-                    tmp = s.split(b'Alchemist',1)[1]
+                    tmp = s.split(b'Alchemist', 1)[1]
                     p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Alchemist')  # left of 'Alchemist' + right of 'Alchemist' + len('Alchemist')
                 elif s.startswith(b'Boss '):
                     block = BLOCK_BOSS
-                    tmp = s.split(b'Boss',1)[1]
+                    tmp = s.split(b'Boss', 1)[1]
                     p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Boss')  # left of 'Boss' + right of 'Boss' + len('Boss')
                 elif s.startswith(b'Gourd '):
                     block = BLOCK_GOURD
-                    tmp = s.split(b'Gourd',1)[1]
+                    tmp = s.split(b'Gourd', 1)[1]
                     p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Gourd')  # left of 'Gourd' + right of 'Gourd' + len('Gourd')
                 elif not s.startswith(b'('):
                     continue # drops start with (id)
@@ -455,28 +456,173 @@ class BossOnlyTest(EvermizerTest):
             if item not in boss_drops:
                 raise Exception('%s missing from bosses (%s) in %s' % (item, b', '.join(boss_drops), fn))
 
-    def log_and_rom(self, o):
-        log = None
-        rom = None
-        for line in o.split(b'\n'):
-            s = line.lstrip()
-            if s.startswith(b'Rom saved as '):
-                rom = s.rstrip()[13:-1]
-            elif s.startswith(b'Spoiler log saved as '):
-                log = s.rstrip()[21:-1]
-            if log and rom: break
-        return log,rom
-
     def proc_done(self, r, o):
         super(BossOnlyTest, self).proc_done(r, o)
-        log,rom = self.log_and_rom(o)
-        if log: self.parse_log(log)
+        log, rom = self.log_and_rom(o)
+        if log:
+            self.parse_log(log)
 
-    def proc_cleanup(self, r, o):
-        super(BossOnlyTest, self).proc_cleanup(r, o)
-        for fn in self.log_and_rom(o):
-            if fn:
-                os.unlink(fn)
+
+class GlitchLevitateTest(EvermizerTest):
+    """Test that Levitate is considered accessible even though it's locked by levitate"""
+
+    def __init__(self, exe, rom, wdir, difficulty, settings, limit=10000):
+        self.difficulty = difficulty
+        self.settings = settings
+        self.checks = [
+            self.check_levitate
+        ]
+        self.found_glitch_levitate = False
+        super(GlitchLevitateTest, self).__init__(exe, ['-b', '-d', wdir, '--dry-run', rom,
+                                                 self.difficulty + self.settings],
+                                                 self.checks, limit=limit)
+
+    def parse_log(self, fn):
+        # TODO: unitfy parse_log
+        BLOCK_NONE, BLOCK_ALCHEMIST, BLOCK_BOSS, BLOCK_GOURD = 0, 1, 2, 3
+        block = BLOCK_NONE
+        p = 0
+        with open(fn, 'rb') as f:
+            for line in f:
+                s = line.lstrip()
+                if s.startswith(b'Spell '):
+                    block = BLOCK_NONE
+                elif s.startswith(b'Alchemist '):
+                    block = BLOCK_ALCHEMIST
+                    tmp = s.split(b'Alchemist', 1)[1]
+                    p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Alchemist')  # left of 'Alchemist' + right of 'Alchemist' + len('Alchemist')
+                elif s.startswith(b'Boss '):
+                    block = BLOCK_BOSS
+                    tmp = s.split(b'Boss', 1)[1]
+                    p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Boss')  # left of 'Boss' + right of 'Boss' + len('Boss')
+                elif s.startswith(b'Gourd '):
+                    block = BLOCK_GOURD
+                    tmp = s.split(b'Gourd', 1)[1]
+                    p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Gourd')  # left of 'Gourd' + right of 'Gourd' + len('Gourd')
+                elif not s.startswith(b'('):
+                    continue # drops start with (id)
+                elif block == BLOCK_ALCHEMIST:
+                    s_drop = line[p:].rstrip()
+                    if s_drop == b'Levitate':
+                        n_loc = int(s.split(b' ', 1)[0][1:-1])
+                        if n_loc in LEVITATE_REQUIRED_ALCHEMY:
+                            self.found_glitch_levitate = True
+                elif block == BLOCK_BOSS:
+                    s_drop = line[p:].rstrip()
+                    if s_drop == b'Levitate':
+                        n_loc = int(s.split(b' ', 1)[0][1:-1])
+                        if n_loc in LEVITATE_REQUIRED_BOSSES:
+                            self.found_glitch_levitate = True
+                elif block == BLOCK_GOURD:
+                    s_drop = line[p:].rstrip()
+                    if s_drop == b'Levitate':
+                        n_loc = int(s.split(b' ', 1)[0][1:-1])
+                        if n_loc in LEVITATE_REQUIRED_GOURDS:
+                            self.found_glitch_levitate = True
+
+    def proc_done(self, r, o):
+        super(GlitchLevitateTest, self).proc_done(r, o)
+        log, rom = self.log_and_rom(o)
+        if log:
+            self.parse_log(log)
+
+    def check_levitate(self, r=0, o=None, report=False):
+        return self.found_glitch_levitate
+
+
+class RockSkipLevitateTest(GlitchLevitateTest):
+    """Test that all is considered accessible even though sequence breaking is required for levitate"""
+
+    def __init__(self, exe, rom, wdir, difficulty, limit=10000):
+        settings = 'r4lABGoJ'
+        super(RockSkipLevitateTest, self).__init__(exe, rom, wdir, difficulty, settings, limit)
+
+
+class OoBLevitateTest(GlitchLevitateTest):
+    """Test that all is considered accessible even though OoB is required for levitate"""
+
+    def __init__(self, exe, rom, wdir, difficulty, limit=10000):
+        settings = 'l4ABGoU'
+        super(OoBLevitateTest, self).__init__(exe, rom, wdir, difficulty, settings, limit)
+
+
+class OoBGaugeTest(EvermizerTest):
+    """Test that a oob-only-accessible key item is valid"""
+
+    def __init__(self, exe, rom, wdir, difficulty, limit=10000):
+        self.difficulty = difficulty
+        self.settings = 'lABGoU'
+        self.checks = [
+            self.check_oob_required
+        ]
+        self.found_seed = None
+        super(OoBGaugeTest, self).__init__(exe, ['-b', '-d', wdir, '--dry-run', rom,
+                                           self.difficulty + self.settings],
+                                           self.checks, limit=limit)
+
+    def parse_log(self, fn):
+        # TODO: unitfy parse_log
+        BLOCK_NONE, BLOCK_ALCHEMIST, BLOCK_BOSS, BLOCK_GOURD = 0, 1, 2, 3
+        block = BLOCK_NONE
+        levitate_behind_levitate = False
+        gauge_behind_levitate = False
+        gauge_in_volcano = False
+        p = 0
+        with open(fn, 'rb') as f:
+            for line in f:
+                s = line.lstrip()
+                if s.startswith(b'Spell '):
+                    block = BLOCK_NONE
+                elif s.startswith(b'Alchemist '):
+                    block = BLOCK_ALCHEMIST
+                    tmp = s.split(b'Alchemist', 1)[1]
+                    p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Alchemist')  # left of 'Alchemist' + right of 'Alchemist' + len('Alchemist')
+                elif s.startswith(b'Boss '):
+                    block = BLOCK_BOSS
+                    tmp = s.split(b'Boss', 1)[1]
+                    p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Boss')  # left of 'Boss' + right of 'Boss' + len('Boss')
+                elif s.startswith(b'Gourd '):
+                    block = BLOCK_GOURD
+                    tmp = s.split(b'Gourd', 1)[1]
+                    p = len(line)-len(s) + len(tmp)-len(tmp.lstrip()) + len('Gourd')  # left of 'Gourd' + right of 'Gourd' + len('Gourd')
+                elif not s.startswith(b'('):
+                    continue # drops start with (id)
+                elif block == BLOCK_ALCHEMIST:
+                    n_loc = int(s.split(b' ', 1)[0][1:-1])
+                    if n_loc in LEVITATE_REQUIRED_ALCHEMY:
+                        s_drop = line[p:].rstrip()
+                        if s_drop == b'Levitate':
+                            levitate_behind_levitate = True
+                        elif s_drop == b'Gauge':
+                            gauge_behind_levitate = True
+                elif block == BLOCK_BOSS:
+                    n_loc = int(s.split(b' ', 1)[0][1:-1])
+                    if n_loc in LEVITATE_REQUIRED_BOSSES:
+                        s_drop = line[p:].rstrip()
+                        if s_drop == b'Levitate':
+                            levitate_behind_levitate = True
+                        elif s_drop == b'Gauge':
+                            gauge_behind_levitate = True
+                elif block == BLOCK_GOURD:
+                    n_loc = int(s.split(b' ', 1)[0][1:-1])
+                    if n_loc in LEVITATE_REQUIRED_GOURDS:
+                        s_drop = line[p:].rstrip()
+                        if s_drop == b'Levitate':
+                            levitate_behind_levitate = True
+                        elif s_drop == b'Gauge':
+                            gauge_behind_levitate = True
+
+        if levitate_behind_levitate and gauge_behind_levitate:
+            self.found_seed = fn
+
+    def proc_done(self, r, o):
+        super(OoBGaugeTest, self).proc_done(r, o)
+        log, rom = self.log_and_rom(o)
+        if log:
+            self.parse_log(log)
+
+    def check_oob_required(self, r=0, o=None, report=False):
+        return bool(self.found_seed)
 
 
 class ExecTest(Test):
@@ -535,6 +681,8 @@ def print_usage(exe):
 
 
 if __name__ == '__main__':
+    from time import sleep
+
     n = 1
     verbose = False
     silent = False
@@ -588,6 +736,11 @@ if __name__ == '__main__':
             ['Boss-only %s' % (difficulty,), BossOnlyTest(exe, rom, wdir, difficulty)]
             for difficulty in ['e', 'h']
         ]
+        tests += [
+            ['Rock skip Levitate', RockSkipLevitateTest(exe, rom, wdir, 'x')],
+            ['OoB Levitate', OoBLevitateTest(exe, rom, wdir, 'x')],
+            ['OoB Gauge', OoBGaugeTest(exe, rom, wdir, 'x')],
+        ]
         for i, [name, test] in enumerate(tests):
             print('%sTEST%3d%s:' % (Colors.BOLD, i, Colors.END), end=' ')
             stdout.flush()
@@ -609,7 +762,9 @@ if __name__ == '__main__':
                 print ('    %d/%d seeds failed in %.1fs' % (
                         test.popen_failed, test.popen_count,
                         testend-teststart,))
-    
+
+        sleep(.1)  # avoid "Directory not empty"
+
     if done>0 and failed==0 and not silent:
         print('%sALL %d TESTS PASSED%s' % (Colors.BOLD + Colors.PASS, done, Colors.END))
     elif not silent:
