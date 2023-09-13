@@ -63,14 +63,13 @@ CHANGES SO FAR:
     Act1-3 only because toaster evasion sound hardlocks for some music tracks
   Pupdunk: Act0 doggo everywhere!
   Musicmizer: randomize music, in testing stage
-  Fix sequence:
-    Desolarify: Act1 first rock skip is disabled (Levitation required)
-    Desaturnate: require the use of teleporter before final boss hatch is open
+  Sequence breaks: Fix, allow or "in logic" (possibly requiring it)
+    Desolarify: Act1 first rock skip is disabled (Levitate required)
+    Desaturnate: require energy core and use of teleporter before final boss hatch is open
     Disable double gauge: don't take away rocket parts until you have them all
+  Out of bounds: Fix, allow or "in logic" (possibly requiring it)
   Fix cheats:
     Remove infinite call bead glitch
-  Glitchless beatable:
-    Never require glitches to beat the game, even if glitches are not disabled
   All accessible:
     Make sure all checks/areas/bosses can be reached
   Fix infinite ammo:
