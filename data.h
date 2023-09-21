@@ -540,7 +540,7 @@ static const drop_tree_item drops[] = {
 
 
 // Logic/data helper functions
-static inline bool check_requires(check_tree_item* check, enum progression progress)
+static inline bool check_requires(const check_tree_item* check, enum progression progress)
 {
     for (size_t i=0; i<ARRAY_SIZE(check->requires); i++)
         if (check->requires[i].pieces>0 && check->requires[i].progress==progress)
@@ -548,7 +548,7 @@ static inline bool check_requires(check_tree_item* check, enum progression progr
     return false;
 }
 
-static inline bool check_reached(check_tree_item* check, const int* progress)
+static inline bool check_reached(const check_tree_item* check, const int* progress)
 {
     for (size_t i=0; i<ARRAY_SIZE(check->requires); i++)
         if (check->requires[i].pieces>progress[check->requires[i].progress])

@@ -1,4 +1,4 @@
-#ifndef NO_RANDO
+#ifdef WITH_MULTIWORLD
 #set // directive to create patch set as APPLY_MULTIWORLD()
 
 
@@ -193,4 +193,4 @@ a3 41               // call loot part 3 (failed message)
 00 // END
 @
 
-#endif
+#endif // WITH_MULTIWORLD
