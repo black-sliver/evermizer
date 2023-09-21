@@ -1,3 +1,11 @@
+v045:
+  Fix energy core fragments not existing if gourdomizer is off
+  Fix not being able to turn in fragmens if alchemizer is off
+  Fix logic for rock skip
+  Keep dog update: when out of bounds is not fixed, restore players when leaving pyramid area
+  Out of bounds setting: Fix, allow, or put the glitch "in logic" (possibly requiring it)
+  Change glitches+glitchless into single setting
+
 v044:
   Fix energy core despawning when looting failed
   Fix fish guy dialog when cure was already obtained
