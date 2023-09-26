@@ -1482,7 +1482,7 @@ int main(int argc, const char** argv)
         {
             // init state
             enum progression goal = milestone==0 ? P_ROCKET : P_FINAL_BOSS;
-            bool allow_rockskip = sequencebreaks == LOGIC;
+            bool allow_sequencebreaks = sequencebreaks == LOGIC;
             bool allow_saturnskip = sequencebreaks == LOGIC;
             bool allow_oob = oob == LOGIC;
             check_tree_item checks[ARRAY_SIZE(blank_check_tree)];
@@ -1502,7 +1502,7 @@ int main(int argc, const char** argv)
             memset(progress, 0, sizeof(progress));
             int nextprogress[P_END];
             memset(nextprogress, 0, sizeof(nextprogress));
-            if (allow_rockskip) nextprogress[P_ROCK_SKIP]++;
+            if (allow_sequencebreaks) nextprogress[P_ALLOW_SEQUENCE_BREAKS]++;
             if (allow_oob) nextprogress[P_ALLOW_OOB]++;
             bool complete=false;
             treedepth=0;
@@ -1588,8 +1588,8 @@ int main(int argc, const char** argv)
             if (accessible && milestone==1) {
                 bool not_accessible = false;
                 for (size_t i=P_NONE+1; i<P_END-1; i++) {
-                    if (i == P_DE || i == P_GAUGE || i == P_WHEEL || i == P_ORACLE_BONE || i == P_ROCK_SKIP ||
-                        i == P_CORE_FRAGMENT || i == P_ALLOW_OOB) continue;
+                    if (i == P_DE || i == P_GAUGE || i == P_WHEEL || i == P_ORACLE_BONE ||
+                        i == P_CORE_FRAGMENT || i == P_ALLOW_OOB || i == P_ALLOW_SEQUENCE_BREAKS) continue;
                     if (progress[i]==0) {
                         not_accessible = true;
                         break;

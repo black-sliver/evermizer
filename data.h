@@ -313,8 +313,8 @@ enum progression {
     P_PYRAMID_OR_RUINS,
     P_AEGIS_DEAD,
     P_PYRAMID_ACCESSIBLE,
-    P_ROCK_SKIP,
     P_ALLOW_OOB,
+    P_ALLOW_SEQUENCE_BREAKS,
     P_QUEENS_KEY_CHESTS_ACCESS,
     P_ENERGY_CORE_ACCESS,
     P_ECRUSTACIA_CHESTS_ACCESS,
@@ -485,9 +485,10 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_RULE,P_ROCKET,          0, 0, REQ4N(1,P_GAUGE,1,P_WHEEL,2,P_DE,1,P_WEAPON), PVD3N(1,P_ROCKET,-2,P_DE,1,P_ENERGY_CORE_ACCESS)},
     {0, CHECK_RULE,P_FINAL_BOSS,      0, 0, REQ2(P_ROCKET,P_ENERGY_CORE), PVD1(P_FINAL_BOSS)},
     {0, CHECK_RULE,P_VOLCANO_ENTERED, 0, 0, REQ2(P_WEAPON,P_LEVITATE),  PVD1(P_VOLCANO_ENTERED)},
-    {0, CHECK_RULE,P_ROCK_SKIP,       0, 0, REQ2(P_WEAPON,P_ROCK_SKIP), PVD1(P_VOLCANO_ENTERED)},
+    {0, CHECK_RULE,P_ALLOW_SEQUENCE_BREAKS, 0, 0, REQ2(P_WEAPON,P_ALLOW_SEQUENCE_BREAKS), PVD3(P_REVEALER,P_PYRAMID_ACCESSIBLE,P_VOLCANO_ENTERED)},
+    {0, CHECK_RULE,P_ALLOW_SEQUENCE_BREAKS, 0, 0, REQ2(P_ROCKET,P_ALLOW_SEQUENCE_BREAKS), PVD1(P_FINAL_BOSS)},
     {0, CHECK_RULE,P_ALLOW_OOB,       0, 0, REQ2(P_WEAPON,P_ALLOW_OOB),
-            PVD6(P_NON_SWORD,P_BRONZE_AXE_PLUS,P_KNIGHT_BASHER,P_KNIGHT_BASHER_PLUS,P_REVEALER,P_ROCK_SKIP)},
+            PVD6(P_NON_SWORD,P_BRONZE_AXE_PLUS,P_KNIGHT_BASHER,P_KNIGHT_BASHER_PLUS,P_REVEALER,P_PYRAMID_ACCESSIBLE)},
     {0, CHECK_RULE,P_ALLOW_OOB,       0, 0, REQ2(P_WEAPON,P_ALLOW_OOB),
             PVD4(P_QUEENS_KEY_CHESTS_ACCESS,P_ENERGY_CORE_ACCESS,P_ECRUSTACIA_CHESTS_ACCESS,P_OGLIN_CAVE_ACCESS)},
     // Stuff to work around OoB giving fake progression
@@ -605,7 +606,8 @@ const char* check2str(const check_tree_item* check)
     if (check->index == P_ROCKET) return "Rocket";
     if (check->index == P_ENERGY_CORE) return "Energy Core";
     if (check->index == P_VOLCANO_ENTERED) return "Volcano entered";
-    if (check->index == P_ROCK_SKIP) return "Rock skip";
+    if (check->index == P_ALLOW_SEQUENCE_BREAKS) return "Sequence break";
+    if (check->index == P_ALLOW_OOB) return "Out of bounds";
     return "Unknown";
 }
 
