@@ -1891,7 +1891,7 @@ int main(int argc, const char** argv)
         if (energy_core == ENERGY_CORE_FRAGMENTS) {
             APPLY_ENERGY_CORE_FRAGMENT_HANDLING();
             (void)available_fragments;
-            buf[rom_off + 0x3082b7] = required_fragments;
+            buf[rom_off + 0x3082ba] = required_fragments;
             buf[rom_off + 0x03273a] = required_fragments > 9 ? ('0' + (required_fragments / 10)) : ' ';
             buf[rom_off + 0x03273b] = '0' + (required_fragments % 10);
         }

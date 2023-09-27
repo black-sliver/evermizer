@@ -49,14 +49,17 @@ da 3e cc
 @0xb082aa
 // this is right after the fragment setup script.
 // NOTE: this will interfere with the next "extra" item
-// need to overwrite value at ...+13 (0xb082b7) as snes word
+// need to overwrite value at ...+16 (0xb082ba) as snes word
 09 85 65 00 01 00 // IFNOT (energy core: $2264&0x20) SKIP 1
 00 // end
-09 08 d7 02 29 03 01 00 9e 04 00 // IFNOT (fragments:$252f < required:const) SKIP 4
 51 c5 22 // Show Text 22c5: fragment hint
+09 08 d7 02 29 03 01 00 9e 01 00 // IFNOT (fragments:$252f < required:const) SKIP 1
 00 // end
+55 // close text box
 17 39 01 28 01 // write prize = energy core (0x0129)
 29 0d 02 0f // call loot script
+a7 01 // wait a bit
+a3 02 // reopen textbox
 00 // end
 @
 
