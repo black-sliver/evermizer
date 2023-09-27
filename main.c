@@ -155,8 +155,10 @@ const static struct option options[] = {
     { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere! Overrides Doggomizer", OFF_ON, "General", "Other" },
     { 'm', 0, "Musicmizer", "Demo",        "Random music for some rooms", OFF_ON, "General", "Cosmetic" },
 #endif
-    { 'j', 0, "Sequence breaks", NULL,     "Off (default) fixes some sequence breaks: Volcano rock, final boss hatch (not out of bounds)", OFF_ON_LOGIC, "Accessibility", NULL },
-    { 'u', 0, "Out of bounds", NULL,       "Off (default) fixes dog collision when leaving West of Crustacia", OFF_ON_LOGIC, "Accessibility", NULL },
+    { 'j', 0, "Sequence breaks", NULL,     "Off (default) fixes some sequence breaks: Volcano rock, final boss hatch (not out of bounds). "
+                                           "'Logic' may expect the player to break sequence or skip invisible bridges to finish.", OFF_ON_LOGIC, "Accessibility", NULL },
+    { 'u', 0, "Out of bounds", NULL,       "Off (default) fixes dog collision when leaving West of Crustacia. "
+                                           "'Logic' may expect a player to use OoB to finish.", OFF_ON_LOGIC, "Accessibility", NULL },
     { '2', 1, "Fix cheats", NULL,          "Fix vanilla cheats: Infinite call beads", OFF_ON, "Accessibility", NULL },
     { '5', 0, "Fix infinite ammo", NULL,   "Fix bug that would have bazooka ammo not drain", OFF_ON, "Accessibility", NULL },
     { '6', 0, "Fix atlas glitch", NULL,    "Fix status effects cancelling with pixie dust", OFF_ON, "Accessibility", NULL },

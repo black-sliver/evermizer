@@ -68,6 +68,7 @@ CHANGES SO FAR:
     Desaturnate: require energy core and use of teleporter before final boss hatch is open
     Disable double gauge: don't take away rocket parts until you have them all
   Out of bounds: Fix, allow or "in logic" (possibly requiring it)
+    This will not enable Saturn skip nor rock skip, however volcano shop skips rock skip.
   Fix cheats:
     Remove infinite call bead glitch
   All accessible:
