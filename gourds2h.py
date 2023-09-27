@@ -139,7 +139,6 @@ prizes = {
 
 requirements = {
     'weapon': 'P_WEAPON',
-    'magmar': 'P_VOLCANO_EXPLODED',
     'non-sword': 'P_NON_SWORD',
     'levitate': 'P_LEVITATE',
     'bronze axe+': 'P_BRONZE_AXE_PLUS',
@@ -168,6 +167,7 @@ requirements = {
     '2x call bead': '2*P_CALLBEAD',
     '3x call bead': '3*P_CALLBEAD',
     'wings': 'P_WINGS',
+    'gauge access': 'P_GAUGE_ACCESS',
     'queen\'s key chests access': 'P_QUEENS_KEY_CHESTS_ACCESS',
     'east crustacia chests access': 'P_ECRUSTACIA_CHESTS_ACCESS',
     'oglin cave access': 'P_OGLIN_CAVE_ACCESS',
