@@ -1,0 +1,71 @@
+#set
+
+#ifndef NO_RANDO
+
+// has to be applied after alchemy_texts
+
+@0xc03867+8
+54 75 // Learned Hard Ball -> Learned Turd Ball
+@
+
+// Apply "Learned Hard Ball" message pointer @0x91d651 to all offensive spells
+
+// Acid Rain
+@0x91d59d
+67 38 00
+
+// Corrosion
+@0x91e7bb
+67 38 00
+
+// Crush
+@0x91dad4
+67 38 00
+
+// Double Drain
+@0x91d690
+67 38 00
+
+// Drain
+@0x91d69f
+67 38 00
+
+// Explosion
+@0x91eb75
+67 38 00
+
+// Fireball
+@0x91e617
+67 38 00
+
+// Fire Power
+@0x91e6e0
+67 38 00
+
+// Flash
+@0x91d963
+67 38 00
+
+// Lance
+@0x91e908
+67 38 00
+
+// Lightning Storm
+@0x91ec1a
+67 38 00
+
+// Nitro
+@0x91eb78
+67 38 00
+
+// Slow Burn
+@0x91eb8a
+67 38 00
+
+// Sting
+@0x91e338
+67 38 00
+
+@
+
+#endif

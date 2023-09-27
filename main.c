@@ -2082,6 +2082,11 @@ int main(int argc, const char** argv)
         APPLY_TURD_BALL(); // convert Hard Ball to Turd Ball
         APPLY_ALTERNATIVE_TURD_BALLS(); // change description of stronger variants
         APPLY_TURDO_BALANCING(); // rebalance game
+#ifndef NO_RANDO
+        if (alchemizer || placement_file) {
+            APPLY_TURDO_ALCHEMY_TEXTS(); // change naming of alchemy items
+        }
+#endif
     }
 
     printf("Increasing save file size...\n");
