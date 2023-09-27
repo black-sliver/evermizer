@@ -343,7 +343,7 @@
 @0xb0820d
 // ALCHEMY_DROP (right after after super heal drop)
 a3 3e               // call loot part 1
-09 85 90 04 05 00   // if not loot successfull skip 5
+09 85 90 04 05 00   // if not loot successful skip 5
 a3 3f               // call loot part 2 (looted message)
 04 02 00            // skip 2
 a3 41               // call loot part 3 (failed message)

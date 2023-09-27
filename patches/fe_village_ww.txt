@@ -1,4 +1,4 @@
-// Make stuff that changes with WW posession to check Magmar instead
+// Make stuff that changes with WW possession to check Magmar instead
 //@0x94d139,etc Orig: 09 85 23 04 .. .. // WW unlocked
 //@0x94d139,etc New:  09 85 46 00 .. .. // Magmar defeated
 // Hut NPCs

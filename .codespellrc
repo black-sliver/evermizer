@@ -1,0 +1,3 @@
+[codespell]
+skip = ./gen.h
+ignore-words-list = sting, missable, rcall

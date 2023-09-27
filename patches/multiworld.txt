@@ -11,7 +11,7 @@
 @0xfd8150
 18 1d 03 b0 // clear multiworld expected index at 7e2575+0..1
 18 24 03 b0 // clear multiworld item id at 7e2575+7..8
-10 1f 03 b0 // clear multiworld transaction pending at 7e2575+2 (old/currrent)
+10 1f 03 b0 // clear multiworld transaction pending at 7e2575+2 (old/current)
 //10 26 03 b0 // clear multiworld transaction pending at 7e2575+9 (new/future)
 0c 9e 02 b1 // $22ab |= 0x40 (is_in_game = true)
 00 // end
@@ -172,7 +172,7 @@ a9 00 00        //LDA 0000
 18 09 02 09 22 03 29 31 9b       // copy amount - 1 from 257a to "next add" 2461
 
 a3 3e               // call loot part 1
-09 85 90 04 05 00   // if not loot successfull skip 5
+09 85 90 04 05 00   // if not loot successful skip 5
 a3 3f               // call loot part 2 (looted message)
 04 02 00            // skip 2
 a3 41               // call loot part 3 (failed message)

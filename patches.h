@@ -77,7 +77,7 @@ DEF(22, 0x9abc62 - 0x800000,
     "\x05\x10" // RJMP -240
     "\x00" // END
     "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"); // 10 free
-// don't clear out buttom half of act3 towns (always people there)
+// don't clear out bottom half of act3 towns (always people there)
 DEF(23, 0x98c426 - 0x800000,
     "\x04\x08\x00"  // uncond. JMP
     "\x00\x00\x00"); // +3 free bytes

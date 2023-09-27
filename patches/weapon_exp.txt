@@ -1,4 +1,4 @@
-// patch weapon experiance to take arbitrary numbers
+// patch weapon experience to take arbitrary numbers
 
 @0xf10000
 // new boy leveling, magic numbers at 0x310000 + 6, 0x310000 + 13dec

@@ -1,5 +1,5 @@
 # Evermizer Guide
-*Version 2022-08-03 for v042+ and multiworld*
+*Version 2022-09-27 for v042+ and multiworld*
 
 ## Goal
 With default settings (not bingo) the goal is to defeat the final boss.
@@ -77,7 +77,7 @@ Not randomized, please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#
 
 ## General Strats
 
-### Usefull Glitches
+### Useful Glitches
 * __Wings glitch__: you can use Wings or Escape to become invincible in all areas where Wings "did not work"
 * __Infinite Bazooka ammo__: Particle Bombs and Cryo-Blast do not drain
 * __Atlas glitch__: makes you invincible and deals max damage (see speedrun guides)

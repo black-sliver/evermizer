@@ -524,7 +524,7 @@ int main(int argc, const char** argv)
     const char* appname = APPNAME;
 #endif
     
-    // verify at least one agument is given
+    // verify at least one argument is given
     if (argc<2 || !argv[1] || !argv[1][0]) {
         print_usage(appname);
         exit(1);

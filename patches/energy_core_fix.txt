@@ -5,7 +5,7 @@
 
 // relocate energy core despawn
 @0x99dad3
-09 85 90 04 04 00 // if not loot successfull skip 4
+09 85 90 04 04 00 // if not loot successful skip 4
 29 00 82 15 // call 0xbd8200 (relocated code)
 00 // end
 @

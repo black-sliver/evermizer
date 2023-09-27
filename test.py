@@ -377,9 +377,9 @@ class DropTest(EvermizerTest):
                     if self.difficulty in ['e'] and loc in HIDDEN_GOURDS:
                         continue
                     if self.difficulty in ['n','h'] and loc in EARLY_GOURDS:
-                        continue # reduce required seeds, convered by e,x
+                        continue  # reduce required seeds, covered by e,x
                     if self.difficulty in ['h'] and loc in INFREQUENT_GOURDS:
-                        continue # reduce required seeds, convered by e,n,x
+                        continue  # reduce required seeds, covered by e,n,x
                     if '4' in self.settings:
                         ignore = False
                         for name,locs in UNREACHABLE_GOURD_DROPS:
