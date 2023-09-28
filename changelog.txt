@@ -1,3 +1,9 @@
+v046:
+  Fix some typos, rework some texts
+  Pyramid and Vanilla Gauge in logic with OoB (no Revealer, no Levitate required)
+  Pyramid in logic with Sequence Breaks (no Revealer required)
+  Fix Turd Ball texts
+  Better textbox handling for Energy Core Fragments when receiving the Energy Core
 v045:
   Fix energy core fragments not existing if gourdomizer is off
   Fix not being able to turn in fragmens if alchemizer is off
