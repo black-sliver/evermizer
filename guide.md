@@ -1,5 +1,5 @@
 # Evermizer Guide
-*Version 2022-09-27 for v042+ and multiworld*
+*Version 2023-09-29 for v045+ and multiworld*
 
 ## Goal
 With default settings (not bingo) the goal is to defeat the final boss.
@@ -18,15 +18,16 @@ Required items are rocket parts (2 Diamond Eyes, Wheel, Gauge) and Energy Core, 
 See [General Strats](#general-strats) below for strats, see [FAQ](#faq) below if you are stuck.
 
 ## Drop locations
-NPC drops (Jaguar Ring, Cecil's bazooka, Call Beads, Collars, ...) are not randomized.
+NPC drops (Jaguar Ring, Cecil's bazooka, Call Beads, Collars, ...) are not randomized yet.
 
-Multiworld
-* All items that can be randomized are placed in completely random locations.
+**Multiworld**
+* All items that can be randomized are placed in random locations,
+  honoring some priority rules (0-2 random late spots) and exclusion rules (hidden chests on easy).
 
-Evermizer with default settings
+**Evermizer with default settings**
 * Gourd/pot/chest, boss and alchemy drops are shuffled to random locations of the same type.
 
-Evermizer with pooling
+**Evermizer with pooling**
 * Drops set to "Pool" will be mixed with each other.
 
 ### Bosses
@@ -37,29 +38,28 @@ See [Boss Strats](#boss-strats) below for strats.
 3. __Mammoth graveyard vipers__: accessible with any slashing weapon
 4. __Salabog__: accessible with any slashing weapon
 5. __Cave Raptors__: on the volcano path, accessible with any slashing weapon
-6. __Volcano vipers__: accessible with Levitate (spell) or rock skip (glitch)
-7. __Magmar__: accessible with Levitate (spell) or rock skip (glitch)
+6. __Volcano vipers__: accessible with Levitate (spell), rock skip (sequence break) or out of bounds
+7. __Magmar__: accessible with Levitate (spell), rock skip (sequence break) or out of bounds
 8. __Vigor__: accessible with slashing weapon, after you jumped down the trench in Crustacia (right of Blimp) and waited for the Market Timer to run out
 9. __Sons of Anhur__: accessible with slashing weapon
 10. __Rimsala__: accessible with Bronze Axe
-11. __Minitaur__: **No drop.** accessible with slashing weapon
+11. __Minitaur__: **No drop.** Accessible with slashing weapon
 12. __Mad Monk__: accessible with slashing weapon and Jaguar Ring
 13. __Megataur__: accessible with Bronze Spear, Lance (weapon) or Laser Lance
-14. __Aegis__: **No drop.** accessible after getting two Diamond Eyes
+14. __Aegis__: **No drop.** Accessible after getting two Diamond Eyes
 15. __Tiny__: accessible after beating Aegis, Levitate required to reach him
-16. __Aquagoth__: accessible after beating Aegis
-17. __Foot Knight__: **No drop before v042.** accessible with Windwalker after getting a slashing weapon
+16. __Aquagoth__: accessible after beating Aegis or out of bounds
+17. __Foot Knight__: **No drop before v042.** Accessible with Windwalker after getting a slashing weapon
 18. __Bad Boys__: accessible with Windwalker after getting a slashing weapon
 19. __Timberdrake__: accessible with Windwalker after getting a slashing weapon
 20. __Verminator__: accessible with Windwalker after getting a slashing weapon
-21. __Sterling__: **Drops alchemy.** accessible with Knight Basher
-22. __Mungola__: accessible after defeating Sterling (requires Knight Basher)
+21. __Sterling__: **Drops alchemy.** accessible with Knight Basher or out of bounds
+22. __Mungola__: accessible after defeating Sterling (requires Knight Basher or out of bounds)
 23. __Secret Boss__: **No drop.** accessible with Rocket
 24. __Carltron__: accessible with Energy Core
 
 ### Gourds/pots/chests
-None missable, all included on normal and hard, some excluded on easy.\
-Always all included in multiworld.
+None missable, all included on normal and hard, some excluded on easy.
 
 Please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore)
 or [a maptracker](https://github.com/Cyb3RGER/evermizer-tracker-package) if you don't know them all.
@@ -72,7 +72,7 @@ or [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore)
 or [a maptracker](https://github.com/Cyb3RGER/evermizer-tracker-package) if you don't know them all.
 
 ### NPCs
-Not randomized, please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore) for now.
+Not randomized yet, please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#SecretOfEvermore) for now.
 
 
 ## General Strats
@@ -81,13 +81,29 @@ Not randomized, please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.htm#
 * __Wings glitch__: you can use Wings or Escape to become invincible in all areas where Wings "did not work"
 * __Infinite Bazooka ammo__: Particle Bombs and Cryo-Blast do not drain
 * __Atlas glitch__: makes you invincible and deals max damage (see speedrun guides)
-* __Saturn skip__: unless fixed _(default: fixed only for final one)_, lets you open all hatches in Act4 with the dog.
+* __Perma Barrier__: adding a 5th status modifier (e.g. Poison, Barrier, Speed, Pixie Dust, Shield) will erase the first
+  positive modifier (Barrier in the example), making it permanent until reset. Some status modifiers can not coexist
+  (e.g. Regenerate and Pixie Dust).
+* __Saturn skip__: if "Sequence breaks" are "On" or "In Logic", lets you open all hatches in Act4 with the dog, making
+  the Energy Core optional. "Off" disables the boss hatch, others still work.
 
-  Place the dog over a hatch. Pressing B should not attack. Open the menu with Y. Tap Y. While closing hold B+Y until in the menu again. Release B+Y. Tap Y. While closing hold SELECT.
+  Place the dog over a hatch. Pressing B should not attack. Open the menu with Y. Tap Y.
+  While closing hold B+Y until in the menu again. Release B+Y. Tap Y. While closing hold SELECT.
 
-* __Rock skip__: unless fixed _(default: fixed)_, lets you enter Volcano (Magmar, Viper, Speed) without Levitate.
+* __Rock skip__: if "Sequence breaks" are "On" or "In Logic", lets you enter Volcano (Magmar, ...) without Levitate.
 
-  Let the dog sniff at the exit to FE Village, run to the rock with the boy. Press X to scroll the camera all the way to the dog, close the menu, while the camera is scrolling back hold A+Up.
+  Let the dog sniff at the exit to FE Village, run to the rock with the boy.
+  Press X to scroll the camera all the way to the dog, close the menu, while the camera is scrolling back hold A+Up.
+
+* __Out of bounds__: if set to "On" or "In Logic", allows you to go out of bounds in Act2 (see speedrun guides), giving you early access to
+    * Pyramid, Halls (skip invisible bridges; event swap does not work in Pyramid)
+    * Volcano (through the shop)
+    * Vanilla Gauge, vanilla Energy Core, 2 East Crustacia chests, Queen's Key stuff (event swap)
+    * All but 1 Tiny chest (using teleporters)
+    * Aquagoth
+    * Connects caves from Act1 and Act2 (Jaguar Ring, HB, Drain, ...)
+
+* __Event swap__: by pressing B with the dog and switching to the boy on the next frame, chests can be looted with the dog. This works everywhere except Pyramid. See Saturn skip for a setup.
 
 ### Useful Mechanics
 * Use strong and cheap spells, switch to dog to multi-cast with X
