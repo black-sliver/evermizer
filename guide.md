@@ -82,8 +82,8 @@ Not randomized yet, please use [vgmaps](https://vgmaps.com/Atlas/SuperNES/index.
 * __Infinite Bazooka ammo__: Particle Bombs and Cryo-Blast do not drain
 * __Atlas glitch__: makes you invincible and deals max damage (see speedrun guides)
 * __Perma Barrier__: adding a 5th status modifier (e.g. Poison, Barrier, Speed, Pixie Dust, Shield) will erase the first
-  positive modifier (Barrier in the example), making it permanent until reset. Some status modifiers can not coexist
-  (e.g. Regenerate and Pixie Dust).
+  positive modifier (Barrier in the example), making it permanent until reset.
+  Regenerate and Pixie Dust status modifiers can not coexist.
 * __Saturn skip__: if "Sequence breaks" are "On" or "In Logic", lets you open all hatches in Act4 with the dog, making
   the Energy Core optional. "Off" disables the boss hatch, others still work.
 
