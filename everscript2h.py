@@ -93,7 +93,8 @@ def main(dst_filename, append, *src_filenames):
                                 b += [a[4:], a[2:4], a[:2]]
                             elif len(a) == 8: # dword
                                 b += [a[6:], a[4:6], a[2:4], a[:2]]
-                            else: raise Exception('Invalid data')
+                            else:
+                                raise Exception('Invalid data: ' + str(data))
                         fout.write(b'%s"\\x%s"%s\n' % (spaces[in_patch], '\\x'.join(b).encode('ascii'), comment.encode('ascii')))
                   except Exception as e:
                     print('In %s:%d' % (os.path.basename(src), line_no))
