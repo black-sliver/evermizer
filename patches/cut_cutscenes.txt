@@ -46,4 +46,17 @@
 04 00 00 // SKIP 0 to 0x96db9e
 @
 
+// shorten Ebon Keep queen dialog
+@0x98ebe5
+04 e0 00 // SKIP to 0x98ecc8, remove Tinker and start walking immediately
+@0x98ed09
+04 d2 01 // SKIP to 0x98eede, skipping most of dialog
+@0x98eee4
+04 00 00 // SKIP to 0x98eee7, remove one text
+@0x98ef0a
+04 18 00 // SKIP to 0x98ef25, removing all after call bead text
+@0x98eee7+7
+32 // SKIP to f22 instead of f0f to skip most text when not receiving call beads
+@
+
 // TODO: Inn: modify text 131a
