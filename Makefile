@@ -72,7 +72,7 @@ gen.h: $(PATCH_FILES) everscript2h.py $(IPS_INFO_FILES) ips2h.py
 	$(PYTHON) ips2h.py -a $@ $(IPS_INFO_FILES)
 endif
 ifneq (,$(wildcard gourds.csv)) # assume we have a pre-built gourds.h if gourds.csv is missing
-gourds.h: gourds.csv gourds2h.py
+gourds.h: gourds.csv gourds2h.py util.py
 ifeq ($(strip $(ROM)),)
 	$(PYTHON) gourds2h.py $@ gourds.csv
 else
