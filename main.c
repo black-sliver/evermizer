@@ -142,8 +142,8 @@ const static struct option options[] = {
     { 'z', 1, "Energy Core", NULL,         "How to obtain the Energy Core. Random and Fragments convert the vanilla spot to a gourd. "
                                            "Fragments replace ingredients in gourds.", ENERGY_CORE_VALUES, "General", "Key items" },
     { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
-    { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
-    { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops. Select 'pool' to add item this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
+    { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
+    { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
     { 'o', 0, "Mixed Pool Strategy", NULL, "Key item placement strategy for the mixed pool. Requires at least one option on 'pool'\n"
                                            "Balanced will keep the original distribution of key items per pool (4 or 5 in gourds, 2 in alchemy, 11 in boss drops)\n"
                                            "Random will randomly distribute key items into any selected pool\n"
