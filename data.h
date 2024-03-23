@@ -399,6 +399,7 @@ enum check_tree_item_type {
     CHECK_GOURD,
     CHECK_EXTRA,
     CHECK_TRAP,
+    CHECK_SNIFF,
     CHECK_NPC,
     CHECK_RULE,
 };
@@ -494,9 +495,11 @@ static const check_tree_item blank_check_tree[] = {
     {0, CHECK_RULE,P_BRONZE_AXE_PLUS, 0, 0, REQ1(P_REAL_BRONZE_AXE_PLUS), PVD1(P_BRONZE_AXE_PLUS)},
     // Energy core fragments conversion; will be updated in main
     {0, CHECK_RULE,P_ENERGY_CORE,     0, 0, REQ1N(-1, P_CORE_FRAGMENT), NOTHING_PROVIDED},
-    // Gourd checks included from generated gourds.h
     #define CHECK_TREE
+    // Gourd checks included from generated gourds.h
     #include "gourds.h"
+    // Sniff checks included from generated sniff.h
+    #include "sniff.h"
     #undef CHECK_TREE
 };
 
@@ -532,9 +535,11 @@ static const drop_tree_item drops[] = {
     {CHECK_BOSS,DIAMOND_EYE_DROP_IDX, PVD1(P_DE)},
     {CHECK_BOSS,DINO_DROP_IDX,        PVD1(P_ARMOR)},
     {CHECK_BOSS,BAZOOKA_DROP_IDX,     PVD1(P_BAZOOKA)},
-    // Gourd drops with progression included from generated gourds.h
     #define DROP_TREE
+    // Gourd drops with progression included from generated gourds.h
     #include "gourds.h"
+    // Sniff drops with progression included from generated sniff.h
+    #include "sniff.h"
     #undef DROP_TREE
 };
 
@@ -574,6 +579,7 @@ static inline void drop_progress(const drop_tree_item* drop, int* progress)
 static inline const drop_tree_item* get_drop(enum check_tree_item_type type, uint16_t idx)
 {
     // NOTE: since we only have progression in drops, always iterating over everything is fast
+    //       this could still be sped up using binary search
     for (size_t i=0; i<ARRAY_SIZE(drops); i++)
         if (drops[i].type == type && drops[i].index == idx) return drops+i;
     return NULL;
@@ -751,6 +757,16 @@ static uint32_t get_drop_setup_target(enum check_tree_item_type type, uint16_t i
         uint32_t addr = trap_data[idx].setup;
         return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
     }
+    if (type == CHECK_SNIFF && ((idx >= 0x200 && idx <= 0x215) || idx == 0x1f)) {
+        // sniff items are encoded using the in-game item IDs, making the above
+        // statement somewhat false
+        if (idx == 0x1f) // iron bracer is an odd sniff item, we put it after ingredients
+            idx = 0x16;
+        else
+            idx -= 0x200;
+        uint32_t addr = 0x30ff00 + 6 * idx;
+        return (addr & 0x7fff) | ((((addr&0x7fffff)-0x120000) >> 1) & 0xff8000);
+    }
     assert(0);
     return 0;
 }
@@ -762,6 +778,23 @@ static uint32_t get_drop_setup_target_from_packed(uint16_t packed)
     return get_drop_setup_target(type, idx);
 }
 
+static const char* get_item_name(uint16_t item)
+{
+    // order of mushroom and mud peppers are swapped in inventory vs item id
+    if (item == 0x200 + MUSHROOM)
+        return ingredient_names[MUD_PEPPER];
+    if (item == 0x200 + MUD_PEPPER)
+        return ingredient_names[MUSHROOM];
+    // other ingredients are in order starting at 0x200
+    if (item >= 0x200 && item < 0x200 + ARRAY_SIZE(ingredient_names))
+        return ingredient_names[item - 0x200];
+    // special sniff spot item
+    if (item == 0x41f)
+        return "Iron Bracer";
+    assert(0);
+    return "";
+}
+
 static const char* get_drop_name(enum check_tree_item_type type, uint16_t idx)
 {
     if (type == CHECK_NONE) return "Remote";
@@ -770,6 +803,8 @@ static const char* get_drop_name(enum check_tree_item_type type, uint16_t idx)
     if (type == CHECK_BOSS && idx<ARRAY_SIZE(boss_drop_names)) return boss_drop_names[idx];
     if (type == CHECK_EXTRA && idx<ARRAY_SIZE(extra_data)) return extra_data[idx].name;
     if (type == CHECK_TRAP && idx<ARRAY_SIZE(trap_data)) return trap_data[idx].name;
+    if (type == CHECK_SNIFF) return get_item_name((idx < 0x100 && idx > 1) ? (0x400 + idx) : idx);
+    printf("Couldn't get name for %d 0x%03x\n", type, idx);
     assert(0);
     return "";
 }
@@ -801,6 +836,9 @@ static bool is_real_progression_from_packed(uint16_t packed)
 {
     enum check_tree_item_type type = (enum check_tree_item_type)(packed>>10);
     uint16_t idx = packed&0x3ff;
+
+    if (type == CHECK_SNIFF)
+        return false; // manual speed up until we have smarter search
 
     for (size_t i=0; i<ARRAY_SIZE(drops); i++) {
         const drop_tree_item* drop = drops+i;

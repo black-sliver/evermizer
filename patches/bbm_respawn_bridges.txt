@@ -1,0 +1,29 @@
+#set
+
+// BBM: reset bridges instead of unloading them
+// to make sniff drops unmissable
+
+@0x93c37a
+// to 0x93c39a: obj 0-7
+// $2288 &= ~0x10, ~0x20, ~0x40, ~0x80
+0c 84 01 b0
+0c 85 01 b0
+0c 86 01 b0
+0c 87 01 b0
+// $2289 = 0
+10 31 00 b0
+// $228a &= ~0x01, ~0x02, ~0x04
+0c 90 01 b0
+0c 91 01 b0
+0c 92 01 b0
+@
+
+// obj 8 is special, we don't touch that
+
+@0x93c3a9
+// to 0x93c3c1: obj 9-14
+// skip unloading them (we reset the flags anyway)
+04 15 00
+00 // end for script parser
+// 20 free bytes here
+@

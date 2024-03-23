@@ -3,7 +3,7 @@
 // see google doc for documentation on old (numbered) patches
 // the idea is to "manually" patch the game to a state where we simply swap
 // out some numbers to make it random (without rewriting/relocating everything)
-#define VERSION "v047"
+#define VERSION "v047b"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -97,6 +97,7 @@ static char b32(uint64_t v) { return B32[v&0x1f]; }
 
 #define progressive_armor (true) // NOTE: gourdomizer only supports true
 #include "gourds.h" // generated list of gourds and gourd drops
+#include "sniff.h" // generated list of sniffing spots
 #include "data.h"
 
 
@@ -111,6 +112,7 @@ const char* OFF_ON[] = { "Off", "On", NULL };
 const char* OFF_ON_FULL[] = { "Off", "On", "Full", NULL };
 const char* OFF_ON_POOL[] = { "Off", "On", "Pool", NULL };
 const char* OFF_ON_LOGIC[] = { "Off", "On", "In Logic", NULL };
+const char* VANILLA_RANDOM[] = { "Vanilla", "Random", NULL };
 const char* ENERGY_CORE_VALUES[] = { "Vanilla", "Shuffle", "Fragments", NULL };
 const char* POOL_STRATEGY_VALUES[] = { "Balance", "Random", "Bosses", NULL };
 #define ON 1
@@ -135,12 +137,13 @@ const static struct option options[] = {
     { 'a', 1, "Alchemizer", NULL,          "Shuffle learned alchemy formulas. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
     { 'b', 1, "Boss dropamizer", NULL,     "Shuffle boss drops. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
     { 'g', 1, "Gourdomizer", NULL,         "Shuffle gourd drops. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items" },
+    { 's', 1, "Sniffamizer", NULL,         "Shuffle sniff drops. Select 'pool' to add this pool to the mixed pool.", OFF_ON_POOL, "General", "Key items"  },
     { 'o', 0, "Mixed Pool Strategy", NULL, "Key item placement strategy for the mixed pool. Requires at least one option on 'pool'\n"
                                            "Balanced will keep the original distribution of key items per pool (4 or 5 in gourds, 2 in alchemy, 11 in boss drops)\n"
                                            "Random will randomly distribute key items into any selected pool\n"
                                            "Bosses will try to place all key items into boss drops. Requires boss dropamizer on 'pool'", POOL_STRATEGY_VALUES, "General", "Key items" },
+    { 'v', 0, "Sniff ingredients", NULL,   "Vanilla or random ingredient drops", VANILLA_RANDOM, "General", "Other"  },
     { 'i', 1, "Ingredienizer", NULL,       "Shuffle ('on') or randomize ('full') ingredients required for formulas", OFF_ON_FULL, "General", "Other" },
-    { 's', 1, "Sniffamizer", NULL,         "Shuffle ('on') or randomize ('full') ingredient drops", OFF_ON_FULL, "General", "Other"  },
     { 'c', 1, "Callbeadamizer", NULL,      "Shuffle call bead characters ('on') or shuffle individual spells ('full')", OFF_ON_FULL, "General", "Other" },
     { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act ('on') or per room ('full')", OFF_ON_FULL, "General", "Other" },
     { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere! Overrides Doggomizer", OFF_ON, "General", "Other" },
@@ -166,9 +169,10 @@ enum option_indices {
     alchemizer_idx,
     bossdropamizer_idx,
     gourdomizer_idx,
-    mixedpool_idx,
-    ingredienizer_idx,
     sniffamizer_idx,
+    mixedpool_idx,
+    sniffingredients_idx,
+    ingredienizer_idx,
     callbeadamizer_idx,
     doggomizer_idx,
     pupdunk_idx, 
@@ -202,8 +206,9 @@ enum option_indices {
 #define alchemizer O(alchemizer_idx)
 #define bossdropamizer O(bossdropamizer_idx)
 #define gourdomizer O(gourdomizer_idx)
-#define mixedpool O(mixedpool_idx)
 #define sniffamizer O(sniffamizer_idx)
+#define mixedpool O(mixedpool_idx)
+#define sniffingredients O(sniffingredients_idx)
 #define callbeadamizer O(callbeadamizer_idx)
 #define doggomizer O(doggomizer_idx)
 #define pupdunk O(pupdunk_idx)
@@ -405,7 +410,7 @@ static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t 
         // iterate over shorter pool1. 50:50 chance to swap with an item from pool2 of the same type (key / non-key)
         size_t key2_count = count_real_progression_from_packed(pool2, len2);
         size_t nonkey2_count = len2-key2_count;
-        assert(key2_count>0 && nonkey2_count>0);
+        assert(key2_count>=0 && nonkey2_count>0);
         // cache key and non-key item indices from pool2
         size_t* key2_indices = calloc(key2_count, sizeof(size_t));
         size_t* nonkey2_indices = calloc(nonkey2_count, sizeof(size_t));
@@ -418,6 +423,8 @@ static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t 
         for (size_t i=0; i<len1; i++) {
             if (rand_u8(0,1)) {
                 if (is_real_progression_from_packed(pool1[i])) {
+                    if (!key2_count)
+                        continue;
                     // swap with key item from pool2
                     size_t n = rand_u16(0, key2_count-1);
                     SWAP(pool1[i], pool2[key2_indices[n]], uint16_t);
@@ -839,7 +846,7 @@ int main(int argc, const char** argv)
     srand64(seed);
     bool randomized = alchemizer || ingredienizer || bossdropamizer ||
                       gourdomizer || sniffamizer || doggomizer || callbeadamizer ||
-                      placement_file /*||enemizer*/;
+                      sniffingredients || placement_file /*||enemizer*/;
     bool randomized_difficulty = alchemizer || ingredienizer || bossdropamizer ||
                       gourdomizer;
     printf("Settings: %-10s\n\n", settings);
@@ -872,7 +879,6 @@ int main(int argc, const char** argv)
     
     #include "patches.h" // hand-written c code patches
     #include "gen.h" // generated from patches/
-    #include "sniff.h" // generated list of sniffing spots
     #include "doggo.h" // generated list of doggo changes
     
     DEF(JUKEBOX_SJUNGLE,      0x938664 - 0x800000, "\x29\x00\x03\x0f"); // CALL jukebox1
@@ -914,11 +920,6 @@ int main(int argc, const char** argv)
   //DEF(JUKEBOX_HALLS_NE2,    0x97a16d - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // disabled until tested
   //DEF(JUKEBOX_PALACE,       0x95d43f - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // wall sounds in past-vigor cutscene glitch out
 
-    // NOTE: alchemy, boss_drops and gourd_drops are 6 msb type + 10 lsb index
-    // NOTE: we also swapped the meaning of alchemy[]. before i was the spell and [i] the location, now it's the other way around
-    uint16_t alchemy[ALCHEMY_COUNT];
-    _Static_assert(ARRAY_SIZE(alchemy) == 34, "Bad alchemy count");
-    for (size_t i=0; i<ALCHEMY_COUNT; i++) alchemy[i] = (CHECK_ALCHEMY<<10) + (uint16_t)i;
     struct formula ingredients[ALCHEMY_COUNT];
     // preset to vanilla for logic checking without ingredienizer
     {
@@ -931,18 +932,24 @@ int main(int argc, const char** argv)
             ingredients[i].amount2 = ingredient_amounts[2*alchemy_locations[i].id+1];
         }
     }
-    uint16_t boss_drops[] = BOSS_DROPS;
-    for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++) boss_drops[i] += CHECK_BOSS<<10;
+    // NOTE: alchemy, boss_drops and gourd_drops are 6 msb type + 10 lsb index
+    // NOTE: the same init is repeated below during fill to reset everything
+    uint16_t alchemy[ALCHEMY_COUNT];
+    _Static_assert(ARRAY_SIZE(alchemy) == 34, "Bad alchemy count");
+    const uint16_t vanilla_boss_drops[] = BOSS_DROPS;
     uint16_t gourd_drops[ARRAY_SIZE(gourd_drops_data)];
-    for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (CHECK_GOURD<<10) + (uint16_t)i;
-    uint16_t sniff_drops[ARRAY_SIZE(sniffs)];
-    for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) sniff_drops[i] = sniffs[i].val;
+    uint16_t boss_drops[ARRAY_SIZE(vanilla_boss_drops)];
+    // similar to traps and extras, we encode the actual item in the (lower 10 bits of) sniff drops
+    uint16_t sniff_drops[ARRAY_SIZE(sniff_data)];
+    // dog swap data
     uint8_t doggo_map[ARRAY_SIZE(doggo_vals)]; // for non-full only
-    for (size_t i=0; i<ARRAY_SIZE(doggo_map); i++) doggo_map[i] = doggo_vals[i];
+    for (size_t i=0; i<ARRAY_SIZE(doggo_map); i++)
+        doggo_map[i] = doggo_vals[i];
     uint8_t doggo_changes[ARRAY_SIZE(doggos)]; // preset to vanilla or pupdunk
     for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
         doggo_changes[i] = (pupdunk) ? doggo_vals[0] : doggos[i].val;
     }
+    // vanilla call bead spell / menu IDs, can be shuffled
     uint8_t callbead_menus[] = {0,2,4,6};
     uint16_t callbead_spells[] = {
         0x00f8, 0x00fa, 0x00fc, 0x00fe, // fire eyes
@@ -953,6 +960,22 @@ int main(int argc, const char** argv)
 
 #ifdef WITH_MULTIWORLD
     if (placement_file) {
+        for (size_t i=0; i<ALCHEMY_COUNT; i++)
+            alchemy[i] = (CHECK_ALCHEMY<<10) + (uint16_t)i;
+        for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++)
+            boss_drops[i] = (CHECK_BOSS<<10) + vanilla_boss_drops[i];
+        for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++)
+            gourd_drops[i] = (CHECK_GOURD<<10) + (uint16_t)i;
+        if (sniffingredients) {
+            // fill sniff spots with random ingredients
+            for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++)
+                sniff_drops[i] = (CHECK_SNIFF<<10) + rand_u16(0x0200, 0x0200 + ARRAY_SIZE(ingredient_names) - 1);
+        } else {
+            // fill sniff spots with vanilla ingredients
+            for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++)
+                sniff_drops[i] = (CHECK_SNIFF<<10) + (sniff_data[i].item & 0x3ff); // NOTE: this is 0x01f for iron bracer
+        }
+
         FILE* f = fopen(placement_file, "rb");
         if (!f || fseek(f, 0, SEEK_END) != 0) {
             free(buf);
@@ -1052,10 +1075,21 @@ int main(int argc, const char** argv)
 
         if (!placement_file) {
             // reset checks
-            const uint16_t tmp[] = BOSS_DROPS;
-            for (size_t i=0; i<ALCHEMY_COUNT; i++) alchemy[i] = (CHECK_ALCHEMY<<10) + (uint16_t)i;
-            for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++) boss_drops[i] = (CHECK_BOSS<<10) + tmp[i];
-            for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) gourd_drops[i] = (CHECK_GOURD<<10) + (uint16_t)i;
+            for (size_t i=0; i<ALCHEMY_COUNT; i++)
+                alchemy[i] = (CHECK_ALCHEMY<<10) + (uint16_t)i;
+            for (size_t i=0; i<ARRAY_SIZE(boss_drops); i++)
+                boss_drops[i] = (CHECK_BOSS<<10) + vanilla_boss_drops[i];
+            for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++)
+                gourd_drops[i] = (CHECK_GOURD<<10) + (uint16_t)i;
+            if (sniffingredients) {
+                // fill sniff spots with random ingredients
+                for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++)
+                    sniff_drops[i] = (CHECK_SNIFF<<10) + rand_u16(0x0200, 0x0200 + ARRAY_SIZE(ingredient_names) - 1);
+            } else {
+                // fill sniff spots with vanilla ingredients
+                for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++)
+                    sniff_drops[i] = (CHECK_SNIFF<<10) + (sniff_data[i].item & 0x3ff); // NOTE: this is 0x01f for iron bracer
+            }
             // assert that last gourd is energy core. required for vanilla and fragments
             assert(get_drop_from_packed(gourd_drops[ARRAY_SIZE(gourd_drops)-1])->provides[0].progress == P_ENERGY_CORE);
             // add energy core fragments; rule update is in milestone loop
@@ -1089,12 +1123,16 @@ int main(int argc, const char** argv)
                     }
                 }
             }
-            // shuffle pools
-            // vanilla energy core feature requires energy core to be the last gourd
+
             size_t gourd_shuffle_count = ARRAY_SIZE(gourd_drops) - ((energy_core == ENERGY_CORE_VANILLA) ? 1 : 0);
-            if (alchemizer) shuffle_u16(alchemy, ARRAY_SIZE(alchemy));
-            if (gourdomizer) shuffle_u16(gourd_drops, gourd_shuffle_count);
-            if (bossdropamizer) shuffle_u16(boss_drops, ARRAY_SIZE(boss_drops));
+            if (alchemizer)
+                shuffle_u16(alchemy, ARRAY_SIZE(alchemy));
+            if (gourdomizer)
+                shuffle_u16(gourd_drops, gourd_shuffle_count);
+            if (bossdropamizer)
+                shuffle_u16(boss_drops, ARRAY_SIZE(boss_drops));
+            if (sniffamizer && !sniffingredients) // no need to shuffle if ingredients are random
+                shuffle_u16(sniff_drops, ARRAY_SIZE(sniff_drops));
             // mix pools
             if (alchemizer == POOL && gourdomizer == POOL) {
                 shuffle_pools(alchemy, ARRAY_SIZE(alchemy), gourd_drops, gourd_shuffle_count,
@@ -1105,6 +1143,36 @@ int main(int argc, const char** argv)
             }
             if (gourdomizer == POOL && bossdropamizer == POOL) {
                 shuffle_pools(boss_drops, ARRAY_SIZE(boss_drops), gourd_drops, gourd_shuffle_count, mixedpool);
+            }
+            if (sniffamizer == POOL && alchemizer == POOL) {
+                shuffle_pools(alchemy, ARRAY_SIZE(alchemy), sniff_drops, ARRAY_SIZE(sniff_drops),
+                              (mixedpool==STRATEGY_BOSSES) ? STRATEGY_RANDOM : mixedpool);
+            }
+            if (sniffamizer == POOL && gourdomizer == POOL) {
+                shuffle_pools(gourd_drops, gourd_shuffle_count, sniff_drops, ARRAY_SIZE(sniff_drops),
+                              (mixedpool==STRATEGY_BOSSES) ? STRATEGY_RANDOM : mixedpool);
+            }
+            if (sniffamizer == POOL && bossdropamizer == POOL) {
+                shuffle_pools(boss_drops, ARRAY_SIZE(boss_drops), sniff_drops, ARRAY_SIZE(sniff_drops), mixedpool);
+            }
+            // until we fix the non-working sniff spots, move garbage into unreachable spots
+            if (sniffamizer == POOL) {
+                bool ok = true;
+                for (size_t dst=0; dst<ARRAY_SIZE(sniff_drops); dst++) {
+                    if ((sniff_data[dst].missable || sniff_data[dst].excluded) &&
+                            (sniff_drops[dst] >> 10) != CHECK_SNIFF) {
+                        ok = false;
+                        for (size_t src=0; src<ARRAY_SIZE(sniff_drops); src++) {
+                            if ((sniff_drops[src] >> 10) == CHECK_SNIFF) {
+                                SWAP(sniff_drops[src], sniff_drops[dst], uint16_t);
+                                ok = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (!ok)
+                    REROLL();
             }
         }
 
@@ -1206,7 +1274,7 @@ int main(int argc, const char** argv)
         if (!placement_file && gourdomizer) {
             // make sure amulet of annihilation is available in ivor tower
             {
-                uint8_t amuletNo = rand_u8(0,3);
+                uint8_t amuletNo = rand_u8(0,3); // this can't be sniff spot unless pooled
                 uint8_t ivorGourdNo = rand_u8(0,23);
                 size_t ivorGourdIdx=(size_t)-1;
                 uint16_t *amuletSrc = NULL;
@@ -1238,6 +1306,15 @@ int main(int argc, const char** argv)
                     if (stris(get_drop_name_from_packed(alchemy[i]), "Amulet of Annihilation")) {
                         if (amuletNo == 0) {
                             amuletSrc = alchemy+i;
+                            break;
+                        }
+                        amuletNo--;
+                    }
+                }
+                if (!amuletSrc) for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
+                    if (stris(get_drop_name_from_packed(sniff_drops[i]), "Amulet of Annihilation")) {
+                        if (amuletNo == 0) {
+                            amuletSrc = sniff_drops+i;
                             break;
                         }
                         amuletNo--;
@@ -1289,6 +1366,15 @@ int main(int argc, const char** argv)
                         wingsNo--;
                     }
                 }
+                if (!wingsSrc) for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
+                    if (stris(get_drop_name_from_packed(sniff_drops[i]), "Wings")) {
+                        if (wingsNo == 0) {
+                            wingsSrc = sniff_drops+i;
+                            break;
+                        }
+                        wingsNo--;
+                    }
+                }
                 if (POOL == STRATEGY_BALANCED && is_real_progression_from_packed(gourd_drops[hallsNEGourdIdx]))
                     REROLL();
                 assert(wingsSrc);
@@ -1312,13 +1398,6 @@ int main(int argc, const char** argv)
             for (size_t i=0; i<ARRAY_SIZE(doggo_changes); i++) {
                 if (doggo_changes[i] == DOGGO_ACT4) continue; // don't touch act4 spots
                 doggo_changes[i] = doggo_vals[rand_u8(0, ARRAY_SIZE(doggo_vals)-2)]; // act0-3 dogs only
-            }
-        }
-        if (sniffamizer && sniffamizer!=FULL) {
-            shuffle_u16(sniff_drops, ARRAY_SIZE(sniff_drops));
-        } else if (sniffamizer) {
-            for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
-                sniff_drops[i] = rand_u16(0x0200, 0x0200+ARRAY_SIZE(ingredient_names)-1);
             }
         }
         if (callbeadamizer) {
@@ -1475,7 +1554,8 @@ int main(int argc, const char** argv)
                     if (check_reached(checks+i, progress)) {
                         uint16_t drop_id = checks[i].type==CHECK_ALCHEMY ? alchemy[checks[i].index] :
                                            checks[i].type==CHECK_BOSS ? boss_drops[checks[i].index] :
-                                           checks[i].type==CHECK_GOURD ? gourd_drops[checks[i].index] : 0;
+                                           checks[i].type==CHECK_GOURD ? gourd_drops[checks[i].index] :
+                                           checks[i].type==CHECK_SNIFF ? sniff_drops[checks[i].index] : 0;
                         const drop_tree_item* drop = get_drop_from_packed(drop_id);
                         check_progress(checks+i, nextprogress);
                         if (! checks[i].missable)
@@ -1973,13 +2053,42 @@ int main(int argc, const char** argv)
         APPLY(JUKEBOK_SWAMPPEPPER);
         APPLY(JUKEBOK_SWAMPSLEEP);
     }
-    if (sniffamizer) {
+    if (sniffamizer == POOL) {
         printf("Applying sniffamizer...\n");
-        if (!openworld)
+        if (!openworld) // already applied as part of open world
+            APPLY(MUD_PEPPER_LIMIT);
+        APPLY_BBM_RESPAWN_BRIDGES(); // otherwise some would be missable
+        // create setup scripts for all possible sniff drops
+        for (uint16_t item=0x200; item<0x217; item++) {
+            size_t addr = 0x30ff00 + 6 * (item - 0x200);
+            if (item == 0x216)
+                item = 0x41f; // iron bracer
+            const uint8_t script[] = {
+                0x17, 0x39, 0x01, (uint8_t)(item & 0xff), (uint8_t)(item >> 8), 0
+            };
+            memcpy(buf + rom_off + addr, script, sizeof(script));
+        }
+        // jump to setup script for each sniff location
+        for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
+            uint32_t setup_addr = get_drop_setup_target_from_packed(sniff_drops[i]);
+            assert(sniff_data[i].call_length >= 4);
+            buf[rom_off + sniff_data[i].call_pos + 0] = 0x07;
+            buf[rom_off + sniff_data[i].call_pos + 1] = (setup_addr>> 0) & 0xff;
+            buf[rom_off + sniff_data[i].call_pos + 2] = (setup_addr>> 8) & 0xff;
+            buf[rom_off + sniff_data[i].call_pos + 3] = (setup_addr>>16) & 0xff;
+            for (size_t n=4; n<sniff_data[i].call_length; n++)
+                buf[rom_off + sniff_data[i].call_pos + n] =  0x4d; // NOP
+        }
+    }
+    else if (sniffamizer || sniffingredients) {
+        printf("Applying sniffamizer...\n");
+        if (!openworld) // already applied as part of open world
             APPLY(MUD_PEPPER_LIMIT);
         for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
-            buf[rom_off + sniffs[i].addr + 0] = (uint8_t)(sniff_drops[i]&0xff);
-            buf[rom_off + sniffs[i].addr + 1] = (uint8_t)(sniff_drops[i]>>8);
+            // sniff encodes in-game item id in the lower 10 bits
+            uint16_t ingredient = sniff_drops[i] & 0x3ff;
+            buf[rom_off + sniff_data[i].item_pos + 0] = (uint8_t)(ingredient & 0xff);
+            buf[rom_off + sniff_data[i].item_pos + 1] = (uint8_t)(ingredient >> 8);
         }
     }
     if (callbeadamizer) {
@@ -2189,6 +2298,18 @@ int main(int argc, const char** argv)
     for (size_t i=0; i<ARRAY_SIZE(gourd_drops); i++) {
         // TODO: hide crap drops
         fprintf(flog,"(%03d) %-19s  %s" ENDL, (int)i, gourd_data[i].name, get_drop_name_from_packed(gourd_drops[i]));
+    }
+    fprintf(flog,"------------------------------------------------------------------------" ENDL);
+    }
+    if (sniffamizer == POOL) {
+    fprintf(flog, ENDL);
+    fprintf(flog,"      %-21s  %s" ENDL, "Sniff", "Drop");
+    fprintf(flog,"------------------------------------------------------------------------" ENDL);
+    for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
+        if (sniff_data[i].excluded)
+            continue;
+        // TODO: hide crap drops
+        fprintf(flog,"(%03d) %-21s  %s" ENDL, (int)i, sniff_data[i].location_name, get_drop_name_from_packed(sniff_drops[i]));
     }
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     }

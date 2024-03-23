@@ -79,6 +79,14 @@ else
 	$(PYTHON) gourds2h.py $@ gourds.csv "$(ROM)"
 endif
 endif
+ifneq (,$(wildcard gourds.csv)) # assume we have a pre-built sniff.h if sniff.csv is missing
+sniff.h: sniff.csv sniff2h.py util.py
+ifeq ($(strip $(ROM)),)
+	$(PYTHON) sniff2h.py $@ sniff.csv
+else
+	$(PYTHON) sniff2h.py $@ sniff.csv "$(ROM)"
+endif
+endif
 
 main.res: icon.ico
 	echo "id ICON $(^)" | $(WIN32WINDRES) -O coff -o $@
@@ -122,6 +130,9 @@ ifneq ($(strip $(PATCH_FILES) $(IPS_INFO_FILES)),) # only if not pre-built
 endif
 ifneq (,$(wildcard gourds.csv)) # only if not pre-built
 	rm -rf gourds.h
+endif
+ifneq (,$(wildcard sniff.csv)) # only if not pre-built
+	rm -rf sniff.h
 endif
 
 test: $(EXE)

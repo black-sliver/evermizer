@@ -16,6 +16,7 @@ ow-patch
 *.res
 gen.h
 gourds.h
+sniff.h
 
 #releases
 old
@@ -24,6 +25,10 @@ rls
 #local/private scripts
 release.sh
 test-code.sh
+
+#temps
+.~lock*
+/raw-data
 
 #python cache
 __pycache__
