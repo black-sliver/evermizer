@@ -441,8 +441,8 @@ static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t 
         size_t nonkey2_count = len2-key2_count;
         assert(key2_count>0 && nonkey2_count>0);
         // cache key and non-key item indices from pool2
-        size_t* key2_indices = malloc(sizeof(size_t) * key2_count);
-        size_t* nonkey2_indices = malloc(sizeof(size_t) * nonkey2_count);
+        size_t* key2_indices = calloc(key2_count, sizeof(size_t));
+        size_t* nonkey2_indices = calloc(nonkey2_count, sizeof(size_t));
         for (size_t i=0, j=0, k=0; i<len2; i++) {
             if (is_real_progression_from_packed(pool2[i]))
                 key2_indices[j++] = i;
