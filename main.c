@@ -62,17 +62,14 @@ char getch() {
 #define DIRSEP '/'
 #endif
 
-#if !defined NO_MULTIWORLD && !defined WITH_MULTIWORLD && !defined __EMSCRIPTEN__ && !defined NO_RANDO
+#if !defined NO_MULTIWORLD && !defined WITH_MULTIWORLD && !defined __EMSCRIPTEN__
 #define WITH_MULTIWORLD
-#elif defined WITH_MULTIWORLD && defined NO_RANDO
-#error "Can't enable MULTIWORLD with NO_RANDO"
 #endif
 
 #include "util.h"
 
-#ifndef NO_RANDO
 static bool stris(const char* s, const char* t) { if (s==t) return true; return strcmp(s,t)==0; }
-#endif
+
 #ifdef NO_UI
 static bool batch = true;
 #else
@@ -91,20 +88,15 @@ void die(const char* msg)
 }
 #endif
 
-#ifndef NO_RANDO
 const char B32[] = "abcdefghijklmnopqrstuvwxyz234567=";
 static char b32(uint64_t v) { return B32[v&0x1f]; }
-#endif
+
 #define APPLY_PATCH(buf, patch, loc) memcpy(buf+loc, patch, sizeof(patch)-1)
 
 #include "rng.h"
 
-#ifndef NO_RANDO
 #define progressive_armor (true) // NOTE: gourdomizer only supports true
 #include "gourds.h" // generated list of gourds and gourd drops
-#else
-#define progressive_armor (false) // NOTE: we don't add new items in non-rando
-#endif
 #include "data.h"
 
 
@@ -136,7 +128,6 @@ const char* POOL_STRATEGY_VALUES[] = { "Balance", "Random", "Bosses", NULL };
 struct option { char key; uint8_t def; const char* text; const char* info; const char* description; const char** state_names; const char* section; const char* subsection;};
 const static struct option options[] = {
     { 0,   1, "Open World", NULL,          "Make windwalker available in every firepit", OFF_ON, NULL, NULL },    
-#ifndef NO_RANDO
     { '4', 0, "All accessible", NULL,      "Make sure all key items are obtainable", OFF_ON, "General", NULL },
     { 'l', 0, "Spoiler Log", NULL,         "Generate a spoiler log file", OFF_ON, "General", NULL },
     { 'z', 1, "Energy Core", NULL,         "How to obtain the Energy Core. Random and Fragments convert the vanilla spot to a gourd. "
@@ -154,7 +145,6 @@ const static struct option options[] = {
     { 'd', 0, "Doggomizer", "Act1-3",      "Random dog per act ('on') or per room ('full')", OFF_ON_FULL, "General", "Other" },
     { 'p', 0, "Pupdunk mode", "Act0 dog",  "Everpupper everywhere! Overrides Doggomizer", OFF_ON, "General", "Other" },
     { 'm', 0, "Musicmizer", "Demo",        "Random music for some rooms", OFF_ON, "General", "Cosmetic" },
-#endif
     { 'j', 0, "Sequence breaks", NULL,     "Off (default) fixes some sequence breaks: Volcano rock, final boss hatch (not out of bounds). "
                                            "'Logic' may expect the player to break sequence or skip invisible bridges to finish.", OFF_ON_LOGIC, "Accessibility", NULL },
     { 'u', 0, "Out of bounds", NULL,       "Off (default) fixes dog collision when leaving West of Crustacia. "
@@ -170,7 +160,6 @@ const static struct option options[] = {
 };
 enum option_indices {
     openworld_idx,
-#ifndef NO_RANDO
     accessible_idx,
     spoilerlog_idx,
     energy_core_idx,
@@ -185,7 +174,6 @@ enum option_indices {
     pupdunk_idx, 
     /*enemizer_idx,*/
     musicmizer_idx,
-#endif
     sequencebreaks_idx,
     oob_idx,
     fixcheats_idx,
@@ -226,21 +214,12 @@ enum option_indices {
 #define spoilerlog O(spoilerlog_idx)
 #define energy_core O(energy_core_idx)
 
-#define DEFAULT_OW() do {\
+#define DEFAULT_SETTINGS() do {\
+    difficulty=DEFAULT_difficulty;\
     for (size_t i=0; i<ARRAY_SIZE(options); i++)\
         O(i) = D(i);\
 } while (false)
-#define DEFAULT_RANDO() do {\
-    difficulty=DEFAULT_difficulty;\
-    DEFAULT_OW();\
-} while (false)
-#ifdef NO_RANDO
-#define DEFAULT_SETTINGS() DEFAULT_OW()
-#else
-#define DEFAULT_SETTINGS() DEFAULT_RANDO()
-#endif
 
-#ifndef NO_RANDO
 #define SETTINGS2STR(s)\
     do {\
         char* t = s;\
@@ -250,17 +229,7 @@ enum option_indices {
             if (C(i) && options[i].key) *t++ = ( (O(i)==FULL) ? toupper(options[i].key) : tolower(options[i].key) );\
         *t++ = 0;\
     } while (false)
-#else
-#define SETTINGS2STR(s)\
-    do {\
-        char* t = s;\
-        assert(ARRAY_SIZE(s)>ARRAY_SIZE(options)+2);\
-        *t++ = 'r';\
-        for (size_t i=0; i<ARRAY_SIZE(options); i++)\
-            if (C(i) && options[i].key) *t++ = ( (O(i)==FULL) ? toupper(options[i].key) : tolower(options[i].key) );\
-        *t++ = 0;\
-    } while (false)
-#endif
+
 #ifdef __EMSCRIPTEN__
 struct preset {const char* name; const char* settings; int exp; int money;};
 const static struct preset presets[] = {
@@ -274,6 +243,7 @@ const static struct preset presets[] = {
     {"Full Random", "rxlABGoISCDm67", -1, -1} //-1 => weekly-esque random value
 };
 #endif
+
 #ifdef NO_UI
 #define _FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] " \
                "[--available-fragments <n>] [--required-fragments <n>] "
@@ -286,13 +256,10 @@ const static struct preset presets[] = {
 #else
 #define FLAGS _FLAGS
 #endif
-#ifdef NO_RANDO
-#define APPNAME "SoE-OpenWorld"
-#define ARGS " [settings]"
-#else
+
 #define APPNAME "Evermizer"
 #define ARGS " [settings [seed]]"
-#endif
+
 
 // The actual program
 static void print_json(const char* str)
@@ -330,16 +297,15 @@ static void print_usage(const char* appname)
 #endif
 #endif
 }
+
 #ifndef __EMSCRIPTEN__
 static void print_settings()
 {
     printf("%s %s settings:\n", APPNAME, VERSION);
-#ifndef NO_RANDO
     printf("Difficulty:\n");
     for (uint8_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++)
         printf("  %c: %s%s\n", DIFFICULTY_CHAR[i], DIFFICULTY_NAME[i],
                                i==DEFAULT_difficulty?" (default)":"");
-#endif
     printf("Options:\n");
     for (size_t i=0; i<ARRAY_SIZE(options); i++) {
         const struct option* opt = options+i;
@@ -358,9 +324,9 @@ static void print_settings()
     printf("\n");
 }
 #endif
+
 static void print_settings_json()
 {
-#ifndef NO_RANDO
     printf("{\"Difficulty\": [\n");
     for (uint8_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++) {
         if (i != 0) printf(",\n");
@@ -377,7 +343,6 @@ static void print_settings_json()
             "from Gourdomizer and make sure Atlas is usable before act 4.\\n"
             "Normal will make sure Atlas is reachable before boss rush.\\n"
             "Random will allow any seed.\",\n");
-#endif
     printf(" \"Options\": [\n");
     bool first_opt = true;
     for (size_t i=0; i<ARRAY_SIZE(options); i++) {
@@ -408,9 +373,10 @@ static void print_settings_json()
                 "\"General\", \"Key items\", 1, 99 ]\n");
     printf(" ]\n}\n\n");
 }
+
 #ifdef __EMSCRIPTEN__
 static void print_presets_json()
-{    
+{
     printf("[\n");
     bool first = true;
     for (size_t i=0; i<ARRAY_SIZE(presets); i++) {
@@ -430,7 +396,7 @@ static void print_presets_json()
     printf("\n]\n");
 }
 #endif
-#ifndef NO_RANDO
+
 static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t len2, uint8_t strategy)
 {
     assert(len2<65536);
@@ -516,7 +482,6 @@ static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t 
         assert(false);
     }
 }
-#endif
 
 int main(int argc, const char** argv)
 {
@@ -531,35 +496,29 @@ int main(int argc, const char** argv)
         print_usage(appname);
         exit(1);
     }
-    
-    #ifdef NO_RANDO // open world + fixes only
-    (void)alchemy_locations; // suppress warning
-    #else // only in rando
+
     uint8_t difficulty;
-    #endif
     uint8_t option_values[ARRAY_SIZE(options)];
     memset(option_values, 0, sizeof(option_values));
-    
-    // default settings
-    #if !defined NO_RANDO && !defined NO_UI // only rando has interactive mode (yet)
-    bool interactive = true; // show settings ui
-    #endif
+
+    DEFAULT_SETTINGS();
+
     bool verify = false; // verify ROM and exit
     bool dry = false; // dry run: don't write ROM
-    DEFAULT_SETTINGS();
-    
+
     const char* ofn = NULL;
     const char* dstdir = NULL;
     bool modeforced = false;
-    
+    #if !defined NO_UI
+    bool interactive; // set later
+    #endif
+
     uint8_t money_num = 0;
     uint8_t money_den = 0;
     uint8_t exp_num = 0;
     uint8_t exp_den = 0;
-#ifndef NO_RANDO
     uint8_t available_fragments = 11;
     uint8_t required_fragments = 10;
-#endif
 
     #ifdef WITH_MULTIWORLD
     uint8_t id_data[64];
@@ -578,13 +537,13 @@ int main(int argc, const char** argv)
         if (strcmp(argv[1], "-b") == 0) {
             modeforced = true;
             batch = true;
-    #if !defined NO_UI && !defined NO_RANDO // NO_RANDO has no UI (yet)
+    #if !defined NO_UI
             interactive = false;
     #endif
             argv++; argc--;
         } else if (strcmp(argv[1], "-i") == 0) {
             modeforced = true;
-    #if defined NO_UI || defined NO_RANDO  // NO_RANDO has no UI (yet)
+    #if defined NO_UI
             fprintf(stderr, "Requested interactive mode, but not compiled in!\n");
             print_usage(appname);
             exit(1);
@@ -633,7 +592,6 @@ int main(int argc, const char** argv)
             if (exp>2500) exp=2500; // limit to 25x
             if (exp>0) percent_to_u8_fraction(exp, &exp_num, &exp_den);
             argv+=2; argc-=2;
-    #ifndef NO_RANDO
         } else if (strcmp(argv[1], "--required-fragments") == 0 && argc > 2) {
             // NOTE: fragment count will be checked but ignored for normal core
             int val = atoi(argv[2]);
@@ -654,7 +612,6 @@ int main(int argc, const char** argv)
                 available_fragments = (uint8_t)val;
             }
             argv+=2; argc-=2;
-    #endif
     #ifdef WITH_MULTIWORLD
         } else if (strcmp(argv[1], "--id") == 0 && argc > 2) {
             id_data_set = parse_id(id_data, sizeof(id_data), argv[2]);
@@ -676,19 +633,13 @@ int main(int argc, const char** argv)
     }
 
     if (!modeforced) {
-        #if defined NO_RANDO && !defined NO_UI
-        //interactive = argc<3; // NO_RANDO has no UI (yet)
-        #elif !defined NO_UI
+        #if !defined NO_UI
         interactive = argc<4;
         #endif
     }
     
     // verify number of command line arguments
-    #ifdef NO_RANDO
-    if (argc<2 || !argv[1] || !argv[1][0] || argc>3) {
-    #else
     if (argc<2 || !argv[1] || !argv[1][0] || argc>4) {
-    #endif
         print_usage(appname);
         exit(1);
     }
@@ -697,11 +648,9 @@ int main(int argc, const char** argv)
     if (argc>=3) {
         for (const char* s=argv[2]; *s; s++) {
             char c = *s;
-        #ifndef NO_RANDO
             for (size_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++) {
                 if (c == DIFFICULTY_CHAR[i]) { difficulty = (uint8_t)i; c = 0; }
             }
-        #endif
             for (size_t i=0; i<ARRAY_SIZE(options); i++) {
                 if (options[i].key && c == tolower(options[i].key)) {
                     option_values[i] = options[i].def ? 0 : 1;
@@ -795,8 +744,7 @@ int main(int argc, const char** argv)
     // show command line settings in batch mode
     char settings[ARRAY_SIZE(options)+3];
     SETTINGS2STR(settings);
-    
-    #ifndef NO_RANDO
+
     // random seed number
     time_t t = 0;
     srand64((uint64_t)time(&t));
@@ -892,12 +840,8 @@ int main(int argc, const char** argv)
                       placement_file /*||enemizer*/;
     bool randomized_difficulty = alchemizer || ingredienizer || bossdropamizer ||
                       gourdomizer;
-    #else
-    printf("SoE OpenWorld " VERSION "\n");
-    #endif
     printf("Settings: %-10s\n\n", settings);
-    
-    #ifndef NO_RANDO
+
     if (placement_file) {
         available_fragments = required_fragments;
     } else if (energy_core == ENERGY_CORE_FRAGMENTS) {
@@ -916,7 +860,6 @@ int main(int argc, const char** argv)
                     "Changing available to required\n");
         }
     }
-    #endif
 
     // define patches
     #define DEF_LOC(n, location)\
@@ -924,13 +867,9 @@ int main(int argc, const char** argv)
     #define DEF(n, location, content)\
         const size_t PATCH_LOC##n = location;\
         const char PATCH##n[] = content
-    #define UNUSED(n)\
-        (void)PATCH_LOC##n;\
-        (void)PATCH##n;
     
     #include "patches.h" // hand-written c code patches
     #include "gen.h" // generated from patches/
-    #ifndef NO_RANDO
     #include "sniff.h" // generated list of sniffing spots
     #include "doggo.h" // generated list of doggo changes
     
@@ -972,9 +911,7 @@ int main(int argc, const char** argv)
   //DEF(JUKEBOX_HALLS_NE,     0x97a381 - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // disabled until tested
   //DEF(JUKEBOX_HALLS_NE2,    0x97a16d - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // disabled until tested
   //DEF(JUKEBOX_PALACE,       0x95d43f - 0x800000, "\x29\x70\x00\x0f"); // CALL jukebox1 // wall sounds in past-vigor cutscene glitch out
-    #endif
 
-    #ifndef NO_RANDO
     // NOTE: alchemy, boss_drops and gourd_drops are 6 msb type + 10 lsb index
     // NOTE: we also swapped the meaning of alchemy[]. before i was the spell and [i] the location, now it's the other way around
     uint16_t alchemy[ALCHEMY_COUNT];
@@ -1628,8 +1565,7 @@ int main(int argc, const char** argv)
         break;
     } while (true);
     if (randomized) printf("\n");
-    #endif
-    
+
     // apply patches
     #define APPLY(n) APPLY_PATCH(buf, PATCH##n, rom_off + PATCH_LOC##n)
     
@@ -1638,15 +1574,13 @@ int main(int argc, const char** argv)
         fclose(fsrc);
         die("Cannot fix glitches without applying open world patch-set!\n");
     }
-    
-    #ifndef NO_RANDO
+
     if (bossdropamizer && !openworld) {
         free(buf);
         fclose(fsrc);
         die("Cannot randomize boss drops without open world patch-set (yet)!\n");
     }
-    #endif
-    
+
     if (openworld) {
         printf("Applying open world patch-set...\n");
         // start with windwalker unlocked
@@ -1744,8 +1678,7 @@ int main(int argc, const char** argv)
     APPLY(ALCHEMY_ACCESSIBLE2);
     // v041: make sons of sth unmissable
     APPLY_SONS_OF_STH_2();
-    
-    #ifndef NO_RANDO
+
     // FIXME: test this
     if (placement_file || gourdomizer || bossdropamizer || energy_core == ENERGY_CORE_FRAGMENTS) {
         // v015: Disable collapsing bridges in pyramids
@@ -1764,7 +1697,7 @@ int main(int argc, const char** argv)
         // v030: update vanilla boss drops to have progressive drops
         APPLY(PROGRESSIVE_ARMOR);
     }
-    #endif
+
     // General features
     printf("Improving quality of life...\n");
     // v014:
@@ -1873,11 +1806,7 @@ int main(int argc, const char** argv)
             write8(buf, rom_off+0x045b9c+i, alchemy_exp[i]);
         }
     }
-    
-    #ifdef NO_RANDO // get rid of unused warnings
-    UNUSED(74);
-    UNUSED(77);
-    #else
+
     if (placement_file) {
         // currently traps only exist for AP
         printf("Adding traps...\n");
@@ -2065,8 +1994,7 @@ int main(int argc, const char** argv)
         APPLY(ACT0_DOG);
         APPLY(ACT0_DOG2);
     }
-#endif
-    
+
     if (shortbossrush) {
         printf("Shortening boss rush...\n");
         APPLY_SHORT_BOSS_RUSH();
@@ -2082,11 +2010,9 @@ int main(int argc, const char** argv)
         APPLY_TURD_BALL(); // convert Hard Ball to Turd Ball
         APPLY_ALTERNATIVE_TURD_BALLS(); // change description of stronger variants
         APPLY_TURDO_BALANCING(); // rebalance game
-#ifndef NO_RANDO
         if (alchemizer || placement_file) {
             APPLY_TURDO_ALCHEMY_TEXTS(); // change naming of alchemy items
         }
-#endif
     }
 
     printf("Increasing save file size...\n");
@@ -2106,7 +2032,6 @@ int main(int argc, const char** argv)
     }
 #endif
 
-#ifndef NO_RANDO
     // if check value differs, the generated ROMs are different.
     uint64_t seedcheck = (uint16_t)(rand64()&0x3ff); // 10bits=2 b32 chars
     uint64_t curflag = 0x400;
@@ -2126,9 +2051,7 @@ int main(int argc, const char** argv)
     const char* sseedcheck = sseedcheckbuf;
     while (sseedcheck[0] == 'a' && sseedcheck[1]) sseedcheck++;
     printf("\nCheck: %s (Please compare before racing)\n", sseedcheck);
-#endif
-    
-    
+
     char shortsettings[sizeof(settings)];
     {
         memset(shortsettings, 0, sizeof(shortsettings));
@@ -2136,18 +2059,11 @@ int main(int argc, const char** argv)
         while (*b) if (*b!='r' && *b!='l') *a++=*b++; else b++;
         if (!shortsettings[0]) shortsettings[0]='r';
     }
-#ifdef NO_RANDO
-    size_t dsttitle_len = strlen("SoE-OpenWorld_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1;
-    char* dsttitle = (char*)malloc(dsttitle_len); // SoE-OpenWorld_vXXX_e0123
-    int printlen;
-    if (1)
-#else
     size_t dsttitle_len = strlen("Evermizer_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1+16+1;
     char* dsttitle = (char*)malloc(dsttitle_len); // Evermizer_vXXX_e0123caibgsdm_XXXXXXXXXXXXXXXX
     int printlen = snprintf(dsttitle, dsttitle_len, "Evermizer_%s%s_%s_%" PRIx64, is_2p?"2P_":"", VERSION, shortsettings, seed);
     assert(printlen < (int)dsttitle_len);
     if (!randomized)
-#endif
     {
         printlen = snprintf(dsttitle, dsttitle_len, "SoE-OpenWorld_%s%s_%s", is_2p?"2P_":"", VERSION, shortsettings);
         assert(printlen < (int)dsttitle_len);
@@ -2189,7 +2105,6 @@ int main(int argc, const char** argv)
     }
     
     // write spoiler log
-#ifndef NO_RANDO
     if (spoilerlog) {
     size_t logdstbuf_len = strlen(dst)+strlen("_SPOILER.log")+1;
     char* logdstbuf = (char*)malloc(logdstbuf_len);;
@@ -2272,7 +2187,6 @@ int main(int argc, const char** argv)
     printf("Spoiler log saved as %s!\n", logdstbuf);
     free(logdstbuf);
     }
-#endif
 
     free(dstbuf);
     free(dsttitle);

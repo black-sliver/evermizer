@@ -1,4 +1,3 @@
-#ifndef NO_RANDO
 #set // directive to create patch set as APPLY_ENERGY_CORE_FIX()
 
 // fix energy core behavior - it's not a real chest after applying gourdomizer :(
@@ -16,5 +15,3 @@
 9b 8d 00 00 // destroy entity
 00 // return
 @
-
-#endif

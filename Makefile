@@ -53,14 +53,14 @@ INCLUDE_FILES = rng.h util.h data.h sniff.h gourds.h doggo.h patches.h gen.h tin
 
 ifeq ($(OS),Windows_NT)
 native: win32
-win32: evermizer.exe ow-patch.exe
+win32: evermizer.exe
 wasm: evermizer.js
 all: native wasm
 EXE = evermizer.exe
 else
-native: evermizer ow-patch
-win32: evermizer.exe ow-patch.exe
-win64: evermizer64.exe ow-patch64.exe
+native: evermizer
+win32: evermizer.exe
+win64: evermizer64.exe
 wasm: evermizer.js
 all: native win32 win64 wasm
 EXE = evermizer
@@ -89,20 +89,11 @@ main64.res: icon.ico
 evermizer: $(SOURCE_FILES) $(INCLUDE_FILES)
 	$(CC) -o $@ $(SOURCE_FILES) $(CFLAGS)
 
-ow-patch: $(SOURCE_FILES) $(INCLUDE_FILES)
-	$(CC) -DNO_RANDO -o $@ $(SOURCE_FILES) $(CFLAGS)
-
 evermizer.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main.res
 	$(WIN32CC) -o $@ $(SOURCE_FILES) $(WIN32CFLAGS) main.res
 
-ow-patch.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main.res
-	$(WIN32CC) -DNO_RANDO -o $@ $(SOURCE_FILES) $(WIN32CFLAGS) main.res
-
 evermizer64.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main64.res
 	$(WIN64CC) -o $@ $(SOURCE_FILES) $(WIN64CFLAGS) main64.res
-
-ow-patch64.exe: $(SOURCE_FILES) $(INCLUDE_FILES) main64.res
-	$(WIN64CC) -DNO_RANDO -o $@ $(SOURCE_FILES) $(WIN64CFLAGS) main64.res
 
 evermizer.js: $(SOURCE_FILES) $(INCLUDE_FILES)
 	$(EMCC) -DNO_UI -o $@ $(SOURCE_FILES) $(EMFLAGS)
@@ -148,7 +139,6 @@ cppcheck2:
 cppcheck3:
 	$(CPPCHECK) $(CPPCHECK_OPT) -D__linux__ -DNO_UI main.c
 cppcheck4:
-	$(CPPCHECK) $(CPPCHECK_OPT) -D__linux__ -DNO_RANDO -DNO_UI main.c
 cppcheck5:
 	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 main.c
 cppcheck6:
@@ -156,7 +146,6 @@ cppcheck6:
 cppcheck7:
 	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -DNO_UI main.c
 cppcheck8:
-	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -DNO_RANDO -DNO_UI main.c
 cppcheck9:
 	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -D_MSC_VER main.c
 cppcheck10:
@@ -164,7 +153,6 @@ cppcheck10:
 cppcheck11:
 	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -D_MSC_VER -DNO_UI main.c
 cppcheck12:
-	$(CPPCHECK) $(CPPCHECK_OPT) -D_WIN32 -D_MSC_VER -DNO_RANDO -DNO_UI main.c
 cppcheck13:
 	$(CPPCHECK) $(CPPCHECK_OPT) -D__EMSCRIPTEN__ main.c
 cppcheck14:
@@ -172,7 +160,6 @@ cppcheck14:
 cppcheck15:
 	$(CPPCHECK) $(CPPCHECK_OPT) -D__EMSCRIPTEN__ -DNO_UI main.c
 cppcheck16:
-	$(CPPCHECK) $(CPPCHECK_OPT) -D__EMSCRIPTEN__ -DNO_RANDO -DNO_UI main.c
 else
 cppcheck1: ;
 cppcheck2: ;

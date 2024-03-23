@@ -1,8 +1,6 @@
 #set
 // ported from patches.h DEF 126~138 - ventuz
 
-#ifndef NO_RANDO
-
 // Disable collapsing bridges in pyramids
 // by changing map data triggers' scripts to df2 (a blank one)
 @0x9ed77f + 4
@@ -81,4 +79,3 @@ a5 ce // RCALL -50 to ..31
 @0x959848
 a5 e5 // RCALL -27 to ..2d
 @
-#endif

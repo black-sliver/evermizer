@@ -1,4 +1,3 @@
-#ifndef NO_RANDO
 // 1. change leg-unload trigger to span both sides:
 @0x9eabf4
 34 3e 35 5e // vanilla: 34 3e 35 41
@@ -11,4 +10,3 @@
 @0x9eabee
 11 4c 15 50 d6 02 // vanilla: 34 59 35 5e 64 11
 @
-#endif

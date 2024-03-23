@@ -1,4 +1,3 @@
-#ifndef NO_RANDO
 @0xb08300
 // we have 61 = 0x3d tracks -> first index is 0x00, last index is 0x3c
 // we use 7e2880, let's hope that it's a temp and is never used
@@ -151,4 +150,3 @@ song_31:
 33 8c 00                        // play track 8c, end
 33 8e 00                        // play track 8e, end
 @
-#endif

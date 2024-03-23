@@ -191,7 +191,6 @@ const char* ingredient_names[] = { // has to match ingame-numbers/order
 _Static_assert(WAX==0x00 && ACORN==0x15, "Bad ingredient numbering");
 _Static_assert(ARRAY_SIZE(ingredient_names)==ACORN+1, "Bad ingredient names");
 
-#ifndef NO_RANDO
 // boss_drop_jumps is where we put the relocation of drops.
 // This jumps to a fixed address in v040+
 const static size_t boss_drop_jumps[] = { // has to match PATCH 81,83-105
@@ -705,7 +704,6 @@ static bool can_buy_pre_thraxx(const struct formula* f)
     return (can_buy_ingredient_pre_thraxx(f->type1) &&
             can_buy_ingredient_pre_thraxx(f->type2));
 }
-#endif
 
 #define CHARACTER_TOTAL 142
 #define CHARACTER_SKIP  2
@@ -729,7 +727,6 @@ const size_t callbead_spell_item_addrs[] = {
     0x0e9d95+1, 0x0e9d9b+1, 0x0e9d8f+1,             // sidney
 };
 
-#ifndef NO_RANDO
 static uint32_t get_drop_setup_target(enum check_tree_item_type type, uint16_t idx)
 {
     if (type == CHECK_NONE) return 0x0fd200; // remote item
@@ -821,4 +818,3 @@ static size_t count_real_progression_from_packed(const uint16_t* packed, size_t 
     }
     return n;
 }
-#endif

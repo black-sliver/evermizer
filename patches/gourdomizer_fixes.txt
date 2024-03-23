@@ -1,4 +1,3 @@
-#ifndef NO_RANDO
 // Collapse knight basher/atom smasher into one chest with new flag $2353&0x02
 @0x998d1e+2
 d9 07
@@ -13,4 +12,3 @@ d8 07
 @0x98e22a+2
 b0 // actually just load a different wall in that room that is always open
 @
-#endif

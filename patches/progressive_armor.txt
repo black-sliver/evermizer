@@ -1,5 +1,3 @@
-#ifndef NO_RANDO
-
 // Change cave raptor's Dino Skin to progressive armor
 @0x94a775
 18 39 01 84 f4 01 // Drop = progressive Breast
@@ -53,5 +51,3 @@ f5 01
 @0x9bbc62+4
 f6 01
 @
-
-#endif

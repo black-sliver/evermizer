@@ -1,7 +1,5 @@
 #set
 
-#ifndef NO_RANDO
-
 // has to be applied after alchemy_texts
 
 @0xc03867+8
@@ -67,5 +65,3 @@
 67 38 00
 
 @
-
-#endif

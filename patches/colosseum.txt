@@ -1,5 +1,3 @@
-#ifndef NO_RANDO
-
 @0x9286ab
 00 e0 0f // call our new script from north market that allows re-entering if vigor is dead
 
@@ -54,7 +52,6 @@ a3 00               // CALL stop music
 00                  // END
 
 @
-#endif
 
 @0x95c520+1
 d2 // East of guard: Make played character face west instead of boy

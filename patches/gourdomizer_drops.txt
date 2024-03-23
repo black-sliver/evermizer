@@ -1,7 +1,5 @@
 #set
 
-#ifndef NO_RANDO
-
 // replace debug message 0x009 "gain item: unknown armor" by remote item text
 @0x91d009+2
 00 // mark as uncompressed
@@ -724,5 +722,3 @@ a7 1f                               // sleep .5
 8d 00                               // stop screen shaking
 00
 @
-
-#endif

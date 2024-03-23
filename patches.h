@@ -214,7 +214,6 @@ DEF(73, 0x98b08b - 0x800000, "\x04\x03\x00");
 DEF(74, 0x9282c4 - 0x800000, "\xad\x42\x02");
 // Add Text "Received Nothing!"; Could always be applied, but only required for boss drop rando
 DEF(77, 0xc00000 - 0xc00000, "\xF9\x00\x28\x2E\x02\x82\xD2\x13\x1E\x0F");
-#ifndef NO_RANDO // required boss drop randomization script changes
 // Change Horace spawn condition in camp to have DEs or DEs stolen
 DEF(78,  0x96e02c + 1 - 0x800000, "\x05\x61\x00\x29\x05\x0d\x04\xa7");
 DEF(78a, 0x96e089 + 1 - 0x800000, "\x05\x61\x00\x29\x05\x0d\x04\xa7");
@@ -313,7 +312,6 @@ DEF(105, 0x97a157 - 0x800000, // Mad Monk drop (see also patch 78)
     "\xa3\x00" "\x33\x78" "\xa3\x01" "\x29\x1c\x41\x02" "\x04\x00\x00");
 DEF(105b, 0x99d46e - 0x800000, // Footknight (see also patch 78)
     "\x29\x25\x41\x02");
-#endif
 // Ignore "no prior save file" flag during intro
 DEF(106, 0x92e4ab + 4 - 0x800000, "\x00");
 // Enter timber drake from east as if coming from south if he's not dead
@@ -327,13 +325,11 @@ DEF(140, 0x97c600 + 3 - 0x800000,
 // remove option to save at mardonius' brother
 DEF(141, 0x97a10c - 0x800000, "\x04\x03\x00\x00\x00\x00"); // 3 free Bytes
 DEF(142, 0x97a14e - 0x800000, "\x04\x03\x00\x00\x00\x00"); // 3 free Bytes
-#ifndef NO_RANDO
 // set DEs stolen flag when giving DEs away for rocket in tinker dialog
 // NOTE: this uses space freed with patch 126, so may only be applied with bossdropamizer=on
 // FIXME: we may want to ALWAYS apply this, not only for bossdropamizer
 DEF(143, 0x998995 - 0x800000, "\x29\xbf\x8b\x01");
 DEF(144, 0x958bbf - 0x800000, "\x0c\x26\x04\xb1" "\x0c\x0d\x04\xb1" "\x00");
-#endif
 // Don't give away single rocket part to disable double gauge
 DEF(145, 0x998bda - 0x800000, "\x04\x00\x00");
 // Avoid softlock if you have collected more than 3 rocket parts
