@@ -410,15 +410,17 @@ static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t 
         // iterate over shorter pool1. 50:50 chance to swap with an item from pool2 of the same type (key / non-key)
         size_t key2_count = count_real_progression_from_packed(pool2, len2);
         size_t nonkey2_count = len2-key2_count;
-        assert(key2_count>=0 && nonkey2_count>0);
+        assert(nonkey2_count>0);
         // cache key and non-key item indices from pool2
         size_t* key2_indices = calloc(key2_count, sizeof(size_t));
         size_t* nonkey2_indices = calloc(nonkey2_count, sizeof(size_t));
         for (size_t i=0, j=0, k=0; i<len2; i++) {
-            if (is_real_progression_from_packed(pool2[i]))
+            if (is_real_progression_from_packed(pool2[i])) {
+                assert(key2_count);
                 key2_indices[j++] = i;
-            else
+            } else {
                 nonkey2_indices[k++] = i;
+            }
         }
         for (size_t i=0; i<len1; i++) {
             if (rand_u8(0,1)) {
@@ -1158,13 +1160,13 @@ int main(int argc, const char** argv)
             // until we fix the non-working sniff spots, move garbage into unreachable spots
             if (sniffamizer == POOL) {
                 bool ok = true;
-                for (size_t dst=0; dst<ARRAY_SIZE(sniff_drops); dst++) {
-                    if ((sniff_data[dst].missable || sniff_data[dst].excluded) &&
-                            (sniff_drops[dst] >> 10) != CHECK_SNIFF) {
+                for (size_t dst_idx=0; dst_idx<ARRAY_SIZE(sniff_drops); dst_idx++) {
+                    if ((sniff_data[dst_idx].missable || sniff_data[dst_idx].excluded) &&
+                            (sniff_drops[dst_idx] >> 10) != CHECK_SNIFF) {
                         ok = false;
-                        for (size_t src=0; src<ARRAY_SIZE(sniff_drops); src++) {
-                            if ((sniff_drops[src] >> 10) == CHECK_SNIFF) {
-                                SWAP(sniff_drops[src], sniff_drops[dst], uint16_t);
+                        for (size_t src_idx=0; src_idx<ARRAY_SIZE(sniff_drops); src_idx++) {
+                            if ((sniff_drops[src_idx] >> 10) == CHECK_SNIFF) {
+                                SWAP(sniff_drops[src_idx], sniff_drops[dst_idx], uint16_t);
                                 ok = true;
                                 break;
                             }
