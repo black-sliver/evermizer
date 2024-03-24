@@ -19,7 +19,7 @@ WIN32WINDRES?=windres
 # tools
 MV?=move
 CPPCHECK:=$(shell where cppcheck)
-CLOSURECOMPILER:=$(shell where closure-compiler)
+CLOSURECOMPILER:=$(shell where google-closure-compiler)
 SED:=$(shell where sed)
 else
 # cross compile, we build both 32bit and 64bit
@@ -32,7 +32,7 @@ WIN64WINDRES?=x86_64-w64-mingw32-windres
 # tools
 MV?=mv
 CPPCHECK:=$(shell which cppcheck)
-CLOSURECOMPILER:=$(shell which closure-compiler)
+CLOSURECOMPILER:=$(shell which google-closure-compiler)
 SED:=$(shell which sed)
 endif
 
