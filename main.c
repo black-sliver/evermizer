@@ -1238,6 +1238,8 @@ int main(int argc, const char** argv)
                         amuletNo--;
                     }
                 }
+                if (POOL == STRATEGY_BALANCED && is_real_progression_from_packed(gourd_drops[ivorGourdIdx]))
+                    REROLL();
                 assert(amuletSrc);
                 assert(ivorGourdIdx < ARRAY_SIZE(gourd_drops));
                 // cppcheck-suppress[nullPointerRedundantCheck,unmatchedSuppression]
@@ -1282,6 +1284,8 @@ int main(int argc, const char** argv)
                         wingsNo--;
                     }
                 }
+                if (POOL == STRATEGY_BALANCED && is_real_progression_from_packed(gourd_drops[hallsNEGourdIdx]))
+                    REROLL();
                 assert(wingsSrc);
                 assert(hallsNEGourdIdx < ARRAY_SIZE(gourd_drops));
                 // cppcheck-suppress[nullPointerRedundantCheck,unmatchedSuppression]
