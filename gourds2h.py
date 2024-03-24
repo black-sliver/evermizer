@@ -6,7 +6,7 @@ import csv
 import codecs
 
 from util import (tryint, str2flag, prizes, difficulty_modifiers, to_requirements, to_provides, romaddr, rom2scriptaddr,
-                  word2bytes, bin2str)
+                  word2bytes, bin2str, filename_to_include_guard)
 
 
 DROP_SCRIPTS_START = 0xB18000
@@ -192,6 +192,7 @@ def main(dst_filename, src_filename, rom_filename=None):
                               spoiler])
 
         print('%d locations and %d drops loaded from %d rows' % (len(locations), len(drops), rownr,))
+        include_guard = filename_to_include_guard(dst_filename)
         with open(dst_filename, 'wb') as fout:
             fout.write(b'#if defined CHECK_TREE\n')
             for i in range(0, len(locations)):
@@ -202,8 +203,8 @@ def main(dst_filename, src_filename, rom_filename=None):
                 if drops[i][4] == 'NOTHING_PROVIDED':
                     continue
                 fout.write(b'    {CHECK_GOURD,%3d, %s},\n' % (i, (drops[i][4]).encode()))
-            fout.write(b'#elif !defined GOURDS_H_INCLUDED\n')
-            fout.write(b'#define GOURDS_H_INCLUDED\n')
+            fout.write(b'#elif !defined %s\n' % include_guard)
+            fout.write(b'#define %s\n' % include_guard)
             fout.write(gourd_data_struct)
             fout.write(gourd_drop_struct)
             fout.write(b'const static struct gourd_data_item gourd_data[] = {\n')
@@ -224,7 +225,7 @@ def main(dst_filename, src_filename, rom_filename=None):
                 fout.write(b'    %s,\n' % (drop,))
             fout.write(b'};\n')
             fout.write(b'_Static_assert(ARRAY_SIZE(gourd_data) == ARRAY_SIZE(gourd_drops_data), "Bad gourd data");\n')
-            fout.write(b'#endif\n')
+            fout.write(b'#endif // %s\n' % (include_guard,))
 
 if __name__ == '__main__':
     from argparse import ArgumentParser

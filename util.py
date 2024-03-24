@@ -127,3 +127,7 @@ def word2bytes(word):
 
 def bin2str(code):
     return ''.join( ( '\\x%02x' % (b,) for b in code ) )
+
+def filename_to_include_guard(filename):
+    import os.path
+    return os.path.basename(filename).upper().replace('.', '_').encode()

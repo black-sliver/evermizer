@@ -27,3 +27,4 @@ test-code.sh
 
 #python cache
 __pycache__
+*.pyc
