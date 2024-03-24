@@ -1653,7 +1653,9 @@ int main(int argc, const char** argv)
     APPLY(PRISON_FIX); APPLY(PRISON_FIX2);
     // v032: fix dog getting stuck on lillypad (only required with doggomizer)
     APPLY(PALACE_GROUNDS_DOG); APPLY(PALACE_GROUNDS_DOG2);
-    
+    // v047: wrong map ref makes looting both spots impossible
+    APPLY_QUICK_SAND_FIX_SNIFF();
+
     printf("Fixing some missables...\n");
     // v018:
     APPLY(ESCAPE_AFTER_DES); // would only be required for alchemizer

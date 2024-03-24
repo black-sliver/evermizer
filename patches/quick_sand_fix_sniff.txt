@@ -1,0 +1,17 @@
+#set
+
+// Quick Sand Desert
+// Sniff spot 62 and 63 have swapped item IDs in vanilla
+// so looting one disables the other
+
+@0x93ad39+2
+2e // map init: swap 2d -> 2e
+@0x93ad3e+2
+2d // map init: swap 2e -> 2d
+@
+
+@0x93abc6+3
+2d // loot: swap 2e -> 2d
+@0x93abac+3
+2e // loot: swap 2d -> 2e
+@
