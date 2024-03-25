@@ -1661,6 +1661,8 @@ int main(int argc, const char** argv)
     APPLY(PALACE_GROUNDS_DOG); APPLY(PALACE_GROUNDS_DOG2);
     // v047: wrong map ref makes looting both spots impossible
     APPLY_QUICK_SAND_FIX_SNIFF();
+    // v047: duplicate triggers make another impossible to loot
+    APPLY_NORTH_OF_MARKET_FIX_SNIFF();
 
     printf("Fixing some missables...\n");
     // v018:

@@ -1,0 +1,9 @@
+#set
+
+// North of Market
+// Sniff spot 344 has a second trigger that is on top of 345.
+// We move that trigger to the same location as the unique 344.
+
+@0xa7e1ee
+08 16 09 17 // instead of wrong 1b 07 1c 08
+@
