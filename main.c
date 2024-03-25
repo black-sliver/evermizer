@@ -176,10 +176,10 @@ enum option_indices {
     musicmizer_idx,
     sequencebreaks_idx,
     oob_idx,
-    fixcheats_idx,
-    fixammo_idx,
-    fixatlas_idx,
-    fixwings_idx,
+    cheats_idx,
+    ammoglitch_idx,
+    atlasglitch_idx,
+    wingsglitch_idx,
     shortbossrush_idx, 
     keepdog_idx,
     shortdialogs_idx,
@@ -192,11 +192,11 @@ enum option_indices {
 #define keepdog O(keepdog_idx)
 #define sequencebreaks O(sequencebreaks_idx)
 #define oob O(oob_idx)
-#define fixcheats O(fixcheats_idx)
+#define cheats O(cheats_idx)
 #define accessible O(accessible_idx)
-#define fixammo O(fixammo_idx)
-#define fixatlas O(fixatlas_idx)
-#define fixwings O(fixwings_idx)
+#define ammoglitch O(ammoglitch_idx)
+#define atlasglitch O(atlasglitch_idx)
+#define wingsglitch O(wingsglitch_idx)
 #define shortdialogs O(shortdialogs_idx)
 #define ingredienizer O(ingredienizer_idx)
 #define alchemizer O(alchemizer_idx)
@@ -672,7 +672,8 @@ int main(int argc, const char** argv)
                 die(NULL);
             }
         }
-        if (turdomode) fixammo=1;
+        if (turdomode)
+            ammoglitch=0;
     }
     
     // parse source file command line argument
@@ -827,7 +828,8 @@ int main(int argc, const char** argv)
                 }
             }
             if (c == 'r') DEFAULT_SETTINGS();
-            if (turdomode) fixammo=1;
+            if (turdomode)
+                ammoglitch=0;
         }
         clrscr();
     }
@@ -1480,7 +1482,7 @@ int main(int argc, const char** argv)
                             drop_progress(drop, nextprogress);
                         if (drop && checks[i].difficulty<0) {
                             cybergameplayscore -= 2*drop_provides(drop, P_CALLBEAD);
-                            if (!fixwings && drop_provides(drop, P_WINGS)) {
+                            if (wingsglitch && drop_provides(drop, P_WINGS)) {
                                 cybergameplayscore += wingspenalty-2;
                                 wingspenalty = 2;
                             }
@@ -1494,22 +1496,22 @@ int main(int argc, const char** argv)
                                 cybergameplayscore -= 10;
                             if (drop_provides(drop, P_ARMOR))
                                 cybergameplayscore -= 2;
-                            if (!fixammo && drop_provides(drop, P_GLITCHED_AMMO) && ammopenalty < 20) {
+                            if (ammoglitch && drop_provides(drop, P_GLITCHED_AMMO) && ammopenalty < 20) {
                                 cybergameplayscore += ammopenalty-20;
                                 ammopenalty = 20;
                             }
-                            else if (!fixammo && drop_provides(drop, P_AMMO) && ammopenalty < 1) {
+                            else if (ammoglitch && drop_provides(drop, P_AMMO) && ammopenalty < 1) {
                                 cybergameplayscore += ammopenalty-1;
                                 ammopenalty = 1;
                             }
-                            if (fixammo && drop_provides(drop, P_AMMO))
+                            if (!ammoglitch && drop_provides(drop, P_AMMO))
                                 cybergameplayscore -= 1;
                         }
                         else if (drop && check_requires(checks+i, P_ROCKET)) {
-                            if (!fixammo && drop_provides(drop, P_GLITCHED_AMMO)) {
+                            if (ammoglitch && drop_provides(drop, P_GLITCHED_AMMO)) {
                                 cybergameplayscore += ammopenalty-15;
                                 ammopenalty = 15;
-                            } else if (fixammo && drop_provides(drop, P_GLITCHED_AMMO))
+                            } else if (!ammoglitch && drop_provides(drop, P_GLITCHED_AMMO))
                                 cybergameplayscore -= 1;
                         }
                         if (drop && drop->provides[0].progress > P_NONE && drop->provides[0].progress < P_ARMOR) {
@@ -1732,22 +1734,22 @@ int main(int argc, const char** argv)
         APPLY(145);
     }
     
-    if (fixcheats) { // cheats put in by the original devs, not glitches
+    if (!cheats) { // cheats put in by the original devs, not glitches
         printf("Removing infinite call bead glitch...\n");
         APPLY(67);
     }
     
-    if (fixammo) {
+    if (!ammoglitch) {
         printf("Fixing infinite bazooka ammo...\n");
         APPLY(INFAMMO);
     }
     
-    if (fixatlas) {
+    if (!atlasglitch) {
         printf("Fixing atlas glitch...\n");
         APPLY(STADIE_U);
     }
     
-    if (fixwings) {
+    if (!wingsglitch) {
         printf("Fixing wings glitch...\n");
         APPLY(WINGS_FIX_U);
     }
