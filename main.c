@@ -2251,6 +2251,7 @@ int main(int argc, const char** argv)
         const struct formula* f = &(ingredients[i]);
 
         const char* location = NULL;
+        char name_buf[64];
         for (size_t j=0; j<ALCHEMY_COUNT; j++) {
             if (alchemy[j] == (CHECK_ALCHEMY<<10) + i) {
                 location = alchemy_locations[j].name;
@@ -2265,8 +2266,16 @@ int main(int argc, const char** argv)
         }
         if (!location) for (size_t j=0; j<ARRAY_SIZE(gourd_drops); j++) {
             if (gourd_drops[j] == (CHECK_ALCHEMY<<10) + i) {
-                location = gourd_data[j].name;
-                break;
+                snprintf(name_buf, sizeof(name_buf), "%s Gourd #%u",
+                        gourd_data[j].name, (unsigned)j);
+                location = name_buf;
+            }
+        }
+        if (!location) for (size_t j=0; j<ARRAY_SIZE(sniff_drops); j++) {
+            if (sniff_drops[j] == (CHECK_ALCHEMY<<10) + i) {
+                snprintf(name_buf, sizeof(name_buf), "%s Sniff #%u",
+                        sniff_data[j].location_name, (unsigned)j);
+                location = name_buf;
             }
         }
         if (!location) location = placement_file ? "Remote" : "Missing";
