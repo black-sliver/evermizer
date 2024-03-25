@@ -1,0 +1,20 @@
+#set
+
+// Horace camp
+// Transition of sniff #387 object when looted can get characters stuck.
+// We relocate the final instruction with something that sets state back to 0.
+// This will make the dog think it's not looted, so a better fix is welcome.
+
+@0x96de0a
+// replace set bit with relocation
+07 f0 7f 0f // call $b0fff0
+00 // end
+00 // clear dead byte
+@
+
+@0xb0fff0
+09 85 90 04 07 00 // IF not looted, skip 7
+0c 18 03 b1 // set bit
+5c b3 b0 // SET OBJ 3 STATE = val:0
+00 // end @0xb0fffd
+@

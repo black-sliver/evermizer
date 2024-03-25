@@ -2060,6 +2060,7 @@ int main(int argc, const char** argv)
         if (!openworld) // already applied as part of open world
             APPLY(MUD_PEPPER_LIMIT);
         APPLY_BBM_RESPAWN_BRIDGES(); // otherwise some would be missable
+        APPLY_HORACE_CAMP_FIX_SNIFF(); // avoid getting stuck, needs extra rom
         // create setup scripts for all possible sniff drops
         for (uint16_t item=0x200; item<0x217; item++) {
             size_t addr = 0x30ff00 + 6 * (item - 0x200);
