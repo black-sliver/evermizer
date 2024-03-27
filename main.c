@@ -1035,6 +1035,9 @@ int main(int argc, const char** argv)
     if (difficulty == 2) rolllimit *= 2;
     if (energy_core == ENERGY_CORE_FRAGMENTS && required_fragments>=30) rolllimit *= 2;
     do {
+        // general logic checking
+        #define REROLL() continue;
+
         // FIXME: limit generation instead of rerolling too often
         if (rollcount>rolllimit-2) {
             free(buf);
@@ -1324,10 +1327,7 @@ int main(int argc, const char** argv)
                 shuffle_u16(callbead_spells, ARRAY_SIZE(callbead_spells));
             }
         }
-        
-        // general logic checking
-        #define REROLL() continue;
-        
+
         const struct formula* levitate_formula = &ingredients[LEVITATE_IDX];
         const struct formula* revealer_formula = &ingredients[REVEALER_IDX];
         const struct formula* atlas_formula = &ingredients[ATLAS_IDX];
