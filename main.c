@@ -1010,30 +1010,44 @@ int main(int argc, const char** argv)
             long item_index = (next && *next == ',' && item_type > 0) ? strtol(next+1, &next, 10) : -1;
             if (loc_type >= 0) { // valid line
                 //printf("place: %s\n", placement_line);
-                if (loc_type < CHECK_ALCHEMY || loc_type > CHECK_GOURD || item_type < 0 || item_type > CHECK_TRAP
-                        || loc_index < 0)
+                if (loc_type < CHECK_ALCHEMY || loc_type > CHECK_SNIFF || item_type < 0 || item_type > CHECK_TRAP
+                        || loc_index < 0 || (item_type != 0 && (item_index < 0 || item_index > 0xffff)))
+                {
+                    char msg[64];
+                    snprintf(msg, sizeof(msg), "Invalid placement data: %s", placement_line);
+                    free(buf);
+                    free(placement);
+                    die(msg);
+                }
+                if (!is_valid_placement_item((enum check_tree_item_type)item_type, (uint16_t)item_index))
                 {
                     free(buf);
                     free(placement);
-                    die("Invalid placement data!");
+                    die("Unknown item in placement data!");
                 }
                 if (loc_type == CHECK_ALCHEMY && (size_t)loc_index < ARRAY_SIZE(alchemy)) {
                     if (item_type == 0)
                         alchemy[loc_index] = 0x01ff; // Remote // TODO: special value
                     else
-                        alchemy[loc_index] = (item_type<<10) + item_index;
+                        alchemy[loc_index] = (uint16_t)(item_type << 10) + (item_index & 0x3ff);
                 }
                 else if (loc_type == CHECK_BOSS && (size_t)loc_index < ARRAY_SIZE(boss_drops)) {
                     if (item_type == 0)
                         boss_drops[loc_index] = 0x01ff; // Remote // TODO: special value
                     else
-                        boss_drops[loc_index] = (uint16_t)(item_type<<10) + item_index;
+                        boss_drops[loc_index] = (uint16_t)(item_type << 10) + (item_index & 0x3ff);
                 }
                 else if (loc_type == CHECK_GOURD && (size_t)loc_index < ARRAY_SIZE(gourd_drops)) {
                     if (item_type == 0)
                         gourd_drops[loc_index] = 0x01ff; // Remote // TODO: special value
                     else
-                        gourd_drops[loc_index] = (uint16_t)(item_type<<10) + item_index;
+                        gourd_drops[loc_index] = (uint16_t)(item_type << 10) + (item_index & 0x3ff);
+                }
+                else if (loc_type == CHECK_SNIFF && (size_t)loc_index < ARRAY_SIZE(sniff_drops)) {
+                    if (item_type == 0)
+                        sniff_drops[loc_index] = 0x01ff; // Remote // TODO: special value
+                    else
+                        sniff_drops[loc_index] = (uint16_t)(item_type << 10) + (item_index & 0x3ff);
                 }
                 else {
                     free(buf);
@@ -2075,6 +2089,7 @@ int main(int argc, const char** argv)
         for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
             uint32_t setup_addr = get_drop_setup_target_from_packed(sniff_drops[i]);
             assert(sniff_data[i].call_length >= 4);
+            assert(setup_addr);
             buf[rom_off + sniff_data[i].call_pos + 0] = 0x07;
             buf[rom_off + sniff_data[i].call_pos + 1] = (setup_addr>> 0) & 0xff;
             buf[rom_off + sniff_data[i].call_pos + 2] = (setup_addr>> 8) & 0xff;

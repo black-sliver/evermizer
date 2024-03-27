@@ -397,9 +397,9 @@ enum check_tree_item_type {
     CHECK_ALCHEMY,
     CHECK_BOSS,
     CHECK_GOURD,
+    CHECK_SNIFF,
     CHECK_EXTRA,
     CHECK_TRAP,
-    CHECK_SNIFF,
     CHECK_NPC,
     CHECK_RULE,
 };
@@ -856,3 +856,27 @@ static size_t count_real_progression_from_packed(const uint16_t* packed, size_t 
     }
     return n;
 }
+
+#ifdef WITH_MULTIWORLD
+static bool is_valid_placement_item(enum check_tree_item_type type, uint16_t idx)
+{
+    switch (type) {
+        case CHECK_NONE:
+            return true; // "Remote"
+        case CHECK_GOURD:
+            return idx < ARRAY_SIZE(gourd_drops_data);
+        case CHECK_ALCHEMY:
+            return idx < ARRAY_SIZE(alchemy_locations);
+        case CHECK_BOSS:
+            return idx < ARRAY_SIZE(boss_drop_names);
+        case CHECK_EXTRA:
+            return idx < ARRAY_SIZE(extra_data);
+        case CHECK_TRAP:
+            return idx < ARRAY_SIZE(trap_data);
+        case CHECK_SNIFF:
+            return (idx >= 0x200 && idx < 0x200 + ARRAY_SIZE(ingredient_names)) || idx == 0x1f;
+        default:
+            return false;
+    }
+}
+#endif
