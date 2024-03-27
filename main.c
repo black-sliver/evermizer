@@ -2134,7 +2134,7 @@ int main(int argc, const char** argv)
         fprintf(flog,"Tree depth: %d, cyber logic score: %d, cyber gameplay score: %d%s", treedepth, cyberlogicscore, cybergameplayscore, ENDL);
     fprintf(flog,"Exp%%: %d, Money%%: %d%s", u8_fraction_to_percent(exp_num,exp_den), u8_fraction_to_percent(money_num,money_den), ENDL);
     fprintf(flog, ENDL);
-    fprintf(flog,"     %-15s  %-15s   %-15s  %s" ENDL, "Spell", "Ingredient 1", "Ingredient 2", "Location"); 
+    fprintf(flog,"     %-15s  %-18s   %-18s  %s" ENDL, "Spell", "Ingredient 1", "Ingredient 2", "Location");
     fprintf(flog,"------------------------------------------------------------------------" ENDL);
     for (size_t i=0; i<ALCHEMY_COUNT; i++) {
         const struct formula* f = &(ingredients[i]);
@@ -2160,7 +2160,7 @@ int main(int argc, const char** argv)
         }
         if (!location) location = placement_file ? "Remote" : "Missing";
 
-        fprintf(flog,"(%02d) %-15s  %dx %-12s + %dx %-12s  %s" ENDL,
+        fprintf(flog,"(%02d) %-15s  %dx %-15s + %dx %-15s  %s" ENDL,
             alchemy_locations[i].id, 
             alchemy_locations[i].name,
             f->amount1, ingredient_names[f->type1],
