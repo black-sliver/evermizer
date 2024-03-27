@@ -165,7 +165,7 @@ enum ingredient_numbers { // has to match ingame-numbers
 const char* ingredient_names[] = { // has to match ingame-numbers/order
     "Wax", "Water", "Vinegar", "Root", "Oil", "Mushroom", "Mud Pepper", "Meteorite",
     "Limestone", "Iron", "Gunpowder", "Grease", "Feather", "Ethanol", "Dry Ice",
-    "Crystal", "Clay", "Brimstone", "Bone", "Atlas Amulet", "Ash", "Acorn"
+    "Crystal", "Clay", "Brimstone", "Bone", "Atlas Medallion", "Ash", "Acorn"
 };
 
 #define INGREDIENT_TYPES { /* vanilla formula ingredients, incl. Laser */\
