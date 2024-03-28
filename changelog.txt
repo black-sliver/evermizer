@@ -1,3 +1,6 @@
+v048:
+  Implement Sniffamizer = Pool option
+  Fix sometimes getting stuck when looting sniff spot #387 in horace camp
 v047:
   Invert description of Fix Atlas, Wings, ...
   Fix typos in descriptions
