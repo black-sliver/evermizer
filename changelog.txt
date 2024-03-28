@@ -1,3 +1,10 @@
+v047:
+  Invert description of Fix Atlas, Wings, ...
+  Fix typos in descriptions
+  Cut Queen Cutscene in Ebon Keep
+  Fix some sniff spots
+  Rename Atlas Amulet to Atlas Medallion
+
 v046:
   Fix some typos, rework some texts
   Pyramid and Vanilla Gauge in logic with OoB (no Revealer, no Levitate required)
