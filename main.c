@@ -466,8 +466,9 @@ static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t 
                 size_t j = 0;
                 while (true) {
                     if (!is_real_progression_from_packed(pool1[j])) {
-                        if (n == 0) break;
-                        else n--;
+                        if (n == 0)
+                            break;
+                        n--;
                     }
                     j++;
                     assert(j < len1); // otherwise we miscounted somewhere
@@ -507,8 +508,7 @@ int main(int argc, const char** argv)
     }
 
     uint8_t difficulty;
-    uint8_t option_values[ARRAY_SIZE(options)];
-    memset(option_values, 0, sizeof(option_values));
+    uint8_t option_values[ARRAY_SIZE(options)] = {0};
 
     DEFAULT_SETTINGS();
 
@@ -607,9 +607,8 @@ int main(int argc, const char** argv)
             if (val<1 || val>99) {
                 fprintf(stderr, "Required fragments has to be in 1..99\n");
                 break;
-            } else {
-                required_fragments = (uint8_t)val;
             }
+            required_fragments = (uint8_t)val;
             argv+=2; argc-=2;
         } else if (strcmp(argv[1], "--available-fragments") == 0 && argc > 2) {
             // NOTE: fragment count will be checked but ignored for normal core
@@ -617,9 +616,8 @@ int main(int argc, const char** argv)
             if (val<1 || val>99) {
                 fprintf(stderr, "Available fragments has to be in 1..99\n");
                 break;
-            } else {
-                available_fragments = (uint8_t)val;
             }
+            available_fragments = (uint8_t)val;
             argv+=2; argc-=2;
     #ifdef WITH_MULTIWORLD
         } else if (strcmp(argv[1], "--id") == 0 && argc > 2) {
@@ -1538,10 +1536,8 @@ int main(int argc, const char** argv)
                     break;
                 }
             }
-            int progress[P_END];
-            memset(progress, 0, sizeof(progress));
-            int nextprogress[P_END];
-            memset(nextprogress, 0, sizeof(nextprogress));
+            int progress[P_END] = {0};
+            int nextprogress[P_END] = {0};
             if (allow_sequencebreaks) nextprogress[P_ALLOW_SEQUENCE_BREAKS]++;
             if (allow_oob) nextprogress[P_ALLOW_OOB]++;
             bool complete=false;
@@ -1644,8 +1640,8 @@ int main(int argc, const char** argv)
         int logicscore = (treedepth-6)*3 + cyberlogicscore;
         if (randomized_difficulty) {
             if (difficulty==2 && logicscore<10) continue;
-            else if (difficulty==0 && logicscore>10) continue;
-            else if (difficulty==1 && (logicscore>15 || logicscore<5)) continue; // TODO: review seeds
+            if (difficulty==0 && logicscore>10) continue;
+            if (difficulty==1 && (logicscore>15 || logicscore<5)) continue; // TODO: review seeds
         }
         int spellmodifier=0;
         for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
@@ -2182,8 +2178,7 @@ int main(int argc, const char** argv)
         }
     }
     seedcheck |= curflag * difficulty;
-    char sseedcheckbuf[14]; // ceil(64/5)+1
-    memset(sseedcheckbuf, 0, sizeof(sseedcheckbuf));
+    char sseedcheckbuf[14] = {0}; // ceil(64/5)+1
     for (uint8_t i=0, j=0; i<64; i+=5) sseedcheckbuf[j++] = b32(seedcheck>>(60-i));
     const char* sseedcheck = sseedcheckbuf;
     while (sseedcheck[0] == 'a' && sseedcheck[1]) sseedcheck++;
