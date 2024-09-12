@@ -1,3 +1,3 @@
 [codespell]
-skip = ./gen.h
-ignore-words-list = sting, missable, rcall
+skip = ./.git,./gen.h
+ignore-words = ./.codespellignore
