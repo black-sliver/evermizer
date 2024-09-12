@@ -25,3 +25,8 @@ c1 00 // ENABLE BOTH, END instead of ENABLE BOY, CALL
 @0x8edeff
 30d4 // 25k -> 12.5k
 @
+
+// Change music to boss rush immediately
+@0x9bb9d0+1
+8a
+@
