@@ -600,6 +600,7 @@ static int drop_provides(const drop_tree_item* drop, uint16_t progress)
     return 0;
 }
 
+#ifdef DEBUG_CHECK_TREE
 const char* check2str(const check_tree_item* check)
 {
     if (check->type == CHECK_BOSS) return boss_names[check->index];
@@ -626,7 +627,9 @@ const char* drop2str(const drop_tree_item* drop)
     if (drop->type == CHECK_TRAP) return trap_data[drop->index].name;
     return "Unknown";
 }
+#endif
 
+// cppcheck-suppress[unusedFunction,unmatchedSuppression]
 bool alchemy_in_act4(uint16_t alchemy_idx)
 {
     return (alchemy_idx==CALL_UP_IDX || alchemy_idx==ENERGIZE_IDX ||

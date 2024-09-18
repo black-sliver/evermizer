@@ -73,10 +73,6 @@ struct TINYMT64_T {
 
 typedef struct TINYMT64_T tinymt64_t;
 
-void tinymt64_init(tinymt64_t * random, uint64_t seed);
-void tinymt64_init_by_array(tinymt64_t * random, const uint64_t init_key[],
-			    int key_length);
-
 #if defined(__GNUC__)
 /**
  * This function always returns 127
@@ -303,6 +299,7 @@ static void period_certification(tinymt64_t * random) {
  * @param random tinymt state vector.
  * @param seed a 64-bit unsigned integer used as a seed.
  */
+static inline
 void tinymt64_init(tinymt64_t * random, uint64_t seed) {
     random->status[0] = seed ^ ((uint64_t)random->mat1 << 32);
     random->status[1] = random->mat2 ^ random->tmat;
@@ -321,6 +318,7 @@ void tinymt64_init(tinymt64_t * random, uint64_t seed) {
  * @param init_key the array of 64-bit integers, used as a seed.
  * @param key_length the length of init_key.
  */
+static inline
 void tinymt64_init_by_array(tinymt64_t * random, const uint64_t init_key[],
 			    int key_length) {
     const int lag = 1;

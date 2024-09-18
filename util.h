@@ -43,7 +43,7 @@
 #ifndef __has_builtin
   #define __has_builtin(x) 0
 #endif
-#if defined __GNUC__ && !defined __STRICT_ANSI__ && (__GNUC__>5 || __has_builtin(__builtin_types_compatible_p))
+#if defined __GNUC__ && !defined __STRICT_ANSI__ && (__GNUC__>5 || __has_builtin(__builtin_types_compatible_p)) && !__JETBRAINS_IDE__ // BUILD_BUG_OR_ZERO not supported by CLion Nova 2024.1.4
 #define BUILD_BUG_OR_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
 #define ZERO_IF_ARRAY(a) BUILD_BUG_OR_ZERO(__builtin_types_compatible_p(typeof(a), typeof(&a[0])))
 #else
@@ -109,6 +109,7 @@ int u8_fraction_to_percent(uint8_t num, uint8_t den)
     return (int)num * 100 / den;
 }
 
+#ifdef WITH_MULTIWORLD
 static inline uint8_t hex2nibble(char hex) {
     if (hex >= '0' && hex <= '9') return (uint8_t)(hex-'0');
     if (hex >= 'A' && hex <= 'F') return (uint8_t)(hex-'A'+0x0a);
@@ -151,5 +152,6 @@ static inline bool parse_id(uint8_t* out, const size_t outlen, const char* in)
 
     return true;
 }
+#endif
 
 #endif // UTIL_H_INCLUDED
