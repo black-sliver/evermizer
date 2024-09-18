@@ -104,3 +104,25 @@
 04 35 00 // unconditional jump by 53 to 0x9bdf71
 00 // end
 @
+
+@0x9bc986
+// cut first half of prof cutscene
+04 d5 03 // unconditional jump by 981 to 0x9bcd5e
+00 // end
+@
+
+@0x9bcd62
+04 03 00 // prof. don't walk up
+@
+
+@0x9bcd6c
+// set dog x,y, prof. x,y, boy x,y, to be used after room change
+17 af 02 70 01 // WRITE $2507 = 0x0170
+17 b1 02 e8 02 // WRITE $2509 = 0x02e8
+17 b3 02 98 01 // WRITE $250b = 0x0198
+17 b5 02 c8 02 // WRITE $250d = 0x02c8
+17 b7 02 b8 01 // WRITE $250f = 0x01b8
+17 b9 02 d8 02 // WRITE $2511 = 0x02d8
+//@9bcd8a
+04 13 00 // unconditional jump by 19 to 0x9bcda0
+@
