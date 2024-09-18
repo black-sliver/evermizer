@@ -1,6 +1,6 @@
 #set // directive to create patch set as APPLY_ENERGY_CORE_FRAGMENT()
 
-// NOTE: we may have to always apply this with AP for the text, so add a separate energy_core_fragment_handling.txt ?
+// NOTE: we may have to always apply this with AP for the text, so see also energy_core_fragment_handling.txt
 
 @0xb082a4
 // This is right after the 6th trap
