@@ -1,10 +1,37 @@
 #set // APPLY_CUT_CUTSCENES
 
 // ** TINKER **
-// remove first tinker cutscene (state 0 -> state 1)
+// remove first tinker cutscene (state 0 -> state 2)
+// NOTE: going directly to 2 with rocket parts is jank, but we skip that as well below
 @0x998d60
-14 fe 00 b1 // write 1 to 2356 (tinker state)
+14 fe 00 b2 // write 2 to 2356 (tinker state)
 04 13 00    // jump to 0x998d7a (fade-in)
+@
+
+@0x998d93+1
+// jump close to the end of script instead
+// RCALL -662 (to 0x998afd)
+6a fd
+@
+
+@0x998afb
+// zero padding for the script below
+00 00
+@
+
+@0x998afd
+// patch script to remove rocket components right before fade out
+0c 24 04 b1 // set Gave away Gauge
+0c 62 00 b0 // clear Gauge from inventory
+0c 25 04 b1 // set Gave away Wheel
+0c 63 00 b0 // clear Wheel from inventory
+0c 26 04 b1 // set Gave away DEs
+0c 61 00 b0 // clear DEs from inventory
+@
+
+@0x9ac5cb
+// outside, rocket cutscene: jump from first messagebox to last
+04 68 00 // unconditional jump 106 to 0x9ac638
 @
 
 // ** HORACE CAMP **
