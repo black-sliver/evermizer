@@ -36,7 +36,7 @@ CLOSURECOMPILER:=$(shell which google-closure-compiler)
 SED:=$(shell which sed)
 endif
 
-CPPCHECK_OPT=--enable=all --check-level=exhaustive --suppress=missingIncludeSystem --suppress=duplicateExpression:patches.h --inline-suppr -q
+CPPCHECK_OPT=--enable=all --check-level=exhaustive --suppress=missingIncludeSystem --suppress=duplicateExpression:patches.h --inline-suppr -q "--suppress=*:tinymt64.h"
 CPPCHECKS=cppcheck1 cppcheck2 cppcheck3 cppcheck4 cppcheck5 cppcheck6 cppcheck7 cppcheck8 cppcheck9 cppcheck10 cppcheck11 cppcheck12 cppcheck13 cppcheck14 cppcheck15 cppcheck16
 
 EMCC?=emcc
@@ -68,8 +68,10 @@ endif
 
 ifneq ($(strip $(PATCH_FILES) $(IPS_INFO_FILES)),) # assume we have a pre-built gen.h if patches/ and ips/ is missing
 gen.h: $(PATCH_FILES) everscript2h.py $(IPS_INFO_FILES) ips2h.py
-	$(PYTHON) everscript2h.py $@ $(PATCH_FILES)
-	$(PYTHON) ips2h.py -a $@ $(IPS_INFO_FILES)
+	echo "#ifndef _GEN_H_INCLUDED" > "$@"
+	$(PYTHON) everscript2h.py -a "$@" $(PATCH_FILES)
+	$(PYTHON) ips2h.py -a "$@" $(IPS_INFO_FILES)
+	echo "#endif" >> "$@"
 endif
 ifneq (,$(wildcard gourds.csv)) # assume we have a pre-built gourds.h if gourds.csv is missing
 gourds.h: gourds.csv gourds2h.py util.py

@@ -1,5 +1,6 @@
 //TODO:  we should also swap animations and palettes based on what doggo we have
 //FIXME: $2363 is used to dynamically load doggo, but rarely used
+#include <stdint.h>
 enum doggo_consts { DOGGO_ACT0=0xba, DOGGO_ACT1=0xb2, DOGGO_ACT2=0xb6,
                     DOGGO_ACT3=0xb8, DOGGO_ACT4=0xbc, DOGGO_BONE=0xb4 };
 static const uint8_t doggo_vals[] = {

@@ -1637,8 +1637,8 @@ int main(int argc, const char** argv)
         }
         #undef REROLL
         if (reroll) continue;
-        int logicscore = (treedepth-6)*3 + cyberlogicscore;
         if (randomized_difficulty) {
+            int logicscore = (treedepth-6)*3 + cyberlogicscore;
             if (difficulty==2 && logicscore<10) continue;
             if (difficulty==0 && logicscore>10) continue;
             if (difficulty==1 && (logicscore>15 || logicscore<5)) continue; // TODO: review seeds
@@ -2184,12 +2184,12 @@ int main(int argc, const char** argv)
     while (sseedcheck[0] == 'a' && sseedcheck[1]) sseedcheck++;
     printf("\nCheck: %s (Please compare before racing)\n", sseedcheck);
 
-    char shortsettings[sizeof(settings)];
+    char shortsettings[sizeof(settings)] = {0};
     {
-        memset(shortsettings, 0, sizeof(shortsettings));
         char* a = shortsettings; char* b = settings;
         while (*b) if (*b!='r' && *b!='l') *a++=*b++; else b++;
         if (!shortsettings[0]) shortsettings[0]='r';
+        assert(shortsettings[ARRAY_SIZE(shortsettings) - 1] == 0);
     }
     size_t dsttitle_len = strlen("Evermizer_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1+16+1;
     char* dsttitle = (char*)malloc(dsttitle_len); // Evermizer_vXXX_e0123caibgsdm_XXXXXXXXXXXXXXXX
