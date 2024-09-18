@@ -87,3 +87,20 @@
 @
 
 // TODO: Inn: modify text 131a
+
+// ** ACT4 **
+@0x9bdef2 + 1
+// make rocket landing pause shorter
+3b // 2s -> 1s
+@
+
+@0x9bdf1e
+// dog rocket exit pause shorter
+1d // 1s -> 0.5s
+@
+
+@0x9bdf39
+// skip most of the rocket landing cutscene
+04 35 00 // unconditional jump by 53 to 0x9bdf71
+00 // end
+@
