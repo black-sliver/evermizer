@@ -130,23 +130,13 @@ DEF(35, 0x97c600 - 0x800000,
 // remove checks for WW in crustacia
 #define PATCH36 PATCH35
 DEF_LOC(36, 0x97c141 - 0x800000);
-// remove checks for WW in act3, fix tinker flags by tinker state
-DEF(37, 0x9acfe2 - 0x800000,
-    "\x0c\x6b\x04\x05\x6b\x04\x29\x07\xfe\x00\x29\x32\x1e\xa7" // $22e5.3 = $22e5.3 | ($2356<2)
-    "\x04\x0c\x00" // uncond. JMP
-    "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"); // 12 free bytes
 // verify patches above are correct
 assert(sizeof(PATCH34)-1-3 == (size_t)PATCH34[1]);
 assert(sizeof(PATCH35)-1-3 == (size_t)PATCH35[1]);
 assert(sizeof(PATCH36)-1-3 == (size_t)PATCH36[1]);
-assert(sizeof(PATCH37)-1-3-14 == (size_t)PATCH37[14+1]);
 GCC_Static_assert(PATCH_LOC34 + sizeof(PATCH34)-1 == 0x97cc77 - 0x800000, "Bad patch size");
 GCC_Static_assert(PATCH_LOC35 + sizeof(PATCH35)-1 == 0x97c61d - 0x800000, "Bad patch size");
 GCC_Static_assert(PATCH_LOC36 + sizeof(PATCH36)-1 == 0x97c15e - 0x800000, "Bad patch size");
-GCC_Static_assert(PATCH_LOC37 + sizeof(PATCH37)-1 == 0x9acfff - 0x800000, "Bad patch size");
-// convert landing skip to regular landing (location check -> !!!!!FALSE)
-DEF(38, 0x9ad10e - 0x800000 + 5,
-    "\x30\x14\x14\x14\x14\x14");
 // Top-of-volcano in late-game
 DEF(39, 0x948476 - 0x800000 + 1, "\x30\x14\x14");
 DEF(40, 0x9484a7 - 0x800000 + 1, "\x30\x14\x94");
