@@ -1691,7 +1691,6 @@ int main(int argc, const char** argv)
         APPLY(19); APPLY(20); APPLY(21); APPLY(22); APPLY(23); APPLY(24);
         APPLY(25); APPLY(26); APPLY(27); APPLY(28); APPLY(29); APPLY(30);
         APPLY(31); /* -32- */ APPLY(33); APPLY(34); APPLY(35); APPLY(36);
-        APPLY(37); APPLY(38);
         // v005:
         APPLY(39); APPLY(40); APPLY(41); APPLY(42); APPLY(43); APPLY(44);
         APPLY(45); APPLY(46); APPLY(47); /*48-49: see below*/  APPLY(50);
@@ -1719,7 +1718,7 @@ int main(int argc, const char** argv)
         APPLY(FE_VILLAGE_WW16); APPLY(FE_VILLAGE_WW17); APPLY(FE_VILLAGE_WW18);
         APPLY(FE_VILLAGE_WW19);
         APPLY(MARKET_REWORK);
-        APPLY(ACT3_OW);  APPLY(ACT3_OW2); APPLY(ACT3_OW3); APPLY(ACT3_OW4);
+        APPLY_ACT3_OW();
         APPLY(MUD_PEPPER_LIMIT);
         APPLY(TEMP); APPLY(TEMP2); // TODO: resolve underlying issue
         // v026: levitate last rock entering magmar fight to avoid softlock

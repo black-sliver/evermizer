@@ -1,3 +1,17 @@
+#set // directive to create patch set as APPLY_ACT3_OW()
+
+// remove checks for WW in act3, fix tinker flags by tinker state
+@0x9acfe2
+0c 6b 04 05 6b 04 29 07 fe 00 29 32 1e a7 // $22e5.3 = $22e5.3 | ($2356<2)
+04 0c 00 // uncond. JMP
+00 00 00 00 00 00 00 00 00 00 00 00 // 12 free bytes
+@
+
+// convert landing skip to regular landing (location check -> !!!!!FALSE)
+@0x9ad10e + 5
+30 14 14 14 14 14
+@
+
 // Change Regrowth Lady to check "Castle crumbled" instead of "WW unlocked"
 //@0x98de0c Orig: 09 85 23 04 06 00
 //@0x98de0c New:  09 85 6e 04 06 00
