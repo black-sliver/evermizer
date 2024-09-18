@@ -883,3 +883,8 @@ static bool is_valid_placement_item(enum check_tree_item_type type, uint16_t idx
     }
 }
 #endif
+
+static const size_t seed_loc = 0x3d0000;
+static const size_t version_loc = 0x3d0008;
+static const size_t flags_loc = 0x3d000c;
+static const size_t settings_loc = 0x3d000d;

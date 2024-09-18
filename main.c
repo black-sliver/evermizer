@@ -254,7 +254,7 @@ const static struct preset presets[] = {
                "[--available-fragments <n>] [--required-fragments <n>] "
 #else
 #define _FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "\
-               "[--available-fragments <n>] [--required-fragments <n>] "
+               "[--available-fragments <n>] [--required-fragments <n>] [--mystery] "
 #endif
 #ifdef WITH_MULTIWORLD
 #define FLAGS _FLAGS "[--id <128 hex nibbles>] [--placement <placement.txt>] [--death-link] "
@@ -529,10 +529,11 @@ int main(int argc, const char** argv)
     uint8_t available_fragments = 11;
     uint8_t required_fragments = 10;
 
+    bool mystery = false;
+
     #ifdef WITH_MULTIWORLD
     uint8_t id_data[64];
     bool id_data_set = false;
-    const size_t flags_loc = 0x3d000c;
     const size_t id_loc = 0x3d0040;
     const char* placement_file = NULL;
     bool death_link = false;
@@ -634,6 +635,9 @@ int main(int argc, const char** argv)
             argv++; argc--;
             death_link = true;
     #endif
+        } else if (strcmp(argv[1], "--mystery") == 0) {
+            argv++; argc--;
+            mystery = true;
         } else {
             break;
         }
@@ -2150,6 +2154,14 @@ int main(int argc, const char** argv)
     printf("Increasing save file size...\n");
     APPLY_SAVE_FILE_GROW();
 
+    grow = true;
+
+    for (uint8_t n = 0; n < 8; n++)
+        buf[rom_off + seed_loc + n] = (seed >> (n * 8)) & 0xff;
+
+    memcpy(buf + rom_off + version_loc, &VERSION[1], 3);
+    buf[rom_off + version_loc + 3] = 0; // reserved
+
 #ifdef WITH_MULTIWORLD
     if (id_data_set) {
         printf("Applying id data...\n");
@@ -2163,6 +2175,10 @@ int main(int argc, const char** argv)
         }
     }
 #endif
+
+    if (mystery) {
+        buf[rom_off + flags_loc] |= 0x01; // tell tracker it shouldn't spoil
+    }
 
     // if check value differs, the generated ROMs are different.
     uint64_t seedcheck = (uint16_t)(rand64()&0x3ff); // 10bits=2 b32 chars
@@ -2190,6 +2206,12 @@ int main(int argc, const char** argv)
         if (!shortsettings[0]) shortsettings[0]='r';
         assert(shortsettings[ARRAY_SIZE(shortsettings) - 1] == 0);
     }
+
+    _Static_assert(sizeof(shortsettings) <= 35, "Too many options for space in ROM");
+    memcpy(buf + rom_off + settings_loc, shortsettings, sizeof(shortsettings));
+
+    APPLY_MEMCPY_SETTINGS();
+
     size_t dsttitle_len = strlen("Evermizer_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1+16+1;
     char* dsttitle = (char*)malloc(dsttitle_len); // Evermizer_vXXX_e0123caibgsdm_XXXXXXXXXXXXXXXX
     int printlen = snprintf(dsttitle, dsttitle_len, "Evermizer_%s%s_%s_%" PRIx64, is_2p?"2P_":"", VERSION, shortsettings, seed);

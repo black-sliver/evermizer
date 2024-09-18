@@ -1,0 +1,39 @@
+#set // directive to create patch set as APPLY_MEMCPY_SETTINGS()
+
+// copies 48B settings string from ROM at $fd0000 to WRAM at $7e2600
+// NOTE: this code is after the multiworld asm hooks in rom
+
+
+@0x808175
+5C 00 11 FD // JML $fd1100 to new code
+EA // NOP
+EA // NOP
+
+@0xfd1100
+// (fd1100)
+DA // PHX
+
+// memcpy seed settings
+A2 2E 00 // LDX #$2E (48)
+loop_seed_settings:
+BF 00 00 FD // LDA $fd0000,x
+9F 00 26 7E // STA $7e2600,x (16bit addr: 9D, 24bit addr: 9F)
+CA // DEX
+CA // DEX
+10 F4 // BPL loop_seed_settings (-12)
+
+// memcpy multiworld settings
+A2 3E 00 // LDX #$3E (62)
+loop_multiworld_settings:
+BF 40 00 FD // LDA $fd0040,x
+9F 40 26 7E // STA $7e26440,x (16bit addr: 9D, 24bit addr: 9F)
+CA // DEX
+CA // DEX
+10 F4 // BPL loop_multiworld_settings (-12)
+
+FA // PLX
+
+// moved code
+A9 8F 00 // LDA #$008f
+8D 06 01 // STA $0106
+5C 7B 81 80 // JML $80817b back (+6)
