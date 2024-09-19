@@ -10,17 +10,18 @@
 
 @0x998d93+1
 // jump close to the end of script instead
-// RCALL -662 (to 0x998afd)
-6a fd
+// RCALL -666 (to 0x998af9)
+66 fd
 @
 
-@0x998afb
+@0x998af7
 // zero padding for the script below
 00 00
 @
 
-@0x998afd
+@0x998af9
 // patch script to remove rocket components right before fade out
+0c 0d 04 b1 // set DEs stolen flag to spawn aegis
 0c 24 04 b1 // set Gave away Gauge
 0c 62 00 b0 // clear Gauge from inventory
 0c 25 04 b1 // set Gave away Wheel
