@@ -2156,8 +2156,10 @@ int main(int argc, const char** argv)
 
     grow = true;
 
-    for (uint8_t n = 0; n < 8; n++)
-        buf[rom_off + seed_loc + n] = (seed >> (n * 8)) & 0xff;
+    if (!mystery) {
+        for (uint8_t n = 0; n < 8; n++)
+            buf[rom_off + seed_loc + n] = (seed >> (n * 8)) & 0xff;
+    }
 
     memcpy(buf + rom_off + version_loc, &VERSION[1], 3);
     buf[rom_off + version_loc + 3] = 0; // reserved
@@ -2208,7 +2210,9 @@ int main(int argc, const char** argv)
     }
 
     _Static_assert(sizeof(shortsettings) <= 35, "Too many options for space in ROM");
-    memcpy(buf + rom_off + settings_loc, shortsettings, sizeof(shortsettings));
+    if (!mystery) {
+        memcpy(buf + rom_off + settings_loc, shortsettings, sizeof(shortsettings));
+    }
 
     APPLY_MEMCPY_SETTINGS();
 
