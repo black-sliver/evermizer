@@ -1,13 +1,45 @@
-name: Blank
+name: Build
 
 on:
+  push:
+    paths:
+    - '!**.md'
+  pull_request:
+    paths:
+    - '!**.md'
   workflow_dispatch:
 
 jobs:
-  blank:
-    runs-on: ubuntu-20.04  # update april 2025
+  build:
+    strategy:
+      matrix:
+        include:
+        - OS: windows-latest
+          EXE: evermizer.exe
+          NAME: evermizer_win64
+        - OS: ubuntu-20.04  # update april 2025
+          EXE: evermizer
+          NAME: evermizer_ubuntu2204
+
+    runs-on: ${{matrix.OS}}
+    name: ${{matrix.OS}} Build
 
     steps:
-    - name: Blank
+    - uses: actions/checkout@v4
+    - uses: msys2/setup-msys2@v2
+      if: runner.os == 'Windows'
+      with:
+        msystem: MINGW64
+        pacboy: make:p gcc:p
+    - name: Build
+      shell: bash
       run: |
-        echo "Blank"
+        CC=gcc make -j4
+    - name: Check Build
+      run: |
+        ./${{matrix.EXE}} -b --version
+        ./${{matrix.EXE}} -b --help
+    - uses: actions/upload-artifact@v4
+      with:
+        name: ${{matrix.NAME}}
+        path: ${{matrix.EXE}}
