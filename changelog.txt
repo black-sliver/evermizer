@@ -1,6 +1,17 @@
+v049 (beta):
+  Mark hidden arena holding gourds as hidden
+  Mark the 4th chest in Ivor South as hidden as well
+  Fix potentially breaking balanced when placing locked items
+  Boss rush music for short boss rush
+  Skip Tinker outdoor WW cutscene and cut rocket cutscene
+  Cut rocket landing cutscene
+  Cut first half of prof cutscene
+  Write settings for auto-tracker
+
 v048:
   Implement Sniffamizer = Pool option
   Fix sometimes getting stuck when looting sniff spot #387 in horace camp
+
 v047:
   Invert description of Fix Atlas, Wings, ...
   Fix typos in descriptions
@@ -14,6 +25,7 @@ v046:
   Pyramid in logic with Sequence Breaks (no Revealer required)
   Fix Turd Ball texts
   Better textbox handling for Energy Core Fragments when receiving the Energy Core
+
 v045:
   Fix energy core fragments not existing if gourdomizer is off
   Fix not being able to turn in fragmens if alchemizer is off
