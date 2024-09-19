@@ -318,6 +318,7 @@ DEF(142, 0x97a14e - 0x800000, "\x04\x03\x00\x00\x00\x00"); // 3 free Bytes
 // set DEs stolen flag when giving DEs away for rocket in tinker dialog
 // NOTE: this uses space freed with patch 126, so may only be applied with bossdropamizer=on
 // FIXME: we may want to ALWAYS apply this, not only for bossdropamizer
+// NOTE: the tinker shortcut in patches/cut_cutscene.txt also has to set this flag
 DEF(143, 0x998995 - 0x800000, "\x29\xbf\x8b\x01");
 DEF(144, 0x958bbf - 0x800000, "\x0c\x26\x04\xb1" "\x0c\x0d\x04\xb1" "\x00");
 // Don't give away single rocket part to disable double gauge
