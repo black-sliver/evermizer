@@ -1,4 +1,4 @@
-v049 (beta):
+v049:
   Mark hidden arena holding gourds as hidden
   Mark the 4th chest in Ivor South as hidden as well
   Fix potentially breaking balanced when placing locked items
