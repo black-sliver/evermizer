@@ -240,12 +240,12 @@ struct preset {const char* name; const char* settings; int exp; int money;};
 const static struct preset presets[] = {
     {"First-Timer", "rel", 300, 300},
     {"Beginner", "rel", 200, 250},
-    {"Advanced", "rlABGSCd67", 150, 200},
-    {"Pro", "rhlABGISCD567", 125, 150},
-    {"Hell", "rhlABGOISCp567f", 75, 75},
-    {"Menblock", "rhlABGOISCp567f", 1, 1},
-    {"Turdo", "rxlABGoISCDm567t", 125, 200},
-    {"Full Random", "rxlABGoISCDm67", -1, -1} //-1 => weekly-esque random value
+    {"Advanced", "rlABGvCd67", 150, 200},
+    {"Pro", "rhlABGIvCD567", 125, 150},
+    {"Hell", "rhlABGOISvCp567f", 75, 75},
+    {"Menblock", "rhlABGOISvCp567f", 1, 1},
+    {"Turdo", "rxlABGoISvCDm567t", 125, 200},
+    {"Full Random", "rxlABGoISvCDm67", -1, -1} //-1 => weekly-esque random value
 };
 #endif
 
