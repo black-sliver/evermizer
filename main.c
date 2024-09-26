@@ -2260,7 +2260,7 @@ int main(int argc, const char** argv)
         len = fwrite(buf, 1, sz, fdst);
         fclose(fdst); fdst=NULL;
         if (len<sz) { fclose(fsrc); free(buf); die("Could not write output file!\n"); }
-        printf("Rom saved as %s!\n", dst);
+        printf("Rom saved as %s !\n", dst);
     }
     
     // write spoiler log
@@ -2364,7 +2364,7 @@ int main(int argc, const char** argv)
     }
     #undef ENDL
     fclose(flog); flog=NULL;
-    printf("Spoiler log saved as %s!\n", logdstbuf);
+    printf("Spoiler log saved as %s !\n", logdstbuf);
     free(logdstbuf);
     }
 
