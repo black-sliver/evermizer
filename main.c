@@ -1931,10 +1931,15 @@ int main(int argc, const char** argv)
         }
     }
 
-    if (alchemizer || placement_file) {
-        printf("Applying alchemizer...\n");
-        grow = true;
+    if (randomized || energy_core == ENERGY_CORE_FRAGMENTS) {
+        // ALCHEMY_RANDO_DROPS57 is required for fragments
+        if (alchemizer) {
+            printf("Applying alchemizer...\n");
+        } else {
+            printf("Fixing alchemists...\n");
+        }
 
+        grow = true;
         for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
             // Replace alchemy flags by location flags
             // new flags at $7e2570..74
@@ -1960,16 +1965,13 @@ int main(int argc, const char** argv)
             call_setup[1] = (uint8_t)(setup_tgt>>0);
             call_setup[2] = (uint8_t)(setup_tgt>>8);
             call_setup[3] = (uint8_t)(setup_tgt>>16);
-            memcpy(buf + rom_off + drop_dst + 0, call_setup, sizeof(call_setup)); // TODO: fill in address
+            memcpy(buf + rom_off + drop_dst + 0, call_setup, sizeof(call_setup));
             memcpy(buf + rom_off + drop_dst + 4, call_drop,  sizeof(call_drop));
         }
 
         // Make alchemy become items
         APPLY_ALCHEMY_TEXTS();
         APPLY_ALCHEMY_RANDO_DROPS(); // this has to be applied after changing the alchemy flags
-    } else if (energy_core == ENERGY_CORE_FRAGMENTS) {
-        grow = true;
-        APPLY(ALCHEMY_RANDO_DROPS57); // this is required for the energy core drop
     }
 
     if (ingredienizer) {
