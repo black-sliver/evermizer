@@ -69,6 +69,10 @@ endif
 ifneq ($(strip $(PATCH_FILES) $(IPS_INFO_FILES)),) # assume we have a pre-built gen.h if patches/ and ips/ is missing
 gen.h: $(PATCH_FILES) everscript2h.py $(IPS_INFO_FILES) ips2h.py
 	echo "#ifndef _GEN_H_INCLUDED" > "$@"
+	echo "#ifndef DEF" >> "$@"
+	echo "#define DEF(name, addr, data)" >> "$@"
+	echo "#error include gen.h after defining DEF macro" >> "$@"
+	echo "#endif" >> "$@"
 	$(PYTHON) everscript2h.py -a "$@" $(PATCH_FILES)
 	$(PYTHON) ips2h.py -a "$@" $(IPS_INFO_FILES)
 	echo "#endif" >> "$@"
