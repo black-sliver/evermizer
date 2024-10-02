@@ -20,8 +20,9 @@ def data2str(data, linelen=16, linesep=b'\n'):
         for i in range(0, len(data), linelen)
     )
 
-def ips2h(src, name, n, offset=0):
+def ips2h(src, name, n, offset=0, add_apply_macro=True):
     ret = []
+    names = []
     with open(src,'rb') as fips:
         hdr = fips.read(5)
         assert hdr==b'PATCH'
@@ -45,9 +46,17 @@ def ips2h(src, name, n, offset=0):
                 fmt = b'%s, 0x%06x, %s' if len(data)<10 else b'%s, 0x%06x,\n    %s\n'
                 ret.append( (b'DEF('+fmt+b');\n') % (
                         partname.encode('ascii'), block_off, data2str(data,linesep=b'\n    ') ) );
+                names.append(partname.encode("ascii"))
                 n += 1
             block_hdr = fips.read(5)
         assert(len(fips.read(4)) in (3,0)) # we don't allow excess bytes
+    assert ret
+    if add_apply_macro:
+        ret.append(b"#define APPLY_%s() do {" % (names[0][:-1],))
+        for i, name in enumerate(names):
+            ret.append(b"\\\n    " if i % 4 == 0 else b" ")
+            ret.append(b'APPLY(%b);' % (names[i],))
+        ret.append(b"\\\n} while(false)\n")
     return ret
 
 def main(dst_filename, append, *src_filenames):
