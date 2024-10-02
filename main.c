@@ -156,6 +156,7 @@ const static struct option options[] = {
     { '5', 1, "Allow infinite ammo", NULL, "Don't fix bug that would have bazooka ammo not drain", OFF_ON, "Accessibility", NULL },
     { '6', 1, "Allow atlas glitch", NULL,  "Don't fix status effects cancelling with pixie dust", OFF_ON, "Accessibility", NULL },
     { '7', 1, "Allow wings glitch", NULL,  "Don't fix wings granting invincibility if they \\\"did not work\\\"", OFF_ON, "Accessibility", NULL },
+    { '8', 1, "Allow perma status", NULL,  "Don't fix status effect becoming permanent with the 5th", OFF_ON, "Accessibility", NULL },
     { 'f', 1, "Short boss rush", NULL,     "Start boss rush at Metal Magmar, cut HP in half", OFF_ON, "Accessibility", NULL },
     { 'k', 1, "Keep dog", NULL,            "Keep dog in some places to avoid softlocks", OFF_ON, "Quality of Life", NULL },
     { '9', 1, "Shorter dialogs", "Few",    "Shorten some dialogs/cutscenes. Ongoing effort.", OFF_ON, "Quality of Life", NULL },
@@ -184,6 +185,7 @@ enum option_indices {
     ammoglitch_idx,
     atlasglitch_idx,
     wingsglitch_idx,
+    permastatus_idx,
     shortbossrush_idx, 
     keepdog_idx,
     shortdialogs_idx,
@@ -201,6 +203,7 @@ enum option_indices {
 #define ammoglitch O(ammoglitch_idx)
 #define atlasglitch O(atlasglitch_idx)
 #define wingsglitch O(wingsglitch_idx)
+#define permastatus O(permastatus_idx)
 #define shortdialogs O(shortdialogs_idx)
 #define ingredienizer O(ingredienizer_idx)
 #define alchemizer O(alchemizer_idx)
@@ -1850,7 +1853,12 @@ int main(int argc, const char** argv)
         printf("Fixing wings glitch...\n");
         APPLY(WINGS_FIX_U);
     }
-    
+
+    if (!permastatus) {
+        printf("Fixing perma status...\n");
+        APPLY_FIVE_STATUS_EFFECTS_FIX_U();
+    }
+
     if (!oob) {
         printf("Fixing OOB...\n");
         grow = true;

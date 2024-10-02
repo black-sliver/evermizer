@@ -1,0 +1,9 @@
+five_status_effects_fix-U.ips
+--
+Copyright r-bin - https://github.com/r-bin/everscript/blob/main/patches/five_status_effects_fix.asm
+
+# SPDX-License-Identifier: MIT
+
+NOTE:
+While the .ips files are provided as part of the project's source/distribution,
+the means to create them are not. See the link above for details on the patches.
