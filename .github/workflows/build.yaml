@@ -83,13 +83,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        repository: 'git@github.com:black-sliver/evermizer-wasm-ui.git'
+        repository: 'black-sliver/evermizer-wasm-ui'
     - name: Build wasm ui
       run: |
+        npm i --dev
         npm run build
         cd dist
         php index.php > index.html
-        rm index.php
+        rm *.php
+        rm -r views
+        rm -r distribution  # until there is a JS fallback
+        cd ..
     - uses: actions/download-artifact@v4
       with:
         name: evermizer_wasm
@@ -97,7 +101,7 @@ jobs:
     - name: "Organize files"
       run: |
         mkdir -p out/preview
-        mv build out/preview/master
+        mv dist out/preview/master
         echo "Visit ./preview/master/ for the UI preview" >> out/index.html
     - uses: actions/upload-artifact@v4
       with:
