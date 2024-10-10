@@ -93,18 +93,18 @@ jobs:
       run: |
         npm i --dev
         npm run build
+    - uses: actions/download-artifact@v4
+      with:
+        name: evermizer_wasm
+        path: dist/evermizer.js/v000
+    - name: "Prebuild HTML and organize files"
+      run: |
         cd dist
         php index.php > index.html
         rm *.php
         rm -r views
         rm -r distribution  # until there is a JS fallback
         cd ..
-    - uses: actions/download-artifact@v4
-      with:
-        name: evermizer_wasm
-        path: dist/evermizer.js/v000
-    - name: "Organize files"
-      run: |
         mkdir -p out/preview
         mv dist out/preview/master
         echo "Visit ./preview/master/ for the UI preview" >> out/index.html
