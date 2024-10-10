@@ -122,7 +122,7 @@ ifneq ($(strip $(SED)),) # reduce emscripten verbosity, skip if no sed installed
 	$(SED) -i 's/out("LazyFiles on gzip forces download of the whole file when length is accessed");//g' $@
 endif
 ifneq ($(strip $(CLOSURECOMPILER)),) # skip if not installed, also see EMFLAGS
-	$(CLOSURECOMPILER) --compilation_level SIMPLE_OPTIMIZATIONS --js="$@" --js_output_file="evermizer.min.js"
+	$(CLOSURECOMPILER) --compilation_level SIMPLE --js="$@" --js_output_file="evermizer.min.js"
 	$(MV) "evermizer.min.js" "$@"
 endif
 

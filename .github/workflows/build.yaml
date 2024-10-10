@@ -39,3 +39,28 @@ jobs:
       with:
         name: ${{matrix.NAME}}
         path: ${{matrix.EXE}}
+
+  build-wasm:
+    runs-on: ubuntu-latest
+    name: WASM Build
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: mymindstorm/setup-emsdk@v14
+    - name: Install closure-compiler
+      run: |
+        npm i google-closure-compiler
+        echo '#!/bin/sh' > google-closure-compiler
+        echo 'npm exec -- google-closure-compiler "$@"' >> google-closure-compiler
+        chmod a+rx google-closure-compiler
+        mv google-closure-compiler /usr/local/bin/
+        google-closure-compiler --version
+    - name: Build
+      run: |
+        make wasm
+    - uses: actions/upload-artifact@v4
+      with:
+        name: evermizer_wasm
+        path: |
+          evermizer.js
+          evermizer.wasm
