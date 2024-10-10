@@ -76,7 +76,6 @@ jobs:
           evermizer.wasm
 
   publish_preview:
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref_name == 'master')
     runs-on: ubuntu-latest
     needs:
     - build-wasm
@@ -105,3 +104,4 @@ jobs:
         name: "github-pages"
         path: "out/**"
     - uses: actions/deploy-pages@v4
+      if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref_name == 'master')
