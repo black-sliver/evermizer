@@ -39,6 +39,16 @@ jobs:
       with:
         name: ${{matrix.NAME}}
         path: ${{matrix.EXE}}
+    - name: Dump settings.json
+      if: runner.os == 'Linux'
+      run: |
+        ./evermizer --settings.json > settings.json
+    - uses: actions/upload-artifact@v4
+      if: runner.os == 'Linux'
+      with:
+        name: settings_json
+        path: settings.json
+        overwrite: true
 
   build-wasm:
     runs-on: ubuntu-latest
