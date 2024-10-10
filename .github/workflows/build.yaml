@@ -108,10 +108,9 @@ jobs:
         mkdir -p out/preview
         mv dist out/preview/master
         echo "Visit ./preview/master/ for the UI preview" >> out/index.html
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-pages-artifact@v3
       with:
-        name: "github-pages"
-        path: "out/**"
+        path: "out"
 
   publish_preview:
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref_name == 'master')
