@@ -4,6 +4,8 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  repository_dispatch:
+    types: [wasm-ui-update]
 
 permissions:
   contents: read
@@ -113,7 +115,7 @@ jobs:
         path: "out"
 
   publish_preview:
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref_name == 'master')
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || (github.event_name == 'push' && github.ref_name == 'master')
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
