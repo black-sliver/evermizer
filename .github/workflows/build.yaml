@@ -91,22 +91,16 @@ jobs:
     - uses: actions/checkout@v4
       with:
         repository: 'black-sliver/evermizer-wasm-ui'
-    - name: Build wasm ui
-      run: |
-        npm i --dev
-        npm run build
     - uses: actions/download-artifact@v4
       with:
         name: evermizer_wasm
-        path: dist/evermizer.js/v000
-    - name: "Prebuild HTML and organize files"
+        path: evermizer.js/v000
+    - name: Build wasm ui
       run: |
-        cd dist
-        php index.php > index.html
-        rm *.php
-        rm -r views
-        rm -r distribution  # until there is a JS fallback
-        cd ..
+        npm i --dev
+        npm run build-static
+    - name: "Organize files"
+      run: |
         mkdir -p out/preview
         mv dist out/preview/master
         echo "Visit ./preview/master/ for the UI preview" >> out/index.html
