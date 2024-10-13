@@ -26,6 +26,8 @@ jobs:
 
     runs-on: ${{matrix.OS}}
     name: ${{matrix.OS}} Build
+    outputs:
+      version: ${{ steps.dump.outputs.VERSION }}
 
     steps:
     - uses: actions/checkout@v4
@@ -46,10 +48,12 @@ jobs:
       with:
         name: ${{matrix.NAME}}
         path: ${{matrix.EXE}}
-    - name: Dump settings.json
+    - name: Dump settings.json and version
       if: runner.os == 'Linux'
+      id: dump
       run: |
         ./evermizer --settings.json > settings.json
+        echo "VERSION=`./evermizer --version | rev | cut -d" " -f1 | rev`" >> $GITHUB_OUTPUT
     - uses: actions/upload-artifact@v4
       if: runner.os == 'Linux'
       with:
@@ -85,7 +89,10 @@ jobs:
   build_preview:
     runs-on: ubuntu-latest
     needs:
+    - build
     - build-wasm
+    env:
+      VERSION: ${{ needs.build.outputs.version }}
 
     steps:
     - uses: actions/checkout@v4
@@ -94,7 +101,7 @@ jobs:
     - uses: actions/download-artifact@v4
       with:
         name: evermizer_wasm
-        path: evermizer.js/v000
+        path: evermizer.js/${{ env.VERSION }}
     - name: Build wasm ui
       run: |
         npm i --dev
