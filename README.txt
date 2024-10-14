@@ -79,6 +79,8 @@ CHANGES SO FAR:
     Fixes stat underflow when dying with active stat boosts
   Fix wings glitch:
     Fixes wings granting invincibility if they "did not work"
+  Fix perma status:
+    Fixes making the first buff permanent when applying the 5th status effect to an entity
   Money%:
     1 to 2500, Enemies give that % of money
   Exp%:
