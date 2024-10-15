@@ -222,9 +222,9 @@ class EvermizerTest(PopenTest):
         for line in o.split(b'\n'):
             s = line.lstrip()
             if s.startswith(b'Rom saved as '):
-                rom = s.rstrip()[13:-1]
+                rom = s.rstrip()[13:-1].rstrip()
             elif s.startswith(b'Spoiler log saved as '):
-                log = s.rstrip()[21:-1]
+                log = s.rstrip()[21:-1].rstrip()
             if log and rom: break
         return log,rom
         
