@@ -1832,6 +1832,8 @@ int main(int argc, const char** argv)
         APPLY(68);
         printf("Disabling double gauge...\n");
         APPLY(145);
+        printf("Fixing invisible bridges...\n");
+        APPLY_INVISIBLE_BRIDGES_FIX_U();
     }
     
     if (!cheats) { // cheats put in by the original devs, not glitches
