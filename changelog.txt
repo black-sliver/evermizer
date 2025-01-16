@@ -1,5 +1,6 @@
 v049.1:
   Fix missing bronze axe requirement for drain cave with OoB
+  Fix compatibility to Archipelago
 v049:
   Mark hidden arena holding gourds as hidden
   Mark the 4th chest in Ivor South as hidden as well
