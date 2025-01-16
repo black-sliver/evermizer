@@ -1,7 +1,10 @@
 v050:
   Update presets to account for new sniffamizer introduced in v048
   Always apply alchemizer fixes/flags for auto-tracking and better UX
+  (bronze axe requirement for drain cave with OoB broken)
 
+v049.1:
+  Fix missing bronze axe requirement for drain cave with OoB
 v049:
   Mark hidden arena holding gourds as hidden
   Mark the 4th chest in Ivor South as hidden as well
