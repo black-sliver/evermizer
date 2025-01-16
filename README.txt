@@ -135,7 +135,7 @@ CHANGES SO FAR:
     Preselect the correct spell in alchemy selection screen
     Bazooka charge/energize and stat display fix
     Multiple level-ups from one enemy
-  Uses tinymt64 for platform-independend RNG. See tinymt64.h for lincense
+  Uses tinymt64 for platform-independend RNG. See tinymt64.h for license
   Allow for ROM to grow to 4MB if required
   Allow skipping of intro with no prior save file
 
