@@ -1,3 +1,5 @@
+v050.1:
+  Fix missing bronze axe requirement for drain cave with OoB
 v050:
   Update presets to account for new sniffamizer introduced in v048
   Always apply alchemizer fixes/flags for auto-tracking and better UX
