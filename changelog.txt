@@ -11,7 +11,10 @@ v049:
   Cut rocket landing cutscene
   Cut first half of prof cutscene
   Write settings for auto-tracker
+  (bronze axe requirement for drain cave with OoB broken)
 
+v048.1:
+  Fix missing bronze axe requirement for drain cave with OoB
 v048:
   Implement Sniffamizer = Pool option
   Fix sometimes getting stuck when looting sniff spot #387 in horace camp
