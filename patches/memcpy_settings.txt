@@ -5,12 +5,12 @@
 
 
 @0x808175
-5C 00 11 FD // JML $fd1100 to new code
+5C 00 12 FD // JML $fd1100 to new code
 EA // NOP
 EA // NOP
 
-@0xfd1100
-// (fd1100)
+@0xfd1200
+// (fd1200)
 DA // PHX
 
 // memcpy seed settings
