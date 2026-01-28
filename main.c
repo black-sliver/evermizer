@@ -9,12 +9,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#ifdef _MSC_VER
-#define strncasecmp _strnicmp
-#define strcasecmp _stricmp
-#else
-#include <strings.h> // strcasecmp
-#endif
 #include <ctype.h>
 #include <stdint.h>
 #include <stdbool.h> 
@@ -44,9 +38,9 @@ char getch() {
     newt = oldt;
     newt.c_lflag &= ~(ICANON);
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    char c = getchar();
+    const int c = getchar();
     tcsetattr( STDIN_FILENO, TCSANOW, &oldt);
-    return c;
+    return (char)c;
 }
 #endif
 #endif
@@ -129,7 +123,7 @@ const char* POOL_STRATEGY_VALUES[] = { "Balance", "Random", "Bosses", NULL };
 #define DEFAULT_difficulty 1
 struct option { char key; uint8_t def; const char* text; const char* info; const char* description; const char** state_names; const char* section; const char* subsection;};
 const static struct option options[] = {
-    { 0,   1, "Open World", NULL,          "Make windwalker available in every firepit", OFF_ON, NULL, NULL },    
+    { 0,   1, "Open World", NULL,          "Make windwalker available in every firepit", OFF_ON, NULL, NULL },
     { '4', 0, "All accessible", NULL,      "Make sure all key items are obtainable", OFF_ON, "General", NULL },
     { 'l', 0, "Spoiler Log", NULL,         "Generate a spoiler log file", OFF_ON, "General", NULL },
     { 'z', 1, "Energy Core", NULL,         "How to obtain the Energy Core. Random and Fragments convert the vanilla spot to a gourd. "
@@ -230,12 +224,12 @@ enum option_indices {
 
 #define SETTINGS2STR(s)\
     do {\
-        char* t = s;\
-        assert(ARRAY_SIZE(s)>ARRAY_SIZE(options)+2);\
-        *t++ = 'r'; *t++ = DIFFICULTY_CHAR[difficulty];\
+        char* _t = s;\
+        _Static_assert(ARRAY_SIZE(s) > ARRAY_SIZE(options) + 2, "Buffer too small");\
+        *_t++ = 'r'; *_t++ = DIFFICULTY_CHAR[difficulty];\
         for (size_t i=0; i<ARRAY_SIZE(options); i++)\
-            if (C(i) && options[i].key) *t++ = ( (O(i)==FULL) ? toupper(options[i].key) : tolower(options[i].key) );\
-        *t++ = 0;\
+            if (C(i) && options[i].key) *_t++ = ( (O(i)==FULL) ? toupper(options[i].key) : tolower(options[i].key) );\
+        *_t++ = 0;\
     } while (false)
 
 #ifdef __EMSCRIPTEN__
@@ -253,16 +247,16 @@ const static struct preset presets[] = {
 #endif
 
 #ifdef NO_UI
-#define _FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] " \
-               "[--available-fragments <n>] [--required-fragments <n>] "
+#define BASE_FLAGS "[-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] " \
+                   "[--available-fragments <n>] [--required-fragments <n>] "
 #else
-#define _FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "\
-               "[--available-fragments <n>] [--required-fragments <n>] [--mystery] "
+#define BASE_FLAGS "[-b|-i] [-o <dst file.sfc>|-d <dst directory>] [--dry-run] [--money <money%%>] [--exp <exp%%>] "\
+                   "[--available-fragments <n>] [--required-fragments <n>] [--mystery] "
 #endif
 #ifdef WITH_MULTIWORLD
-#define FLAGS _FLAGS "[--id <128 hex nibbles>] [--placement <placement.txt>] [--death-link] "
+#define FLAGS BASE_FLAGS "[--id <128 hex nibbles>] [--placement <placement.txt>] [--death-link] "
 #else
-#define FLAGS _FLAGS
+#define FLAGS BASE_FLAGS
 #endif
 
 #define APPNAME "Evermizer"
@@ -311,7 +305,7 @@ static void print_settings()
 {
     printf("%s %s settings:\n", APPNAME, VERSION);
     printf("Difficulty:\n");
-    for (uint8_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++)
+    for (uint8_t i = 0; i < (uint8_t)ARRAY_SIZE(DIFFICULTY_CHAR); i++)
         printf("  %c: %s%s\n", DIFFICULTY_CHAR[i], DIFFICULTY_NAME[i],
                                i==DEFAULT_difficulty?" (default)":"");
     printf("Options:\n");
@@ -336,7 +330,7 @@ static void print_settings()
 static void print_settings_json()
 {
     printf("{\"Difficulty\": [\n");
-    for (uint8_t i=0; i<ARRAY_SIZE(DIFFICULTY_CHAR); i++) {
+    for (uint8_t i = 0; i < (uint8_t)ARRAY_SIZE(DIFFICULTY_CHAR); i++) {
         if (i != 0) printf(",\n");
         printf("  [ \"%c\", \"%s\", %s ]", DIFFICULTY_CHAR[i], DIFFICULTY_NAME[i],
                                i==DEFAULT_difficulty?"true":"false");
@@ -459,9 +453,9 @@ static void shuffle_pools(uint16_t* pool1, size_t len1, uint16_t* pool2, size_t 
         size_t nonkey1 = len1-count_real_progression_from_packed(pool1,len1);
         for (size_t i=0; i<len2; i++) {
             if (nonkey1 == 0) {
-                int tmp1 = count_real_progression_from_packed(pool1, len1);
-                int tmp2 = count_real_progression_from_packed(pool2, len2);
-                printf("no more spots to fill (%d, %d)\n", tmp1, tmp2);
+                const size_t tmp1 = count_real_progression_from_packed(pool1, len1);
+                const size_t tmp2 = count_real_progression_from_packed(pool2, len2);
+                printf("no more spots to fill (%zu, %zu)\n", tmp1, tmp2);
                 break;
             }
             if (is_real_progression_from_packed(pool2[i])) {
@@ -537,6 +531,7 @@ int main(int argc, const char** argv)
     #ifdef WITH_MULTIWORLD
     uint8_t id_data[64];
     bool id_data_set = false;
+    // ReSharper disable once CppTooWideScope
     const size_t id_loc = 0x3d0040;
     const char* placement_file = NULL;
     bool death_link = false;
@@ -884,7 +879,7 @@ int main(int argc, const char** argv)
         const size_t PATCH_LOC##n = location;\
         const char PATCH##n[] = content
     
-    #include "patches.h" // hand-written c code patches
+    #include "patches.h" // handwritten c code patches
     #include "gen.h" // generated from patches/
     #include "doggo.h" // generated list of doggo changes
     
@@ -930,9 +925,9 @@ int main(int argc, const char** argv)
     struct formula ingredients[ALCHEMY_COUNT];
     // preset to vanilla for logic checking without ingredienizer
     {
-        const uint8_t ingredient_types[] = INGREDIENT_TYPES; // includes laser
-        const uint8_t ingredient_amounts[] = INGREDIENT_AMOUNTS; // includes laser
         for (size_t i=0; i<ALCHEMY_COUNT; i++) {
+            const uint8_t ingredient_types[] = INGREDIENT_TYPES; // includes laser
+            const uint8_t ingredient_amounts[] = INGREDIENT_AMOUNTS; // includes laser
             ingredients[i].type1 = ingredient_types[2*alchemy_locations[i].id+0];
             ingredients[i].type2 = ingredient_types[2*alchemy_locations[i].id+1];
             ingredients[i].amount1 = ingredient_amounts[2*alchemy_locations[i].id+0];
@@ -1118,7 +1113,7 @@ int main(int argc, const char** argv)
                 // replace energy core with fragment
                 gourd_drops[ARRAY_SIZE(gourd_drops)-1] = (CHECK_EXTRA<<10) + 0;
                 // place all other fragments by replacing ingredients
-                // skipping mud peppers, gun powder, grease, dry ice or meteorite to not impact logic
+                // skipping mud peppers, gunpowder, grease, dry ice or meteorite to not impact logic
                 int n = available_fragments - 1;
                 while (n>0) {
                     uint16_t i = rand_u16(0, sizeof(gourd_drops)-1);
@@ -1225,7 +1220,7 @@ int main(int argc, const char** argv)
             
             int cur_total_cost = 0;
             if (ingredienizer==FULL) {
-                for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
+                for (uint8_t i = 0; i < (uint8_t)ALCHEMY_COUNT; i++) {
                     uint8_t type1;
                     uint8_t type2;
                     if (i == cheap_spell_location) {
@@ -1237,13 +1232,14 @@ int main(int argc, const char** argv)
                         type1 = rand_u8(0, 21);
                         type2 = rand_u8_except(0, 21, type1);
                     }
-                    int off = (int)cur_total_cost*100 - (int)est_total_cost*100*i/ALCHEMY_COUNT;
-                    uint8_t amount1 = rand_amount(min_single_cost, max_single_cost,  off);
+                    int off = cur_total_cost * 100 - est_total_cost * 100 * (int)i / (int)ALCHEMY_COUNT;
+                    uint8_t amount1 = rand_amount(min_single_cost, max_single_cost, off);
                     if (i==LEVITATE_IDX && type1==DRY_ICE)
                         amount1 = 1; // only allow 1 dry ice for levitate
                     cur_total_cost += amount1;
-                    off = (int)cur_total_cost*100 - (int)est_total_cost*(100*i+50)/ALCHEMY_COUNT;
-                    uint8_t amount2 = rand_amount(min_single_cost, MIN(max_single_cost,max_spell_cost-amount1), off);
+                    off = cur_total_cost * 100 - est_total_cost * (100 * (int)i + 50) / (int)ALCHEMY_COUNT;
+                    uint8_t max_cost2 = MIN(max_single_cost, max_spell_cost - amount1);
+                    uint8_t amount2 = rand_amount(min_single_cost, max_cost2, off);
                     if (i==LEVITATE_IDX && type2==DRY_ICE)
                         amount2 = 1; // only allow 1 dry ice for levitate
                     cur_total_cost += amount2;
@@ -1274,14 +1270,15 @@ int main(int argc, const char** argv)
                 } else { // shuffle original ingredients
                     shuffle_u8(ingredient_types, ARRAY_SIZE(ingredient_types));
                 }
-                for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
-                    int off = (int)cur_total_cost*100 - (int)est_total_cost*100*i/ALCHEMY_COUNT;
+                for (uint8_t i = 0; i < (uint8_t)ALCHEMY_COUNT; i++) {
+                    int off = cur_total_cost * 100 - est_total_cost * 100 * (int)i / (int)ALCHEMY_COUNT;
                     uint8_t amount1 = rand_amount(min_single_cost, max_single_cost, off);
                     if (i==LEVITATE_IDX && ingredient_types[i*2] == DRY_ICE)
                         amount1 = 1; // only allow 1 dry ice for levitate
                     cur_total_cost += amount1;
-                    off = (int)cur_total_cost*100 - (int)est_total_cost*(100*i+50)/ALCHEMY_COUNT;
-                    uint8_t amount2 = rand_amount(min_single_cost, MIN(max_single_cost,max_spell_cost-amount1), off);
+                    off = cur_total_cost * 100 - est_total_cost * (100 * (int)i + 50) / (int)ALCHEMY_COUNT;
+                    uint8_t max_cost2 = MIN(max_single_cost, max_spell_cost - amount1);
+                    uint8_t amount2 = rand_amount(min_single_cost, max_cost2, off);
                     if (i==LEVITATE_IDX && ingredient_types[i*2+1] == DRY_ICE)
                         amount2 = 1; // only allow 1 dry ice for levitate
                     cur_total_cost += amount2;
@@ -1494,9 +1491,10 @@ int main(int argc, const char** argv)
             // make sure no spell uses the same ingredient twice
             if (ingredienizer) {
                 bool ok = true;
-                for (uint8_t i=0; i<ALCHEMY_COUNT; i++)
+                for (uint8_t i = 0; i < (uint8_t)ALCHEMY_COUNT; i++) {
                     if (ingredients[i].type1 == ingredients[i].type2)
                         ok = false;
+                }
                 if (!ok) REROLL();
             }
             // make sure we have at least 98 casts of good offensive and 33 healing spells before boss rush
@@ -1534,10 +1532,9 @@ int main(int argc, const char** argv)
             memcpy(checks, blank_check_tree, sizeof(blank_check_tree));
             // update energy core fragment rule
             for (size_t i=0; i<ARRAY_SIZE(checks); i++) {
-                if (checks[i].type == CHECK_RULE &&
-                        checks[i].requires[0].progress == P_CORE_FRAGMENT)
-                {
-                    checks[i].requires[0].pieces = required_fragments;
+                if (checks[i].type == CHECK_RULE && checks[i].requires[0].progress == P_CORE_FRAGMENT) {
+                    assert(required_fragments < 128);
+                    checks[i].requires[0].pieces = (int8_t)required_fragments;
                     checks[i].provides[0].pieces = 1;
                     checks[i].provides[0].progress = P_ENERGY_CORE;
                     break;
@@ -1651,7 +1648,7 @@ int main(int argc, const char** argv)
             if (difficulty==1 && (logicscore>15 || logicscore<5)) continue; // TODO: review seeds
         }
         int spellmodifier=0;
-        for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
+        for (uint8_t i = 0; i < (uint8_t)ALCHEMY_COUNT; i++) {
             if (alchemy_is_good(i) && alchemy_is_cheap(&ingredients[i]))
                 spellmodifier -= 2;
         }
@@ -1950,7 +1947,7 @@ int main(int argc, const char** argv)
         }
 
         grow = true;
-        for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
+        for (uint8_t i = 0; i < (uint8_t)ALCHEMY_COUNT; i++) {
             // Replace alchemy flags by location flags
             // new flags at $7e2570..74
             uint16_t new_flag = ((0x2570 - 0x2258)<<3) + alchemy_locations[i].id;
@@ -1969,8 +1966,8 @@ int main(int argc, const char** argv)
             // Insert item reward code (we jump there from vanilla alchemy code)
             // drops at 0xb08000 + 0x09*ID
             uint32_t drop_dst  = (0xb08000-0x800000) + 9 * alchemy_locations[i].id;
-            uint8_t call_setup[]   = { 0x29, 0x00, 0x00, 0x00 };       // jump target sets item id and amount
-            uint8_t call_drop[]    = { 0x29, 0x0d, 0x02, 0x0f, 0x00 }; // jump target actually gives reward, end
+            uint8_t call_setup[]   = { 0x29, 0x00, 0x00, 0x00 };       // jump-target sets item id and amount
+            uint8_t call_drop[]    = { 0x29, 0x0d, 0x02, 0x0f, 0x00 }; // jump-target actually gives reward, end
             uint32_t setup_tgt = get_drop_setup_target_from_packed(alchemy[i]);
             call_setup[1] = (uint8_t)(setup_tgt>>0);
             call_setup[2] = (uint8_t)(setup_tgt>>8);
@@ -1987,7 +1984,7 @@ int main(int argc, const char** argv)
     if (ingredienizer) {
         _Static_assert(sizeof(*ingredients)==4, "Bad padding"); // required for memcpy
         printf("Applying ingredienizer...\n");
-        for (uint8_t i=0; i<ALCHEMY_COUNT; i++) {
+        for (uint8_t i = 0; i < (uint8_t)ALCHEMY_COUNT; i++) {
             uint16_t id = alchemy_locations[i].id;
             memcpy(buf + rom_off + 0x4601F + id*4, &(ingredients[i]), 4);
         }
@@ -2096,7 +2093,7 @@ int main(int argc, const char** argv)
             };
             memcpy(buf + rom_off + addr, script, sizeof(script));
         }
-        // jump to setup script for each sniff location
+        // jump to setup-script for each sniff location
         for (size_t i=0; i<ARRAY_SIZE(sniff_drops); i++) {
             uint32_t setup_addr = get_drop_setup_target_from_packed(sniff_drops[i]);
             assert(sniff_data[i].call_length >= 4);
@@ -2200,7 +2197,7 @@ int main(int argc, const char** argv)
     for (size_t i=0; i<ARRAY_SIZE(options); i++) {
         if (options[i].key == 'm') continue;
         size_t n=0;
-        for (;options[i].state_names[n]; n++);
+        for (; options[i].state_names[n]; n++) {}
         if (n) {
             seedcheck |= curflag * option_values[i];
             for (;n>1;n=(n+1)/2) curflag <<= 1;

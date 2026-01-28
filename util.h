@@ -103,7 +103,8 @@ static bool percent_to_u8_fraction(int percent, uint8_t* num, uint8_t* den)
     }
     return true;
 }
-int u8_fraction_to_percent(uint8_t num, uint8_t den)
+
+static int u8_fraction_to_percent(const uint8_t num, const uint8_t den)
 {
     if (num == den || den == 0) return 100;
     return (int)num * 100 / den;
