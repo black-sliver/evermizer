@@ -19,7 +19,6 @@ WIN32WINDRES?=windres
 # tools
 MV?=move
 CPPCHECK:=$(shell where cppcheck)
-CLOSURECOMPILER:=$(shell where google-closure-compiler)
 SED:=$(shell where sed)
 else
 # cross compile, we build both 32bit and 64bit
@@ -32,7 +31,6 @@ WIN64WINDRES?=x86_64-w64-mingw32-windres
 # tools
 MV?=mv
 CPPCHECK:=$(shell which cppcheck)
-CLOSURECOMPILER:=$(shell which google-closure-compiler)
 SED:=$(shell which sed)
 endif
 
@@ -40,7 +38,7 @@ CPPCHECK_OPT=--enable=all --check-level=exhaustive --suppress=missingIncludeSyst
 CPPCHECKS=cppcheck1 cppcheck2 cppcheck3 cppcheck4 cppcheck5 cppcheck6 cppcheck7 cppcheck8 cppcheck9 cppcheck10 cppcheck11 cppcheck12 cppcheck13 cppcheck14 cppcheck15 cppcheck16
 
 EMCC?=emcc
-EMFLAGS?=-D NO_ASSERT -s ENVIRONMENT=web -s WASM=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=0 -s ASSERTIONS=0 -s TOTAL_STACK=1048576 -s INITIAL_MEMORY=6291456 -Os --closure 0
+EMFLAGS?=-D NO_ASSERT -s ENVIRONMENT=web -s WASM=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=0 -s ASSERTIONS=0 -s TOTAL_STACK=1048576 -s INITIAL_MEMORY=6291456 -Os
 # NOTE: em's --closure 1 may fail/remove too much or clash with other code, we call closure compiler manually for that reason
 
 PATCH_FILES := $(wildcard patches/*.txt) # this is replaced by pre-built gen.h in release to reduce build dependencies
@@ -120,10 +118,6 @@ ifneq ($(strip $(SED)),) # reduce emscripten verbosity, skip if no sed installed
 	$(SED) -i "s/Lazy loading should have been performed (contents set) in createLazyFile, but it was not. Lazy loading only works in web workers. Use --embed-file or --preload-file in emcc on the main thread/No lazy loading/g" $@
 	$(SED) -i "s/Use --embed-file or --preload-file in emcc//g" $@
 	$(SED) -i 's/out("LazyFiles on gzip forces download of the whole file when length is accessed");//g' $@
-endif
-ifneq ($(strip $(CLOSURECOMPILER)),) # skip if not installed, also see EMFLAGS
-	$(CLOSURECOMPILER) --compilation_level SIMPLE --js="$@" --js_output_file="evermizer.min.js"
-	$(MV) "evermizer.min.js" "$@"
 endif
 
 clean: clean-temps
