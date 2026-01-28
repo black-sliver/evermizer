@@ -1,6 +1,6 @@
 five_status_effects_fix-U.ips
 --
-Copyright r-bin - https://github.com/r-bin/everscript/blob/main/patches/five_status_effects_fix.asm
+Copyright r-bin - https://github.com/r-bin/everscript/
 
 # SPDX-License-Identifier: MIT
 
