@@ -1,6 +1,6 @@
-invisible_bridges_fix-U.ips
+mandatory_revealer-U.ips
 --
-Copyright r-bin - https://github.com/r-bin/everscript/blob/main/patches/fix_bridges.evs
+Copyright r-bin - https://github.com/r-bin/everscript/
 
 # SPDX-License-Identifier: MIT
 
