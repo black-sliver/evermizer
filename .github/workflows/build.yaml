@@ -20,7 +20,7 @@ jobs:
         - OS: windows-latest
           EXE: evermizer.exe
           NAME: evermizer_win64
-        - OS: ubuntu-20.04  # update april 2025
+        - OS: ubuntu-22.04
           EXE: evermizer
           NAME: evermizer_ubuntu2204
 
