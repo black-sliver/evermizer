@@ -238,9 +238,9 @@ const static struct preset presets[] = {
     {"First-Timer", "rel", 300, 300},
     {"Beginner", "rel", 200, 250},
     {"Advanced", "rlABGvCd67", 150, 200},
-    {"Pro", "rhlABGIvCD567", 125, 150},
-    {"Hell", "rhlABGOISvCp567f", 75, 75},
-    {"Menblock", "rhlABGOISvCp567f", 1, 1},
+    {"Pro", "rhlABGIvCD5678", 125, 150},
+    {"Hell", "rhlABGOISvCp5678f", 75, 75},
+    {"Menblock", "rhlABGOISvCp5678f", 1, 1},
     {"Turdo", "rxlABGoISvCDm567t", 125, 200},
     {"Full Random", "rxlABGoISvCDm67", -1, -1} //-1 => weekly-esque random value
 };
