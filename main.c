@@ -712,6 +712,10 @@ int main(int argc, const char** argv)
     assert(GROW_BY == 1024*1024 || GROW_BY == 512*1024);
     
     uint8_t* buf = (uint8_t*)malloc(sz+GROW_BY); // allow to grow by 1MB
+    if (!buf) {
+        fclose(fsrc);
+        die("Out of memory!\n");
+    }
     memset(buf+sz, 0, GROW_BY); // or 0xff?
     size_t len = fread(buf, 1, sz, fsrc);
     if (len!=sz) { free(buf); fclose(fsrc); die("Could not read input file!\n"); }
@@ -986,7 +990,12 @@ int main(int argc, const char** argv)
         long placement_size = ftell(f);
         rewind(f);
         char* placement = (char*)malloc(placement_size+1);
-        if (placement && placement_size>=0 && fread(placement, 1, placement_size, f) != (size_t)placement_size) {
+        if (!placement) {
+            fclose(fsrc);
+            free(buf);
+            die("Out of memory!\n");
+        }
+        if (placement_size>=0 && fread(placement, 1, placement_size, f) != (size_t)placement_size) {
             free(buf);
             free(placement);
             fclose(f);
@@ -2227,6 +2236,11 @@ int main(int argc, const char** argv)
 
     size_t dsttitle_len = strlen("Evermizer_")+strlen("2P_")+strlen(VERSION)+1+sizeof(shortsettings)-1+1+16+1;
     char* dsttitle = (char*)malloc(dsttitle_len); // Evermizer_vXXX_e0123caibgsdm_XXXXXXXXXXXXXXXX
+    if (!dsttitle) {
+        fclose(fsrc);
+        free(buf);
+        die("Out of memory!\n");
+    }
     int printlen = snprintf(dsttitle, dsttitle_len, "Evermizer_%s%s_%s_%" PRIx64, is_2p?"2P_":"", VERSION, shortsettings, seed);
     assert(printlen < (int)dsttitle_len);
     if (!randomized)
@@ -2273,7 +2287,12 @@ int main(int argc, const char** argv)
     // write spoiler log
     if (spoilerlog) {
     size_t logdstbuf_len = strlen(dst)+strlen("_SPOILER.log")+1;
-    char* logdstbuf = (char*)malloc(logdstbuf_len);;
+    char* logdstbuf = (char*)malloc(logdstbuf_len);
+    if (!logdstbuf) {
+        fclose(fsrc);
+        free(buf);
+        die("Out of memory!\n");
+    }
     pSlash = strrchr(dst, DIRSEP);
     ext = strrchr(dst, '.');
     if (!ext || ext<pSlash) ext = dst+strlen(dst);
