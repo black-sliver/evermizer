@@ -669,7 +669,7 @@ bool alchemy_is_healing(uint16_t alchemy_idx)
     }
 }
 
-bool ingredient_is_cheap(uint8_t i)
+static bool ingredient_is_cheap(uint8_t i)
 {
     return (i==WAX || i==WATER || i==VINEGAR || i==ROOT || i==OIL || i==LIMESTONE || i==ETHANOL || i==CRYSTAL || i==CLAY || i==BONE || i==ASH);
 }

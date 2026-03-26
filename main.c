@@ -18,7 +18,7 @@
 #include <process.h>
 #include <windows.h>
 int getch(void); // can't #include <conio.h> with <windows.h>
-void clrscr(void)
+static void clrscr(void)
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     COORD pos = {0,0};
@@ -32,7 +32,7 @@ void clrscr(void)
 #include <termios.h>
 #include <unistd.h>
 #define clrscr() printf("\e[1;1H\e[2J")
-char getch() {
+static char getch() {
     static struct termios oldt, newt;
     tcgetattr(STDIN_FILENO, &oldt);
     newt = oldt;
@@ -70,7 +70,7 @@ static bool batch = true;
 static bool batch = false;
 #endif
 #ifndef die
-void die(const char* msg)
+static void die(const char* msg)
 {
     if (msg) fprintf(stderr, "%s", msg);
 #if (defined(WIN32) || defined(_WIN32)) && !defined(NO_UI)
@@ -2221,7 +2221,8 @@ int main(int argc, const char** argv)
 
     char shortsettings[sizeof(settings)] = {0};
     {
-        char* a = shortsettings; char* b = settings;
+        char* a = shortsettings;
+        const char* b = settings;
         while (*b) if (*b!='r' && *b!='l') *a++=*b++; else b++;
         if (!shortsettings[0]) shortsettings[0]='r';
         assert(shortsettings[ARRAY_SIZE(shortsettings) - 1] == 0);
